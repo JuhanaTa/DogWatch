@@ -1,7 +1,12 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 import './App.css'
+import Button from '@mui/material/Button';
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,9 +24,9 @@ function App() {
       <h1>Dogwatch heart Vite + React</h1>
       <h1>Our dog loving community starts from here!</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
+        <Button onClick={() => setCount((count) => count + 1)} variant="contained">
           count is {count}
-        </button>
+        </Button>
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
         </p>
