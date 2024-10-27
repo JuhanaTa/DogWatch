@@ -3,34 +3,34 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Container } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
+import InfoCards from '../components/InfoCards';
+import SearchBox from '../components/SearchBox';
 
 function MainPage() {
 
     return (
         <Box sx={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%'
-
         }}>
 
             <Box sx={{
                 backgroundImage: `url(${cover})`,
                 backgroundRepeat: "no-repeat",
-                backgroundSize: "fill",
-                height: 500,
-                backgroundPosition: "center",
+                backgroundSize: "cover",
+                height: '65vh',
+                backgroundPosition: "top",
                 display: 'block',
                 width: '100%'
             }}>
             </Box>
 
-            <Box sx={{ padding: 10, position: 'relative', minHeight: 500 }}>
+            <Box sx={{ padding: 10, position: 'relative' }}>
 
                 <Container
                     sx={{
                         backgroundColor: 'secondary.main',
-                        height: 200,
-                        width: '85vw',
+                        minWidth: '70vw',
                         display: 'block',
                         borderRadius: 10,
                         position: 'absolute',
@@ -40,23 +40,19 @@ function MainPage() {
                         boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)'
                     }}>
 
-                    <h1>Search box</h1>
+                    <SearchBox></SearchBox>
 
                 </Container>
 
             </Box>
 
-            <Box sx={{}}>
-
+            <Box>
+                <Typography variant="h3" gutterBottom sx={{ color: 'text.primary' }}>
+                    Why Choose Us
+                </Typography>
             </Box>
 
-            <Box sx={{}}>
-
-            </Box>
-
-            <Box sx={{}}>
-
-            </Box>
+            <InfoCards></InfoCards>
 
         </Box>
     )

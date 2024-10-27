@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Logo from './assets/logo.svg';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -10,22 +11,12 @@ import { Link as RouterLink, Route, BrowserRouter as Router, Routes } from 'reac
 import Contact from './views/Contact';
 import Search from './views/Search';
 import Footer from './components/Footer';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
-import { ThemeProvider } from '@mui/material/styles';
-import Link from '@mui/material/Link';
+import {AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, Link} from '@mui/material';
 import theme from './theme';
+import { ThemeProvider } from '@mui/material/styles';
+import MenuIcon from '@mui/icons-material/Menu';
+import AdbIcon from '@mui/icons-material/Adb';
+
 
 
 //Changes to LINKs later
@@ -55,27 +46,10 @@ function App() {
     <ThemeProvider theme={theme}>
       <Router>
 
-        <Container>
+        <Box>
           <AppBar position="fixed" color='secondary' elevation={0}>
             <Container maxWidth="xl">
               <Toolbar disableGutters>
-
-                <Typography
-                  variant="h6"
-                  noWrap
-                  component="a"
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'none', md: 'flex' },
-                    fontFamily: 'Inter',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: 'inherit',
-                    textDecoration: 'none',
-                  }}
-                >
-                  DogWatch
-                </Typography>
 
                 <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
 
@@ -137,25 +111,8 @@ function App() {
                   </Menu>
 
                 </Box>
-
-                <Typography
-                  variant="h5"
-                  noWrap
-                  component="a"
-                  href="#app-bar-with-responsive-menu"
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'flex', md: 'none' },
-                    flexGrow: 1,
-                    fontFamily: 'Inter',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: 'inherit',
-                    textDecoration: 'none',
-                  }}
-                >
-                  DogWatch
-                </Typography>
+                
+                <img src={Logo} />
 
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                   <Button>
@@ -217,7 +174,7 @@ function App() {
               </Toolbar>
             </Container>
           </AppBar>
-        </Container>
+        </Box>
 
         <div className='content'>
           <Routes>
