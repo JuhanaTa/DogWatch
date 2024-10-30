@@ -3,14 +3,41 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import Button from '@mui/material/Button';
+import cover from '../assets/backgroundLogin.svg'
+import { Box, Button } from '@mui/material';
+import LoginForm from '../components/LoginForm';
+import RegisterForm from '../components/RegisterForm';
 
-function Login () {
+function Login() {
 
-    const [count, setCount] = useState(0)
+    const [showRegister, setShowRegister] = useState(false)
 
+    const handleForm = (state) => {
+        setShowRegister(state)
+    }
 
-    return(
+    return (
+
+        <Box sx={{
+            backgroundImage: `url(${cover})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            minHeight: '80vh',
+            backgroundPosition: "center",
+            display: 'block',
+            width: '100%'
+        }}>
+
+            {showRegister ? <RegisterForm setShowRegister={setShowRegister}/> : <LoginForm setShowRegister={setShowRegister}/>}
+
+        </Box>
+
+    )
+}
+
+export default Login
+
+/*
         <>
             <h1>Login Page for DogWatch</h1>
             <h1>Our dog loving community starts from here!</h1>
@@ -20,7 +47,4 @@ function Login () {
             </Button>
             </div>
         </>
-    )
-}
-
-export default Login
+*/
