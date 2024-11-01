@@ -8,9 +8,6 @@ import Logo from '../assets/logo.svg';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 
-//Changes to LINKs later
-const settings = ['Profile', 'Bookings', 'Login', 'Logout'];
-
 function TopToolbar() {
 
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -163,19 +160,6 @@ function TopToolbar() {
 
                   </MenuItem>
 
-                </Link>
-
-                <Link component={RouterLink} to="/Bookings" color="primary" sx={{
-                  textDecoration: 'none',
-                  '&:hover': {
-                    textDecoration: 'none',
-                  },
-                }}>
-                  <MenuItem onClick={handleCloseUserMenu}>
-
-                    <Typography sx={{ textAlign: 'center' }}>Bookings</Typography>
-
-                  </MenuItem>
                 </Link>
 
                 <Link component={RouterLink} to="/Login" color="primary" sx={{

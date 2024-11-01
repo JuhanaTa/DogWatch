@@ -13,6 +13,7 @@ import TopToolbar from './components/TopToolbar';
 import {Box} from '@mui/material';
 import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
+import Profile from './views/Profile';
 
 
 function App() {
@@ -24,14 +25,15 @@ function App() {
 
         <TopToolbar></TopToolbar>
 
-        <div className='content'>
+        <Box className='content'>
           <Routes>
+            <Route path="/profile" element={<Profile />} />
             <Route path="/search" element={<Search />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<MainPage />} />
           </Routes>
-        </div>
+        </Box>
         
         <Box sx={{ height: '464px', backgroundColor: 'primary.main'}}>
           <Footer></Footer>

@@ -36,15 +36,3 @@ function Login() {
 }
 
 export default Login
-
-/*
-        <>
-            <h1>Login Page for DogWatch</h1>
-            <h1>Our dog loving community starts from here!</h1>
-            <div className="card">
-            <Button onClick={() => setCount((count) => count + 1)} variant="contained">
-                count is {count}
-            </Button>
-            </div>
-        </>
-*/
