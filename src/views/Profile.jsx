@@ -4,7 +4,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { Box, Button, Container, Tab, Tabs, Typography } from '@mui/material';
-import Logo from '../assets/DogSitterImage.png';
+import ProfileImg from '../assets/DogSitterImage.png';
 import Messages from '../components/Messages';
 import BookingHistory from '../components/BookingHistory';
 import Settings from '../components/Settings';
@@ -67,7 +67,7 @@ function ProfileOwner() {
                         p: 2
                     }}>
 
-                    <img src={Logo} />
+                    <img src={ProfileImg} />
 
                     <Box>
                         <Typography variant='h4'>Meri Suomalainen</Typography>

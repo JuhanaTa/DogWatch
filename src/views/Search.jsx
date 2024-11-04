@@ -52,7 +52,7 @@ function Search () {
                 </Typography>
             </Box>
 
-            <SearchResults></SearchResults>
+            <SearchResults preview={false}></SearchResults>
 
         </Box>
     )

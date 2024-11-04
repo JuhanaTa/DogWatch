@@ -6,6 +6,8 @@ import '@fontsource/roboto/700.css';
 import { Box, Container, Typography } from '@mui/material';
 import InfoCards from '../components/InfoCards';
 import SearchBox from '../components/SearchBox';
+import ReviewCarousel from '../components/ReviewCarousel';
+import SearchResults from '../components/SearchResults';
 
 function MainPage() {
 
@@ -24,6 +26,8 @@ function MainPage() {
                 width: '100%'
             }}>
             </Box>
+
+
 
             <Box sx={{ padding: 10, position: 'relative' }}>
 
@@ -46,13 +50,25 @@ function MainPage() {
 
             </Box>
 
-            <Box>
-                <Typography variant="h3" gutterBottom sx={{ color: 'text.primary' }}>
+            <Box sx={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 2
+            }}>
+
+                <Typography variant="h4">
                     Why Choose Us
                 </Typography>
-            </Box>
 
-            <InfoCards></InfoCards>
+                <InfoCards></InfoCards>
+
+                <ReviewCarousel></ReviewCarousel>
+
+                <Typography variant="h4">
+                    Our Dog Sitters
+                </Typography>
+
+                <SearchResults preview={true}></SearchResults>
+
+            </Box>
 
         </Box>
     )
