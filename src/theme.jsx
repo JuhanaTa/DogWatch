@@ -9,6 +9,8 @@ const theme = createTheme({
       secondary: {
         main: '#FFFFFF', // Custom secondary color
       },
+
+      //Define here custom colors to other elements e.g. error, warning success etc. if needed
     },
   });
 

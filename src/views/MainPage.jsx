@@ -30,24 +30,7 @@ function MainPage() {
 
 
             <Box sx={{ padding: 10, position: 'relative' }}>
-
-                <Container
-                    sx={{
-                        backgroundColor: 'secondary.main',
-                        minWidth: '70vw',
-                        display: 'block',
-                        borderRadius: 10,
-                        position: 'absolute',
-                        top: '0%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)'
-                    }}>
-
-                    <SearchBox></SearchBox>
-
-                </Container>
-
+                <SearchBox></SearchBox>
             </Box>
 
             <Box sx={{

@@ -7,8 +7,10 @@ import { Link } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function RegisterForm({setShowRegister}) {
+    const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPass, setShowConfirmPass] = useState(false);
@@ -104,7 +106,7 @@ function RegisterForm({setShowRegister}) {
 
                 <Typography variant="p" sx={{ color: 'text.primary', p: 1 }}>Choose your role:</Typography>
 
-                <Button sx={{ width: 175, m: 1  }} LinkComponent={Link} to="/" variant="contained">Create Account</Button>
+                <Button sx={{ width: 175, m: 1  }} onClick={()=>{navigate(`/`)}} variant="contained">Create Account</Button>
 
                 <Typography variant="p" sx={{ color: 'text.primary', p: 1 }}>
                     Have you already created an account?{" "}

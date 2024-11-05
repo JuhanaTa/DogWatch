@@ -14,6 +14,7 @@ import {Box} from '@mui/material';
 import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import Profile from './views/Profile';
+import PublicProfile from './views/PublicProfile';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
 
         <Box className='content'>
           <Routes>
+            <Route path="/publicprofile" element={<PublicProfile />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/search" element={<Search />} />
             <Route path="/contact" element={<Contact />} />

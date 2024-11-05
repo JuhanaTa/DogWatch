@@ -22,17 +22,17 @@ function ProfileOwner() {
         const { children, value, index, ...other } = props;
 
         return (
-            <div
+            <Box
                 role="tabpanel"
                 hidden={value !== index}
-                id={`simple-tabpanel-${index}`}
-                aria-labelledby={`simple-tab-${index}`}
+                id={`tabpanel-${index}`}
                 {...other}
+                sx={{p: 2}}
             >
                 {value === 0 && <Messages></Messages>}
                 {value === 1 && <BookingHistory></BookingHistory>}
                 {value === 2 && <Settings></Settings>}   
-            </div>
+            </Box>
         );
     }
 

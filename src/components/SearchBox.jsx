@@ -1,10 +1,12 @@
 import { AccountCircle } from '@mui/icons-material';
-import { Box, FormControl, InputLabel, Select, MenuItem, Button, TextField, InputAdornment, Rating, Typography } from '@mui/material';
+import { Box, FormControl, InputLabel, Select, MenuItem, Button, TextField, InputAdornment, Rating, Typography, Container } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
+import { useNavigate } from 'react-router-dom';
 
 function SearchBox() {
+    const navigate = useNavigate();
 
     const [service, setService] = useState('');
     const [rating, setRating] = useState(0);
@@ -21,7 +23,22 @@ function SearchBox() {
 
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', p: 4 }}>
+
+        <Container
+            sx={{
+                backgroundColor: 'secondary.main',
+                minWidth: '70vw',
+                display: 'flex',
+                flexDirection: 'column',
+                p: 4,
+                borderRadius: 10,
+                position: 'absolute',
+                top: '0%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)'
+            }}>
+
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
 
                 <FormControl sx={{ m: 1, width: 150 }}>
@@ -74,11 +91,12 @@ function SearchBox() {
             </Box>
 
             <Box>
-                <Button LinkComponent={Link} to="/search" variant="contained">Search</Button>
+                <Button onClick={()=>{navigate(`/search`)}} variant="contained">Search</Button>
             </Box>
 
+        </Container>
 
-        </Box>
+
 
 
     )

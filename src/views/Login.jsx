@@ -7,6 +7,7 @@ import cover from '../assets/backgroundLogin.svg'
 import { Box, Button } from '@mui/material';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
 

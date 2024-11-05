@@ -8,9 +8,10 @@ import { Box, Button, FormControl, IconButton, InputAdornment, InputLabel, Outli
 import { Link } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-
+import { useNavigate } from 'react-router-dom';
 
 function LoginForm({setShowRegister}) {
+    const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -71,7 +72,7 @@ function LoginForm({setShowRegister}) {
                     />
                 </FormControl>
 
-                <Button sx={{ width: 100, m: 1 }} LinkComponent={Link} to="/" variant="contained">Sign In</Button>
+                <Button sx={{ width: 100, m: 1 }} onClick={()=>{navigate(`/`)}} variant="contained">Sign In</Button>
 
                 <Typography variant="p" sx={{ color: 'text.primary' }}>
                     Don't have an account yet?{" "}
