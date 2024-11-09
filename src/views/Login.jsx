@@ -13,9 +13,7 @@ function Login() {
 
     const [showRegister, setShowRegister] = useState(false)
 
-    const handleForm = (state) => {
-        setShowRegister(state)
-    }
+    
 
     return (
 

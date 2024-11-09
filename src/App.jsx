@@ -10,40 +10,54 @@ import Contact from './views/Contact';
 import Search from './views/Search';
 import Footer from './components/Footer';
 import TopToolbar from './components/TopToolbar';
-import {Box} from '@mui/material';
+import { Box } from '@mui/material';
 import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import Profile from './views/Profile';
 import PublicProfile from './views/PublicProfile';
+import { configureStore } from '@reduxjs/toolkit';
+import UserReducer from './reducers/UserReducer';
+import { Provider } from 'react-redux';
 
 
 function App() {
 
+  const store = configureStore({
+    reducer: {
+      user: UserReducer
+    }
+  })
+
+
   return (
-    <ThemeProvider theme={theme}>
+    <Provider store={store}>
 
-      <Router>
+      <ThemeProvider theme={theme}>
 
-        <TopToolbar></TopToolbar>
+        <Router>
 
-        <Box className='content'>
-          <Routes>
-            <Route path="/publicprofile" element={<PublicProfile />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/search" element={<Search />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<MainPage />} />
-          </Routes>
-        </Box>
-        
-        <Box sx={{ height: '464px', backgroundColor: 'primary.main'}}>
-          <Footer></Footer>
-        </Box>
+          <TopToolbar></TopToolbar>
 
-      </Router>
+          <Box className='content'>
+            <Routes>
+              <Route path="/publicprofile" element={<PublicProfile />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/search" element={<Search />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/" element={<MainPage />} />
+            </Routes>
+          </Box>
 
-    </ThemeProvider>
+          <Box sx={{ height: '464px', backgroundColor: 'primary.main' }}>
+            <Footer></Footer>
+          </Box>
+
+        </Router>
+
+      </ThemeProvider>
+
+    </Provider>
   )
 }
 

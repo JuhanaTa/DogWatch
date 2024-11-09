@@ -7,11 +7,14 @@ import { Link as RouterLink } from 'react-router-dom';
 import Logo from '../assets/logo.svg';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { userLogout } from '../reducers/UserReducer'
 
 function TopToolbar() {
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
+  //const [user, setUser] = useState(getUserData())
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -26,6 +29,14 @@ function TopToolbar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const { user, loading, error } = useSelector((state) => state.user)
+
+  const dispatch = useDispatch();
+
+  const handleUserLogout = () => {
+      dispatch(userLogout());
   };
 
 
@@ -131,6 +142,7 @@ function TopToolbar() {
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
+              {user && <Typography>{user.email}</Typography>}
               <Menu
                 sx={{ mt: '45px' }}
                 id="menu-appbar"
@@ -175,18 +187,11 @@ function TopToolbar() {
                   </MenuItem>
                 </Link>
 
-                <Link component={RouterLink} to="/Logout" color="primary" sx={{
-                  textDecoration: 'none',
-                  '&:hover': {
-                    textDecoration: 'none',
-                  },
-                }}>
-                  <MenuItem onClick={handleCloseUserMenu}>
+                <MenuItem onClick={(e) => handleUserLogout(e)}>
 
-                    <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
+                  <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
 
-                  </MenuItem>
-                </Link>
+                </MenuItem>
 
               </Menu>
             </Box>
