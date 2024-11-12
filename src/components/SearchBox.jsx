@@ -26,7 +26,7 @@ function SearchBox() {
 
         <Container
             sx={{
-                backgroundColor: 'secondary.main',
+                backgroundColor: 'background.paper',
                 minWidth: '70vw',
                 display: 'flex',
                 flexDirection: 'column',

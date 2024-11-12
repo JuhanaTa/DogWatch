@@ -39,8 +39,12 @@ function LoginForm({ setShowRegister }) {
         event.preventDefault();
 
         let credentials = {
-            email,
-            password
+            firstname: 'Tester',
+            lastname: 'Testing',
+            username: 'Test',
+            desc: 'This is test desc',
+            email: email,
+            password: password
         }
 
         dispatch(userLogin(credentials)).then((result) => {
@@ -57,7 +61,7 @@ function LoginForm({ setShowRegister }) {
             <Box sx={{
                 width: '45vw',
                 maxWidth: 700,
-                backgroundColor: 'secondary.main',
+                backgroundColor: 'background.paper',
                 position: 'absolute',
                 top: '50%',
                 left: '15%',
@@ -112,7 +116,6 @@ function LoginForm({ setShowRegister }) {
                         sx={{ width: 100, m: 1 }}
                         onClick={(e) => {
                             handleLogin(e)
-                            //navigate(`/`) 
                         }}
                         variant="contained"
                     >

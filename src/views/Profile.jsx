@@ -7,7 +7,7 @@ import { Box, Button, Container, Tab, Tabs, Typography } from '@mui/material';
 import ProfileImg from '../assets/DogSitterImage.png';
 import Messages from '../components/Messages';
 import BookingHistory from '../components/BookingHistory';
-import Settings from '../components/Settings';
+import Settings from '../components/UserSettings';
 
 function ProfileOwner() {
 
@@ -53,7 +53,7 @@ function ProfileOwner() {
 
                 <Box
                     sx={{
-                        backgroundColor: 'secondary.main',
+                        backgroundColor: 'background.paper',
                         width: '90vw',
                         display: 'flex',
                         position: 'absolute',
@@ -82,7 +82,7 @@ function ProfileOwner() {
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="Messages" />
                     <Tab label="Booking History" />
-                    <Tab label="Settings" />
+                    <Tab label="Account settings" />
 
                 </Tabs>
             </Box>
@@ -93,7 +93,7 @@ function ProfileOwner() {
                 Booking History
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-                Settings
+                Account settings
             </CustomTabPanel>
 
         </Box>

@@ -35,7 +35,7 @@ function RegisterForm({setShowRegister}) {
             <Box sx={{
                 width: '45vw',
                 maxWidth: 700,
-                backgroundColor: 'secondary.main',
+                backgroundColor: 'background.paper',
                 position: 'absolute',
                 top: '50%',
                 left: '15%',
