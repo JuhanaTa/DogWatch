@@ -5,12 +5,12 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { Box, Button, Container, FormControl, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import ProfilePhoto from '../assets/ProfilePhoto.png';
+import ProfilePhoto from '../assets/sitter4.jpg';
 import { useDispatch, useSelector } from 'react-redux';
 import { userEdit } from '../reducers/UserReducer';
 
 function UserSettings() {
-    const { user, loading, error } = useSelector((state) => state.user)
+    const { user, userLoading, userError } = useSelector((state) => state.user)
 
     const [firstname, setFirstname] = useState(user.firstname)
     const [lastname, setLastname] = useState(user.lastname)

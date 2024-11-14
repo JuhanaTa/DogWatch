@@ -3,8 +3,8 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { AppBar, Avatar, Box, Button, Container, IconButton, Link, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
-import Logo from '../assets/logo.svg';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import Logo from '../assets/logo.png';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,12 +31,15 @@ function TopToolbar() {
     setAnchorElUser(null);
   };
 
-  const { user, loading, error } = useSelector((state) => state.user)
+  const { user, userLoading, userError } = useSelector((state) => state.user)
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleUserLogout = () => {
-      dispatch(userLogout());
+    dispatch(userLogout());
+    handleCloseUserMenu()
+    navigate(`/`);
   };
 
 
@@ -107,7 +110,7 @@ function TopToolbar() {
 
             </Box>
 
-            <img src={Logo} />
+            <img style={{ width: 300}} src={Logo} />
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Button>
@@ -174,25 +177,29 @@ function TopToolbar() {
 
                 </Link>
 
-                <Link component={RouterLink} to="/Login" color="primary" sx={{
-                  textDecoration: 'none',
-                  '&:hover': {
-                    textDecoration: 'none',
-                  },
-                }}>
-                  <MenuItem onClick={handleCloseUserMenu}>
 
-                    <Typography sx={{ textAlign: 'center' }}>Login</Typography>
+                {!user &&
+                  <Link component={RouterLink} to="/Login" color="primary" sx={{
+                    textDecoration: 'none',
+                    '&:hover': {
+                      textDecoration: 'none',
+                    },
+                  }}>
+                    <MenuItem onClick={handleCloseUserMenu}>
+
+                      <Typography sx={{ textAlign: 'center' }}>Login</Typography>
+
+                    </MenuItem>
+                  </Link>
+                }
+
+                {user &&
+                  <MenuItem onClick={(e) => handleUserLogout(e)}>
+
+                    <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
 
                   </MenuItem>
-                </Link>
-
-                <MenuItem onClick={(e) => handleUserLogout(e)}>
-
-                  <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
-
-                </MenuItem>
-
+                }
               </Menu>
             </Box>
 

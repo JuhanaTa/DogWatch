@@ -25,16 +25,11 @@ const currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getIt
 const UserReducer = createSlice({
     name: 'user',
     initialState: {
-        loading: false,
+        userLoading: false,
         user: currentUser,
-        error: null
+        userError: null
     },
     reducers: {
-        /*userEdit: (state) => {
-            localStorage.removeItem('user');
-            localStorage.setItem('user', JSON.stringify(credentials))
-        }*/
-
         userLogout: (state) => {
             // Clear user state and localStorage on logout
             state.user = null;
@@ -45,20 +40,20 @@ const UserReducer = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(userLogin.pending, (state) => {
-                state.loading = true;
+                state.userLoading = true;
                 state.user = null;
-                state.error = null;
+                state.userError = null;
             })
             .addCase(userLogin.fulfilled, (state, action) => {
-                state.loading = false;
+                state.userLoading = false;
                 state.user = action.payload;
-                state.error = null;
+                state.userError = null;
             })
             .addCase(userLogin.rejected, (state, action) => {
-                state.loading = false;
+                state.userLoading = false;
                 state.user = null;
                 //console.log(action.error.message);
-                state.error = action.error.message;
+                state.userError = action.error.message;
             })
             .addCase(userEdit.pending, (state) => {
                 state.status = 'loading';
@@ -69,7 +64,7 @@ const UserReducer = createSlice({
             })
             .addCase(userEdit.rejected, (state, action) => {
                 state.status = 'failed';
-                state.error = action.error.message;
+                state.userError = action.error.message;
             });
     }
 })

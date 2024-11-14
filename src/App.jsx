@@ -18,13 +18,15 @@ import PublicProfile from './views/PublicProfile';
 import { configureStore } from '@reduxjs/toolkit';
 import UserReducer from './reducers/UserReducer';
 import { Provider } from 'react-redux';
+import SearchReducer from './reducers/SearchReducer';
 
 
 function App() {
 
   const store = configureStore({
     reducer: {
-      user: UserReducer
+      user: UserReducer,
+      search: SearchReducer
     }
   })
 
@@ -40,7 +42,7 @@ function App() {
 
           <Box className='content'>
             <Routes>
-              <Route path="/publicprofile" element={<PublicProfile />} />
+              <Route path="/publicprofile/:userId" element={<PublicProfile />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/search" element={<Search />} />
               <Route path="/contact" element={<Contact />} />

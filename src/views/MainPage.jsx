@@ -1,4 +1,4 @@
-import cover from '../assets/backgroundMain.svg'
+import cover from '../assets/landing_page.jpg'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';

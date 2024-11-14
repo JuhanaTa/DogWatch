@@ -1,4 +1,4 @@
-import cover from '../assets/backgroundSearch.svg'
+import cover from '../assets/search_page.jpg'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';

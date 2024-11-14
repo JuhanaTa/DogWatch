@@ -1,4 +1,3 @@
-import cover from '../assets/backgroundSearch.svg'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -6,35 +5,16 @@ import '@fontsource/roboto/700.css';
 import SearchBox from '../components/SearchBox';
 import { Avatar, Box, Divider, ListItem, ListItemButton, ListItemText, Rating, Typography } from '@mui/material';
 import { FixedSizeList } from 'react-window';
+import { format } from 'date-fns';
 
-function ReviewList() {
-
-    const reviews = [
-        {
-            name: 'Guy Hawkins',
-            rating: 5,
-            ratingText: 'Absolutely wonderful experience! My dog was well cared for, and the sitter sent regular updates with photos. I felt so at ease during my trip.'
-        },
-        {
-            name: 'Dianne Russell',
-            rating: 4,
-            ratingText: 'This dog sitter was amazing! They treated my dog like family, and I could tell my pup was very happy and relaxed when I returned'
-        },
-        {
-            name: 'Bessie Cooper',
-            rating: 5,
-            ratingText: 'I’ve never seen my dog this calm after coming home from being watched. They took such good care of her, and even gave her some extra playtime!'
-        },
-        {
-            name: 'Bessie Cooper',
-            rating: 5,
-            ratingText: 'I’ve never seen my dog this calm after coming home from being watched. They took such good care of her, and even gave her some extra playtime!'
-        },
-
-    ]
+function ReviewList({reviews}) {
 
     function reviewItem(props) {
         const { index, style } = props;
+
+        const date = new Date(reviews[index].created_at * 1000);
+        const formattedDate = format(date, 'MMMM dd, yyyy HH:mm');
+
         return (
             <ListItem
                 style={{
@@ -57,9 +37,10 @@ function ReviewList() {
                     flexDirection: 'column',
                     alignItems: 'flex-start'
                 }}>
-                    <Typography variant='h6'>{reviews[index].name}</Typography>
+                    <Typography variant='h6'>{reviews[index].from}</Typography>
                     <Rating name="read-only" value={reviews[index].rating} readOnly />
-                    <Typography variant='p'>{reviews[index].ratingText}</Typography>
+                    <Typography variant='p'>{formattedDate}</Typography>
+                    <Typography variant='p'>{reviews[index].comment}</Typography>
                 </Box>
 
             </ListItem>
@@ -73,7 +54,7 @@ function ReviewList() {
 
             <FixedSizeList
                 height={400}
-                itemSize={120}
+                itemSize={160}
                 itemCount={reviews.length}
                 overscanCount={5}
             >

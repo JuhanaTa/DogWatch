@@ -4,14 +4,21 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { Box, Button, Container, FormControl, InputLabel, MenuItem, Modal, Select, Tab, Tabs, Typography } from '@mui/material';
-import ProfileImg from '../assets/DogSitterImage.png';
+import ProfileImg from '../assets/sitter3.jpg';
 import ReviewList from '../components/ReviewList';
 import RequestBooking from '../components/RequestBooking';
+import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 function PublicProfile() {
-
+    const { searchResults } = useSelector((state) => state.search)
     const [rating, setRating] = useState(5);
     const [bookingOpen, setBookingOpen] = useState(false);
+
+
+    const { userId } = useParams();
+    const viewedProfile = searchResults.find(search => search.userId === parseInt(userId));
+    console.log(userId, searchResults, viewedProfile)
 
     const handleRating = (event) => {
         setRating(event.target.value);
@@ -72,31 +79,32 @@ function PublicProfile() {
                         p: 2
                     }}>
 
-                    <img src={ProfileImg} />
+                    <img style={{ width: 200}} src={ProfileImg} />
 
                     <Box>
-                        <Typography variant='h4'>Meri Suomalainen</Typography>
-                        <Typography variant='p'>Mother of Charlie</Typography>
+                        <Typography variant='h4'>{viewedProfile.firstname} {viewedProfile.lastname}</Typography>
+                        <Typography variant='p'>--</Typography>
                     </Box>
 
                 </Box>
 
             </Box>
 
-            <Box sx={{ width: '95vw', p: 2, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2 }}>
+            <Box sx={{ width: '95vw', pb: 2, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2 }}>
 
-                <Box sx={{ flex: 1, p: 2, border: '1px solid' }}>
+                <Box sx={{ 
+                    flex: 1,
+                    p: 2, 
+                    border: '1px solid',
+                    minWidth: 350,
+                    height: ''
+                    }}>
                     <Typography variant='h6'>ABOUT ME</Typography>
-                    <Typography variant='p'>Hi there! I'm Liam, a passionate dog lover based in Helsinki, offering reliable dog walking and daycare services for your furry friends.
-
-                        As an experienced pet sitter, I understand that every dog is unique, and I take pride in providing personalized care tailored to each dog’s needs. Whether it's a fun walk through Helsinki's beautiful parks or a cozy day at home with plenty of playtime, I ensure your dog is safe, happy, and well cared for.
-
-                        I’m dedicated to creating a comfortable and engaging environment for dogs of all sizes and breeds. With regular updates, you’ll always know your pet is in great hands. Let me take care of your dog's daily exercise and social needs, giving you peace of mind while you're away.
-
-                        Feel free to reach out—I’d love to meet you and your dog!
+                    <Typography variant='p'>
+                        {viewedProfile.desc}
                     </Typography>
 
-                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                         <Button
                             variant="contained"
                             onClick={() => { handleBookingForm() }}
@@ -107,7 +115,13 @@ function PublicProfile() {
                     </Box>
                 </Box>
 
-                <Box sx={{ flex: 2, p: 2, width: '100%', minWidth: 400, border: '1px solid' }}>
+                <Box sx={{ 
+                    flex: 2, 
+                    p: 2, 
+                    width: '100%', 
+                    minWidth: 400, 
+                    border: '1px solid',
+                }}>
 
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row' }}>
 
@@ -132,7 +146,7 @@ function PublicProfile() {
 
                     </Box>
 
-                    <ReviewList></ReviewList>
+                    <ReviewList reviews={viewedProfile.reviews}></ReviewList>
                 </Box>
 
             </Box>

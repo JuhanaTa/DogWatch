@@ -3,7 +3,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import cover from '../assets/backgroundLogin.svg'
+import cover from '../assets/dog4.jpg'
 import { Box, Button } from '@mui/material';
 import LoginForm from '../components/LoginForm';
 import RegisterForm from '../components/RegisterForm';

@@ -19,7 +19,7 @@ function LoginForm({ setShowRegister }) {
     const [password, setPassword] = useState('')
 
     //redux states
-    const { loading, error } = useSelector((state) => state.user)
+    const { userLoading, userError } = useSelector((state) => state.user)
 
     const navigate = useNavigate();
 
@@ -109,7 +109,7 @@ function LoginForm({ setShowRegister }) {
                     />
                 </FormControl>
 
-                {loading ?
+                {userLoading ?
                     <CircularProgress />
                     :
                     <Button
@@ -123,7 +123,7 @@ function LoginForm({ setShowRegister }) {
                     </Button>
                 }
 
-                {error && (
+                {userError && (
                     <Typography>Login failed</Typography>
                 )}
 

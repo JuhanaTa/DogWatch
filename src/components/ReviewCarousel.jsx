@@ -1,5 +1,5 @@
 import { Box, Typography, List, ListItem, IconButton } from '@mui/material';
-import ProfileImg from '../assets/DogSitterImage.png';
+import ProfileImg from '../assets/sitter3.jpg';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useState } from 'react';
