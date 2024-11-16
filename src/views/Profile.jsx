@@ -8,6 +8,7 @@ import ProfileImg from '../assets/sitter3.jpg';
 import Messages from '../components/Messages';
 import BookingHistory from '../components/BookingHistory';
 import Settings from '../components/UserSettings';
+import BookingRequests from '../components/BookingRequests';
 
 function ProfileOwner() {
 
@@ -16,7 +17,6 @@ function ProfileOwner() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
-
 
     function CustomTabPanel(props) {
         const { children, value, index, ...other } = props;
@@ -27,13 +27,15 @@ function ProfileOwner() {
                 hidden={value !== index}
                 id={`tabpanel-${index}`}
                 {...other}
-                sx={{p: 2}}
+                sx={{ p: 2 }}
             >
-                {value === 0 && <Messages></Messages>}
-                {value === 1 && <BookingHistory></BookingHistory>}
-                {value === 2 && <Settings></Settings>}   
+                {value === 0 && <BookingRequests></BookingRequests>}
+                {value === 1 && <Messages></Messages>}
+                {value === 2 && <BookingHistory></BookingHistory>}
+                {value === 3 && <Settings></Settings>}
             </Box>
         );
+
     }
 
     return (
@@ -44,30 +46,32 @@ function ProfileOwner() {
 
             <Box sx={{
                 backgroundColor: 'primary.main',
-                height: '20vh',
+                height: 200,
                 width: '100%'
             }}>
             </Box>
 
-            <Box sx={{ padding: 10, position: 'relative' }}>
+            <Box sx={{ p: 6, position: 'relative' }}>
 
                 <Box
                     sx={{
                         backgroundColor: 'background.paper',
                         width: '90vw',
+                        height: 200,
                         display: 'flex',
                         position: 'absolute',
                         top: '0%',
                         left: '50%',
-                        transform: 'translate(-50%, -50%)',
+                        transform: 'translate(-50%, -65%)',
                         boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        flexWrap: 'wrap',
                         p: 2
                     }}>
 
-                    <img style={{ width: 200}} src={ProfileImg} />
+                    <img style={{ width: 200, borderRadius: '50%' }} src={ProfileImg} />
 
                     <Box>
                         <Typography variant='h4'>Meri Suomalainen</Typography>
@@ -78,21 +82,33 @@ function ProfileOwner() {
 
             </Box>
 
-            <Box sx={{ borderBottom: 1, borderColor: 'divider', width: '90vw', paddingBottom: 2 }}>
+            <Box sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                borderBottom: 1,
+                borderColor: 'divider',
+                width: '90vw',
+                paddingBottom: 2
+            }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                    <Tab label="Booking Requests" />
                     <Tab label="Messages" />
                     <Tab label="Booking History" />
                     <Tab label="Account settings" />
 
                 </Tabs>
             </Box>
+
             <CustomTabPanel value={value} index={0}>
-                Messages
+                Booking Requests
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-                Booking History
+                Messages
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
+                Booking History
+            </CustomTabPanel>
+            <CustomTabPanel value={value} index={3}>
                 Account settings
             </CustomTabPanel>
 

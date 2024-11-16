@@ -21,7 +21,7 @@ function MainPage() {
                 backgroundRepeat: "no-repeat",
                 backgroundSize: "cover",
                 height: '65vh',
-                backgroundPosition: "top",
+                backgroundPosition: "center",
                 display: 'block',
                 width: '100%'
             }}>

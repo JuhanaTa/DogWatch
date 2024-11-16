@@ -2,7 +2,6 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import SearchBox from '../components/SearchBox';
 import { Avatar, Box, Divider, ListItem, ListItemButton, ListItemText, Rating, Typography } from '@mui/material';
 import { FixedSizeList } from 'react-window';
 import { format } from 'date-fns';
@@ -26,7 +25,6 @@ function ReviewList({reviews}) {
                 component="div"
                 disablePadding
             >
-
 
                 <Box sx={{p: 1}}>
                     <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />                

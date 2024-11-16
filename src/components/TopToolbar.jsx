@@ -110,7 +110,7 @@ function TopToolbar() {
 
             </Box>
 
-            <img style={{ width: 300}} src={Logo} />
+            <img style={{ width: 300 }} src={Logo} />
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Button>
@@ -162,7 +162,7 @@ function TopToolbar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                <Link component={RouterLink} to="/Profile" color="primary" sx={{
+                <Link component={RouterLink} to="/profile" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',

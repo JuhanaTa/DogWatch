@@ -12,8 +12,6 @@ function SearchBox() {
     const dispatch = useDispatch();
 
     const { searchParameters, availableLocations, serviceTypes, searchLoading } = useSelector((state) => state.search)
-    const { user } = useSelector((state) => state.user)
-
     const [service, setService] = useState(searchParameters.service);
     const [location, setLocation] = useState(searchParameters.location)
     const [rating, setRating] = useState(searchParameters.rating);
@@ -34,23 +32,18 @@ function SearchBox() {
     const handleSearch = (event) => {
         event.preventDefault();
 
-        if (user) {
-            let filters = {
-                service: service,
-                location: location,
-                rating: rating,
-            }
-
-            dispatch(searchSitters(filters)).then((result) => {
-                if (result.payload) {
-                    //Finally go to search page when sitters fetched
-                    navigate(`/search`)
-                }
-            })
-        } else {
-            //User not signed in. User needs to login.
-            navigate(`/login`)
+        let filters = {
+            service: service,
+            location: location,
+            rating: rating,
         }
+
+        dispatch(searchSitters(filters)).then((result) => {
+            if (result.payload) {
+                //Finally go to search page when sitters fetched
+                navigate(`/search`)
+            }
+        })
 
     }
 

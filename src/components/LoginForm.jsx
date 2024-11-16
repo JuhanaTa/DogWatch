@@ -44,7 +44,7 @@ function LoginForm({ setShowRegister }) {
             username: 'Test',
             desc: 'This is test desc',
             email: email,
-            password: password
+            password: password,
         }
 
         dispatch(userLogin(credentials)).then((result) => {
@@ -124,7 +124,7 @@ function LoginForm({ setShowRegister }) {
                 }
 
                 {userError && (
-                    <Typography>Login failed</Typography>
+                    <Typography variant='p'>Login failed</Typography>
                 )}
 
                 <Typography variant="p" sx={{ color: 'text.primary' }}>

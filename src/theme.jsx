@@ -10,6 +10,12 @@ const theme = createTheme({
         main: '#FFFFFF', // Custom secondary color
       },
 
+      text: {
+        primary: "#000000",
+        highlight: '#D99528',
+        white: '#FFFFFF'
+      }
+
       //Define here custom colors to other elements e.g. error, warning success etc. if needed
     },
   });

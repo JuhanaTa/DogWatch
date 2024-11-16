@@ -5,7 +5,7 @@ import '@fontsource/roboto/700.css';
 import './App.css'
 import MainPage from './views/MainPage';
 import Login from './views/Login';
-import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Contact from './views/Contact';
 import Search from './views/Search';
 import Footer from './components/Footer';
@@ -17,7 +17,7 @@ import Profile from './views/Profile';
 import PublicProfile from './views/PublicProfile';
 import { configureStore } from '@reduxjs/toolkit';
 import UserReducer from './reducers/UserReducer';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import SearchReducer from './reducers/SearchReducer';
 
 
@@ -30,6 +30,17 @@ function App() {
     }
   })
 
+  const ProtectedRoute = ({ children }) => {
+    const { user } = useSelector((state) => state.user);
+
+    //
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+
+    return children;
+  };
+
 
   return (
     <Provider store={store}>
@@ -41,17 +52,33 @@ function App() {
           <TopToolbar></TopToolbar>
 
           <Box className='content'>
+
             <Routes>
               <Route path="/publicprofile/:userId" element={<PublicProfile />} />
-              <Route path="/profile" element={<Profile />} />
               <Route path="/search" element={<Search />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/login" element={<Login />} />
               <Route path="/" element={<MainPage />} />
+
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+
             </Routes>
+
           </Box>
 
-          <Box sx={{ height: '464px', backgroundColor: 'primary.main' }}>
+          <Box sx={{
+            backgroundColor: 'primary.main',
+            display: 'flex',
+            justifyContent: 'center',
+            p: 10
+          }}>
             <Footer></Footer>
           </Box>
 

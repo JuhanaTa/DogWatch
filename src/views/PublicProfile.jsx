@@ -56,7 +56,7 @@ function PublicProfile() {
 
             <Box sx={{
                 backgroundColor: 'primary.main',
-                height: '20vh',
+                height: 200,
                 width: '100%'
             }}>
             </Box>
@@ -71,7 +71,7 @@ function PublicProfile() {
                         position: 'absolute',
                         top: '0%',
                         left: '50%',
-                        transform: 'translate(-50%, -50%)',
+                        transform: 'translate(-50%, -65%)',
                         boxShadow: '0px 2px 4px rgba(0, 0, 0, 0.2)',
                         flexDirection: 'row',
                         alignItems: 'center',

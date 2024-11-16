@@ -1,14 +1,9 @@
-import { useState } from 'react'
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import { Box, Button, Container, Tab, Tabs, Typography } from '@mui/material';
-import BookingItem from './BookingItem';
+import { Box, Typography } from '@mui/material';
+import BookingRequestItem from './BookingRequestItem';
 
-function BookingHistory() {
+function BookingRequests() {
 
-    const bookings = [
+    const bookingRequests = [
         {
             serviceType: 'Dog sitting',
             startDate: 1731612988,
@@ -52,10 +47,10 @@ function BookingHistory() {
             gap: 2
         }}>
 
-            <Typography variant='h4'>Booking History</Typography>
+            <Typography variant='h4'>Booking Requests</Typography>
 
-            {bookings.map((booking, index) => (
-                <BookingItem key={index} booking={booking} currentDate={currentDate}></BookingItem>
+            {bookingRequests.map((booking, index) => (
+                <BookingRequestItem key={index} booking={booking} currentDate={currentDate}></BookingRequestItem>
             ))}
 
         </Box>
@@ -63,4 +58,4 @@ function BookingHistory() {
     )
 }
 
-export default BookingHistory
+export default BookingRequests
