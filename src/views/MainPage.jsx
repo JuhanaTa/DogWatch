@@ -29,12 +29,12 @@ function MainPage() {
 
 
 
-            <Box sx={{ padding: 10, position: 'relative' }}>
+            <Box sx={{ padding: 7, position: 'relative' }}>
                 <SearchBox></SearchBox>
             </Box>
 
             <Box sx={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: 2
+                display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 2
             }}>
 
                 <Typography variant="h4">

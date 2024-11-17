@@ -44,11 +44,11 @@ function RegisterForm({ setShowRegister }) {
     };
 
     const handleChangeSitter = (event) => {
-        setRoleChecked([!roleChecked[0], roleChecked[1]]);
+        setRoleChecked([!roleChecked[0], !roleChecked[0] ? false : roleChecked[1]]);
     };
 
     const handleChangeOwner = (event) => {
-        setRoleChecked([roleChecked[0], !roleChecked[1]]);
+        setRoleChecked([!roleChecked[1] ? false : roleChecked[0], !roleChecked[1]]);
     };
 
     const handleRegister = (event) => {
@@ -204,7 +204,7 @@ function RegisterForm({ setShowRegister }) {
                     {userLoading ?
                         <CircularProgress />
                         :
-                        <Button sx={{ width: 175 }} onClick={handleRegister} variant="contained">Create Account</Button>
+                        <Button onClick={handleRegister} variant="contained">Create Account</Button>
                     }
 
                     {userError && (

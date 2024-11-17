@@ -68,14 +68,15 @@ function ProfileOwner() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexWrap: 'wrap',
-                        p: 2
+                        p: 2,
+                        gap: 2
                     }}>
 
                     <img style={{ width: 200, borderRadius: '50%' }} src={ProfileImg} />
 
-                    <Box>
-                        <Typography variant='h4'>Meri Suomalainen</Typography>
-                        <Typography variant='p'>Mother of Charlie</Typography>
+                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                        <Typography align='left' variant='h4'>Meri Suomalainen</Typography>
+                        <Typography align='left' variant='p'>Mother of Charlie</Typography>
                     </Box>
 
                 </Box>

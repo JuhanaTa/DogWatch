@@ -68,12 +68,13 @@ function LoginForm({ setShowRegister }) {
                 transform: 'translate(-10%, -50%)',
                 display: 'flex',
                 flexDirection: 'column',
-                p: 4
+                p: 4,
+                gap: 2
             }}>
 
                 <Typography variant="h4" sx={{ color: 'text.primary' }}>Log In</Typography>
 
-                <FormControl sx={{ m: 1, width: '25ch' }}>
+                <FormControl sx={{ width: '100%' }}>
                     <TextField
                         id="user-input"
                         label="Username or email address..."
@@ -83,7 +84,7 @@ function LoginForm({ setShowRegister }) {
                     />
                 </FormControl>
 
-                <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
+                <FormControl sx={{ width: '100%' }} variant="outlined">
                     <InputLabel htmlFor="outlined-adornment-password">Create Password</InputLabel>
                     <OutlinedInput
                         id="outlined-adornment-password"
@@ -113,7 +114,7 @@ function LoginForm({ setShowRegister }) {
                     <CircularProgress />
                     :
                     <Button
-                        sx={{ width: 100, m: 1 }}
+                        sx={{ width: 100 }}
                         onClick={(e) => {
                             handleLogin(e)
                         }}
@@ -127,7 +128,7 @@ function LoginForm({ setShowRegister }) {
                     <Typography variant='p'>Login failed</Typography>
                 )}
 
-                <Typography variant="p" sx={{ color: 'text.primary' }}>
+                <Typography align='left' variant="p" sx={{ color: 'text.primary' }}>
                     Don't have an account yet?{" "}
                     <Link onClick={() => setShowRegister(true)} color="inherit">
                         Create it now!

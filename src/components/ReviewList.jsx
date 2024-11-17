@@ -52,7 +52,7 @@ function ReviewList({reviews}) {
 
             <FixedSizeList
                 height={400}
-                itemSize={160}
+                itemSize={175}
                 itemCount={reviews.length}
                 overscanCount={5}
             >

@@ -110,7 +110,13 @@ function TopToolbar() {
 
             </Box>
 
-            <img style={{ width: 300 }} src={Logo} />
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              <img style={{ width: 300 }} src={Logo} />
+            </Box>
+
+            <Box sx={{ display: { xs: 'flex', md: 'none'} }}>
+              <img style={{ width: 200 }} src={Logo} />
+            </Box>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
               <Button>

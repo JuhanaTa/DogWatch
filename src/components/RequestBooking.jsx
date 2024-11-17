@@ -11,7 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import SendIcon from '@mui/icons-material/Send';
 
-function RequestBooking({handleBookingForm}) {
+function RequestBooking({ handleBookingForm }) {
     const navigate = useNavigate();
 
     const [service, setService] = useState(1);
@@ -34,16 +34,36 @@ function RequestBooking({handleBookingForm}) {
         setDescription(event.target.value);
     };
 
+
+
+
+
+    const [selectedDates, setSelectedDates] = useState([]);
+
+    const handleDateChange = (date) => {
+        const dateString = date.format('YYYY-MM-DD');
+        setSelectedDates((prevDates) =>
+            prevDates.includes(dateString)
+                ? prevDates.filter((d) => d !== dateString) // Deselect if already selected
+                : [...prevDates, dateString] // Add to selected dates
+        );
+    };
+    console.log('selected dates', selectedDates)
+
+    const isSelected = (date) => selectedDates.includes(date.format('YYYY-MM-DD'));
+
+
+
+
     return (
 
         <Box sx={{ backgroundColor: 'secondary.main', gap: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
             <Typography variant="h6" sx={{ color: 'text.primary' }}>Request Booking</Typography>
 
-            <Divider></Divider>
 
-            <Box>
-                <FormControl sx={{ mb: 4, width: '100%' }}>
+            <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column'}}>
+                <FormControl sx={{ width: '100%' }}>
                     <InputLabel id="service-select-label">Service</InputLabel>
                     <Select
                         labelId="service-label"
@@ -58,7 +78,7 @@ function RequestBooking({handleBookingForm}) {
 
                 </FormControl>
 
-                <FormControl sx={{ mb: 4, width: '100%' }}>
+                <FormControl sx={{ width: '100%' }}>
                     <InputLabel id="location-select-label">Location</InputLabel>
                     <Select
                         labelId="location-label"
@@ -82,14 +102,33 @@ function RequestBooking({handleBookingForm}) {
                     />
                 </FormControl>
 
-                <LocalizationProvider
-                    dateAdapter={AdapterDayjs}
-                    localeText={{
-                        calendarWeekNumberHeaderText: '#',
-                        calendarWeekNumberText: (weekNumber) => `${weekNumber}.`,
-                    }}
-                >
-                    <DateCalendar displayWeekNumber />
+
+
+
+
+
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DateCalendar
+                        onChange={handleDateChange}
+                        renderDay={(day, selectedDay, pickersDayProps) => {
+                            const isSelectedDay = isSelected(day);
+
+                            return (
+                                <div
+                                    {...pickersDayProps}
+                                    style={{
+                                        ...pickersDayProps.style,
+                                        backgroundColor: isSelectedDay ? '#1976d2' : undefined, // Highlight selected days
+                                        color: isSelectedDay ? '#fff' : undefined, // White text
+                                        borderRadius: '50%', // Circular shape
+                                        cursor: 'pointer', // Hand cursor on hover
+                                    }}
+                                >
+                                    {day.date()}
+                                </div>
+                            );
+                        }}
+                    />
                 </LocalizationProvider>
 
 

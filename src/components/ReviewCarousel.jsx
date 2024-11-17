@@ -40,7 +40,7 @@ function ReviewCarousel() {
 
             <List sx={{ flexDirection: 'row', display: 'flex', width: '60%' }}>
 
-                <ListItem sx={{ gap: 6, width: '100%' }}>
+                <ListItem sx={{ gap: 6, width: '100%', height: 350 }}>
 
                     <IconButton disabled={reviewData.length != showReview + 1} onClick={() => { handleReviewBack() }}
                         sx={{
@@ -52,7 +52,7 @@ function ReviewCarousel() {
                         <ArrowBackIcon fontSize="large" />
                     </IconButton>
 
-                    <Box sx={{ flexDirection: 'column', display: 'flex', alignItems: 'center', gap: 3, width: '100%', minHeight: 400 }}>
+                    <Box sx={{ flexDirection: 'column', display: 'flex', alignItems: 'center', gap: 3, width: '100%'}}>
 
                         <img style={{ width: 160 }} loading='lazy' src={ProfileImg} />
 

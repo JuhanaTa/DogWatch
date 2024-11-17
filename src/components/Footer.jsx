@@ -189,6 +189,7 @@ function Footer() {
                         sx={{
                             display: 'flex',
                             flexDirection: 'row',
+                            flexWrap: 'wrap',
                             gap: 1
                         }}
                     >

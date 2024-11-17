@@ -179,51 +179,52 @@ function UserSettings() {
                 flexWrap: 'wrap'
             }}>
 
+                {user.role === 'sitter' &&
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            alignItems: 'start',
+                            minWidth: 200
+                        }}
+                    >
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2,
-                        alignItems: 'start',
-                        minWidth: 200
-                    }}
-                >
+                        <Typography variant='h6'>Services</Typography>
 
-                    <Typography variant='h6'>Services</Typography>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox checked={service[0]} onChange={handleDogWalking} name="Dog walking" />
+                                }
+                                label="Dog walking"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox checked={service[1]} onChange={handleHouseSitting} name="Dog sitting" />
+                                }
+                                label="Dog sitting"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox checked={service[2]} onChange={handleDaycare} name="Daycare" />
+                                }
+                                label="Daycare"
+                            />
+                        </FormGroup>
 
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Checkbox checked={service[0]} onChange={handleDogWalking} name="Dog walking" />
-                            }
-                            label="Dog walking"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox checked={service[1]} onChange={handleHouseSitting} name="Dog sitting" />
-                            }
-                            label="Dog sitting"
-                        />
-                        <FormControlLabel
-                            control={
-                                <Checkbox checked={service[2]} onChange={handleDaycare} name="Daycare" />
-                            }
-                            label="Daycare"
-                        />
-                    </FormGroup>
+                        {userLoading ?
+                            <CircularProgress />
+                            :
+                            <Button sx={{ width: 175 }} onClick={() => { handleSettingsSave() }} variant="contained">Save Services</Button>
+                        }
 
-                    {userLoading ?
-                        <CircularProgress />
-                        :
-                        <Button sx={{ width: 175 }} onClick={() => { handleSettingsSave() }} variant="contained">Save Services</Button>
-                    }
+                        {userError && (
+                            <Typography variant='p'>Changing settings failed</Typography>
+                        )}
 
-                    {userError && (
-                        <Typography variant='p'>Changing settings failed</Typography>
-                    )}
-
-                </Box>
+                    </Box>
+                }
 
                 <Box
                     sx={{

@@ -3,29 +3,43 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Container, FormControl, InputLabel, MenuItem, Modal, Select, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, Card, Container, FormControl, InputLabel, MenuItem, Modal, Select, Tab, Tabs, Typography } from '@mui/material';
 import ProfileImg from '../assets/sitter3.jpg';
 import ReviewList from '../components/ReviewList';
 import RequestBooking from '../components/RequestBooking';
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function PublicProfile() {
     const { searchResults } = useSelector((state) => state.search)
+    const { user } = useSelector((state) => state.user)
+
     const [rating, setRating] = useState(5);
     const [bookingOpen, setBookingOpen] = useState(false);
 
-
     const { userId } = useParams();
     const viewedProfile = searchResults.find(search => search.userId === parseInt(userId));
-    console.log(userId, searchResults, viewedProfile)
+
+    const navigate = useNavigate();
 
     const handleRating = (event) => {
         setRating(event.target.value);
     };
 
     const handleBookingForm = () => {
-        setBookingOpen(!bookingOpen);
+        if (user) {
+            setBookingOpen(!bookingOpen);
+        } else {
+            navigate(`/login`)
+        }
+    };
+
+    const handleSendMessage = () => {
+        if (user) {
+            //setBookingOpen(!bookingOpen);
+        } else {
+            navigate(`/login`)
+        }
     };
 
     const modalStyle = {
@@ -61,7 +75,7 @@ function PublicProfile() {
             }}>
             </Box>
 
-            <Box sx={{ padding: 10, position: 'relative' }}>
+            <Box sx={{ padding: 5, position: 'relative' }}>
 
                 <Box
                     sx={{
@@ -76,14 +90,15 @@ function PublicProfile() {
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        p: 2
+                        p: 2,
+                        gap: 2
                     }}>
 
-                    <img style={{ width: 200}} src={ProfileImg} />
+                    <img style={{ width: 200 }} src={ProfileImg} />
 
-                    <Box>
-                        <Typography variant='h4'>{viewedProfile.firstname} {viewedProfile.lastname}</Typography>
-                        <Typography variant='p'>--</Typography>
+                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                        <Typography align='left' variant='h4'>{viewedProfile.firstname} {viewedProfile.lastname}</Typography>
+                        <Typography align='left' variant='p'>--</Typography>
                     </Box>
 
                 </Box>
@@ -92,13 +107,12 @@ function PublicProfile() {
 
             <Box sx={{ width: '95vw', pb: 2, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2 }}>
 
-                <Box sx={{ 
+                <Card sx={{
                     flex: 1,
-                    p: 2, 
-                    border: '1px solid',
-                    minWidth: 350,
+                    p: 2,
+                    minWidth: 300,
                     height: ''
-                    }}>
+                }}>
                     <Typography variant='h6'>ABOUT ME</Typography>
                     <Typography variant='p'>
                         {viewedProfile.desc}
@@ -111,19 +125,19 @@ function PublicProfile() {
                         >Request Booking</Button>
                         <Button
                             variant="contained"
+                            onClick={() => { handleSendMessage() }}
                         >Send Message</Button>
                     </Box>
-                </Box>
+                </Card>
 
-                <Box sx={{ 
-                    flex: 2, 
-                    p: 2, 
-                    width: '100%', 
-                    minWidth: 400, 
-                    border: '1px solid',
+                <Card sx={{
+                    flex: 2,
+                    p: 2,
+                    width: '100%',
+                    minWidth: 300,
                 }}>
 
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', flexWrap: 'wrap' }}>
 
                         <Typography variant='h5'>Customers Feedback</Typography>
                         <FormControl sx={{ m: 1 }}>
@@ -147,7 +161,7 @@ function PublicProfile() {
                     </Box>
 
                     <ReviewList reviews={viewedProfile.reviews}></ReviewList>
-                </Box>
+                </Card>
 
             </Box>
 
