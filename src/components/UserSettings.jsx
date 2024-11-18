@@ -3,11 +3,11 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Card, Checkbox, CircularProgress, Container, FormControl, FormControlLabel, FormGroup, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Checkbox, CircularProgress, Container, FormControl, FormControlLabel, FormGroup, Input, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ProfilePhoto from '../assets/sitter4.jpg';
 import { useDispatch, useSelector } from 'react-redux';
-import { userEdit } from '../reducers/UserReducer';
+import { uploadUserImage, userEdit } from '../reducers/UserReducer';
 
 function UserSettings() {
     const { user, userLoading, userError } = useSelector((state) => state.user)
@@ -19,6 +19,7 @@ function UserSettings() {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [desc, setDesc] = useState(user.desc)
     const [service, setService] = useState([false, false, false]);
+    const [imgFile, setImgFile] = useState();
 
 
     const navigate = useNavigate();
@@ -64,6 +65,32 @@ function UserSettings() {
         })
     }
 
+    const handleImageUpload = async () => {
+
+    }
+
+    const handleImageChange = (event) => {
+
+        if (event.target.files[0] != undefined) {
+            const imageFile = event.target.files[0]
+            console.log(imageFile)
+
+
+            const fd = new FormData();
+            fd.append('image', imageFile, imageFile.name)
+
+            console.log(fd)
+
+            dispatch(uploadUserImage(fd)).then((result) => {
+                if (result.payload) {
+                    console.log('image upload success')
+                }
+            })
+
+        }
+
+    }
+
 
     return (
 
@@ -91,15 +118,44 @@ function UserSettings() {
             >
 
                 <Card sx={{
-                    p: 4,
                     flexDirection: 'column',
                     display: 'flex',
                     maxWidth: 400,
                     minWidth: 280,
-                    flex: 1
+                    position: 'relative',
+                    flex: 1,
+                    p: 2
                 }}>
-                    <img src={ProfilePhoto} />
+                    <label
+                        htmlFor="image-upload"
+                        style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            width: '100%',
+                            height: '100%',
+                            zIndex: 2, // Ensure label covers the card
+                            cursor: 'pointer',
+                        }}
+                    >
+                        <Input
+                            id="image-upload"
+                            type="file"
+                            onChange={handleImageChange}
+                            style={{
+                                display: 'none', // Completely hide the file input
+                            }}
+                        />
+                    </label>
+                    {userLoading ?
+                        <CircularProgress />
+                        :
+                        <img src={ProfilePhoto} />
+
+                    }
                     <Typography variant='p'>Image size should be under 1MB and image ration needs to be 1:1</Typography>
+
+
                 </Card>
 
 

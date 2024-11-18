@@ -125,7 +125,7 @@ function LoginForm({ setShowRegister }) {
                 }
 
                 {userError && (
-                    <Typography variant='p'>Login failed</Typography>
+                    <Typography variant='p'>Login failed {userError}</Typography>
                 )}
 
                 <Typography align='left' variant="p" sx={{ color: 'text.primary' }}>

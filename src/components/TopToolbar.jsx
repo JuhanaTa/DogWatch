@@ -44,7 +44,6 @@ function TopToolbar() {
 
 
   return (
-    <Box>
       <AppBar position="fixed" color='secondary' elevation={0}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -212,7 +211,6 @@ function TopToolbar() {
           </Toolbar>
         </Container>
       </AppBar>
-    </Box>
   )
 }
 

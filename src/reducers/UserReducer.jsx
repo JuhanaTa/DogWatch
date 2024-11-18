@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { getPublicUserInfo, uploadImage, userLoginReq } from "../requests/userRequests";
 
 
 export const userLogin = createAsyncThunk(
@@ -13,6 +14,10 @@ export const userLogin = createAsyncThunk(
             desc: '',
         }
         //Api call to user login here
+        const userData = await getPublicUserInfo()
+        console.log("data fetched", userData)
+
+
         localStorage.setItem('user', JSON.stringify(userInfo))
         //needs to return all user info
         return userInfo
@@ -45,6 +50,18 @@ export const userEdit = createAsyncThunk(
         localStorage.setItem('user', JSON.stringify(credentials))
         //needs to return all user info with edited content
         return credentials
+    }
+)
+
+export const uploadUserImage = createAsyncThunk(
+    'user/uploadImage',
+    async (image) => {
+
+        //Fd image sent here with post call. Returns url for image?
+        const res = await uploadImage(image)
+        
+
+        return "Image URL"
     }
 )
 
@@ -111,6 +128,21 @@ const UserReducer = createSlice({
                 state.userError = null;
             })
             .addCase(userEdit.rejected, (state, action) => {
+                state.userLoading = false;
+                state.userError = action.error.message;
+            })
+
+            .addCase(uploadUserImage.pending, (state) => {
+                state.userLoading = false;
+                state.userError = null;
+            })
+            .addCase(uploadUserImage.fulfilled, (state, action) => {
+                state.userLoading = false;
+                console.log('image in reducer', action.payload)
+                //state.user.image = action.payload; 
+                state.userError = null;
+            })
+            .addCase(uploadUserImage.rejected, (state, action) => {
                 state.userLoading = false;
                 state.userError = action.error.message;
             });
