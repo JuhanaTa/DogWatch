@@ -2,7 +2,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, Checkbox, CircularProgress } from '@mui/material';
+import { Box, Button, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, Checkbox, CircularProgress, MenuItem, Select } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -10,10 +10,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userRegister } from '../reducers/UserReducer';
+import { NearMeOutlined } from '@mui/icons-material';
 
 function RegisterForm({ setShowRegister }) {
     const navigate = useNavigate();
     const { userLoading, userError } = useSelector((state) => state.user)
+    const { availableLocations } = useSelector((state) => state.data)
     const dispatch = useDispatch();
 
     const [firstname, setFirstname] = useState('')
@@ -24,11 +26,17 @@ function RegisterForm({ setShowRegister }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPass, setShowConfirmPass] = useState(false);
     const [roleChecked, setRoleChecked] = useState([false, false]);
+    const [location, setLocation] = useState(availableLocations[0])
+
+
+
+    
 
 
     const handleFirstname = (event) => setFirstname(event.target.value);
     const handleLastname = (event) => setLastname(event.target.value);
     const handleEmail = (event) => setEmail(event.target.value);
+    const handleLocation = (event) => setLocation(event.target.value);
     const handlePassword = (event) => setPassword(event.target.value);
     const handleRePassword = (event) => setRePassword(event.target.value);
 
@@ -55,13 +63,15 @@ function RegisterForm({ setShowRegister }) {
         event.preventDefault();
 
         let credentials = {
-            firstname: firstname,
-            lastname: lastname,
+            firstName: firstname,
+            lastName: lastname,
             email: email,
             password: password,
             role: roleChecked[0] ? 'sitter' : 'owner',
+            location: location
         }
 
+        console.log('creds', credentials)
         dispatch(userRegister(credentials)).then((result) => {
             if (result.payload) {
                 navigate(`/`)
@@ -125,6 +135,30 @@ function RegisterForm({ setShowRegister }) {
                             value={email}
                             onChange={handleEmail}
                         />
+                    </FormControl>
+
+                    <FormControl sx={{ width: '100%'  }}>
+
+                        <InputLabel id="location-label">Location</InputLabel>
+
+                        <Select
+                            labelId="location-select-label"
+                            id="location-select"
+                            value={location}
+                            label="Location"
+                            onChange={handleLocation}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    <NearMeOutlined />
+                                </InputAdornment>
+                            }
+                        >
+                            {availableLocations.map((location, index) => (
+                                <MenuItem key={index} value={location}>{location}</MenuItem>
+                            ))}
+
+                        </Select>
+
                     </FormControl>
 
 

@@ -25,7 +25,7 @@ function Search() {
             }}>
             </Box>
 
-            <Box sx={{ padding: 7, position: 'relative' }}>
+            <Box sx={{ pb: 22, position: 'relative' }}>
                 <SearchBox></SearchBox>
             </Box>
 

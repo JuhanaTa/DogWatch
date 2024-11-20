@@ -10,15 +10,16 @@ import Contact from './views/Contact';
 import Search from './views/Search';
 import Footer from './components/Footer';
 import TopToolbar from './components/TopToolbar';
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import Profile from './views/Profile';
 import PublicProfile from './views/PublicProfile';
 import { configureStore } from '@reduxjs/toolkit';
-import UserReducer from './reducers/UserReducer';
-import { Provider, useSelector } from 'react-redux';
-import SearchReducer from './reducers/SearchReducer';
+import UserReducer, { userInit } from './reducers/UserReducer';
+import { Provider, useDispatch, useSelector } from 'react-redux';
+import DataReducer, { dataInit } from './reducers/DataReducer';
+import { useEffect } from 'react';
 
 
 function App() {
@@ -26,14 +27,46 @@ function App() {
   const store = configureStore({
     reducer: {
       user: UserReducer,
-      search: SearchReducer
+      data: DataReducer
     }
   })
+
+  const token = localStorage.getItem('token');
+  const userUUID = localStorage.getItem('userUUID');
+
+
+  const AppInit = ({ children }) => {
+    const dispatch = useDispatch();
+    const { userLoading } = useSelector((state) => state.user);
+    const { searchLoading } = useSelector((state) => state.data)
+
+    useEffect(() => {
+
+      const fetchData = async () => {
+
+        console.log('userUUID', userUUID)
+        //Initial user data
+        await dispatch(userInit(userUUID))
+
+        //Initial app data
+        await dispatch(dataInit(token))
+
+      };
+
+      fetchData();
+
+    }, [token, dispatch]);
+
+    if (userLoading || searchLoading) {
+      return <CircularProgress />;
+    }
+
+    return children;
+  };
 
   const ProtectedRoute = ({ children }) => {
     const { user } = useSelector((state) => state.user);
 
-    //
     if (!user) {
       return <Navigate to="/login" replace />;
     }
@@ -42,50 +75,51 @@ function App() {
   };
 
 
+
   return (
     <Provider store={store}>
+      <AppInit>
+        <ThemeProvider theme={theme}>
 
-      <ThemeProvider theme={theme}>
+          <Router>
 
-        <Router>
+            <TopToolbar></TopToolbar>
 
-          <TopToolbar></TopToolbar>
+            <Box className='content'>
 
-          <Box className='content'>
+              <Routes>
+                <Route path="/publicprofile/:uuid" element={<PublicProfile />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/" element={<MainPage />} />
 
-            <Routes>
-              <Route path="/publicprofile/:userId" element={<PublicProfile />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/" element={<MainPage />} />
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
+              </Routes>
 
-            </Routes>
+            </Box>
 
-          </Box>
+            <Box sx={{
+              backgroundColor: 'primary.main',
+              display: 'flex',
+              justifyContent: 'center',
+              p: 10
+            }}>
+              <Footer></Footer>
+            </Box>
 
-          <Box sx={{
-            backgroundColor: 'primary.main',
-            display: 'flex',
-            justifyContent: 'center',
-            p: 10
-          }}>
-            <Footer></Footer>
-          </Box>
+          </Router>
 
-        </Router>
-
-      </ThemeProvider>
-
+        </ThemeProvider>
+      </AppInit>
     </Provider>
   )
 }

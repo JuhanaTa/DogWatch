@@ -5,13 +5,17 @@ import { useNavigate } from 'react-router-dom';
 function SearchResults({ preview }) {
     const navigate = useNavigate();
 
-    const { searchResults } = useSelector((state) => state.search)
+    const { searchResults, sittersList } = useSelector((state) => state.data)
 
     let results = []
 
+    console.log('sitters', sittersList[0])
+
     if (preview) {
 
-        results = [
+        results = sittersList
+
+        /*[
             {
                 userId: 0,
                 firstname: "Sitter",
@@ -75,11 +79,11 @@ function SearchResults({ preview }) {
                     },
                 ]
             },
-        ]
+        ]*/
 
     } else {
         //search results come from search state
-        results = searchResults
+        results = sittersList[0]
     }
 
 
@@ -105,7 +109,7 @@ function SearchResults({ preview }) {
 
                     >
                         <CardActionArea
-                            onClick={() => { navigate(`/publicprofile/${result.userId}`) }}
+                            onClick={() => { navigate(`/publicprofile/${result.uuid}`) }}
                         >
                             <CardMedia
                                 component="img"
@@ -121,10 +125,17 @@ function SearchResults({ preview }) {
                                 }}
                             >
 
-                                <Rating name="read-only" value={result.reviews[0].rating} readOnly />
+                                <Rating
+                                    name="read-only"
+                                    value={
+                                        //result.reviews[0].rating
+                                        0
+                                    }
+                                    readOnly
+                                />
 
                                 <Typography gutterBottom variant="p">
-                                    {result.firstname} {result.lastname}
+                                    {result.firstName} {result.lastName}
                                 </Typography>
 
                             </CardContent>

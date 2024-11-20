@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -41,6 +41,9 @@ function BookingHistory() {
 
     const currentDate = Math.floor(Date.now() / 1000); 
 
+    useEffect(() => {
+        console.log('Component re-rendered');
+      });
     return (
 
         <Box sx={{

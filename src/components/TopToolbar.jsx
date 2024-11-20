@@ -12,9 +12,10 @@ import { userLogout } from '../reducers/UserReducer'
 
 function TopToolbar() {
 
+  const { user, userLoading, userError } = useSelector((state) => state.user)
+
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  //const [user, setUser] = useState(getUserData())
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -31,7 +32,7 @@ function TopToolbar() {
     setAnchorElUser(null);
   };
 
-  const { user, userLoading, userError } = useSelector((state) => state.user)
+  console.log('current user', user)
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

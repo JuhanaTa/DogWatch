@@ -1,67 +1,77 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getPublicUserInfo, uploadImage, userLoginReq } from "../requests/userRequests";
+import { getPublicUserInfo, updateUserData, uploadImage, userDataFetch, userLoginReq, userRegisterReq, userUpdatePassword } from "../requests/userRequests";
 
+
+
+export const userInit = createAsyncThunk(
+    'user/userInit',
+    async (uuid) => {
+        const userPersonalData = await userDataFetch(uuid)
+        return { userInfo: userPersonalData }
+    }
+)
 
 export const userLogin = createAsyncThunk(
     'user/userLogin',
     async (credentials) => {
         const userInfo = {
-            firstname: '',
-            lastname: '',
             email: credentials.email,
             password: credentials.password,
-            role: 'owner',
-            desc: '',
         }
-        //Api call to user login here
-        const userData = await getPublicUserInfo()
-        console.log("data fetched", userData)
 
+        const userAuth = await userLoginReq(userInfo)
+        const userPersonalData = await userDataFetch(userAuth.userInfo.uuid)
 
-        localStorage.setItem('user', JSON.stringify(userInfo))
-        //needs to return all user info
-        return userInfo
+        //set login token
+        localStorage.setItem('token', userAuth.token)
+        localStorage.setItem('userUUID', userAuth.userInfo.uuid)
+
+        return { token: userAuth.token, userInfo: userPersonalData }
     }
 )
 
 export const userRegister = createAsyncThunk(
     'user/userRegister',
     async (credentials) => {
-        const userInfo = {
-            firstname: credentials.firstname,
-            lastname: credentials.lastname,
-            email: credentials.email,
-            password: credentials.password,
-            role: credentials.role,
-            desc: '',
-        }
-        //Api call to user register here
+
+        const userData = await userRegisterReq(credentials)
+
         localStorage.setItem('user', JSON.stringify(userInfo))
         //needs to return all user info
-        return userInfo
+        return userData
+    }
+)
+
+export const getUserData = createAsyncThunk(
+    'user/userData',
+    async (uuid) => {
+        console.log('UUID', uuid)
+        const userPersonalData = await userDataFetch(uuid)
+        return { userInfo: userPersonalData }
     }
 )
 
 export const userEdit = createAsyncThunk(
     'user/userEdit',
-    async (credentials) => {
-        console.log('creds', credentials)
+    async (data) => {
+        console.log('updated data 1', data.uuid, data.token, data.updatedData, data.avatar)
         //Api call to user edit here
-        localStorage.setItem('user', JSON.stringify(credentials))
-        //needs to return all user info with edited content
-        return credentials
+        const updateUserResp = await updateUserData(data.uuid, data.token, data.updatedData, data.avatar)
+
+        if(updateUserResp.status == 201){
+            const userPersonalData = await userDataFetch(data.uuid)
+            return {userInfo: userPersonalData}
+        }
+
     }
 )
 
-export const uploadUserImage = createAsyncThunk(
-    'user/uploadImage',
-    async (image) => {
-
-        //Fd image sent here with post call. Returns url for image?
-        const res = await uploadImage(image)
-        
-
-        return "Image URL"
+export const userChangePassword = createAsyncThunk(
+    'user/userChangePassword',
+    async (data) => {
+        console.log("password udpate", data)
+        const resp = await userUpdatePassword(data.passwords, data.uuid, data.token)
+        return resp
     }
 )
 
@@ -72,7 +82,7 @@ const UserReducer = createSlice({
     name: 'user',
     initialState: {
         userLoading: false,
-        user: currentUser,
+        user: null,
         userError: null
     },
     reducers: {
@@ -86,6 +96,22 @@ const UserReducer = createSlice({
     extraReducers: (builder) => {
         builder
 
+            .addCase(userInit.pending, (state) => {
+                state.userLoading = true;
+                state.user = null;
+                state.userError = null;
+            })
+            .addCase(userInit.fulfilled, (state, action) => {
+                state.userLoading = false;
+                state.user = action.payload.userInfo;
+                state.userError = null;
+            })
+            .addCase(userInit.rejected, (state, action) => {
+                state.userLoading = false;
+                state.user = null;
+                state.userError = action.error.message;
+            })
+
             .addCase(userLogin.pending, (state) => {
                 state.userLoading = true;
                 state.user = null;
@@ -93,7 +119,7 @@ const UserReducer = createSlice({
             })
             .addCase(userLogin.fulfilled, (state, action) => {
                 state.userLoading = false;
-                state.user = action.payload;
+                state.user = action.payload.userInfo;
                 state.userError = null;
             })
             .addCase(userLogin.rejected, (state, action) => {
@@ -118,13 +144,28 @@ const UserReducer = createSlice({
                 state.userError = action.error.message;
             })
 
-            .addCase(userEdit.pending, (state) => {
-                state.userLoading = false;
+            .addCase(getUserData.pending, (state) => {
+                state.userLoading = true;
+                state.user = null;
                 state.userError = null;
+            })
+            .addCase(getUserData.fulfilled, (state, action) => {
+                state.userLoading = false;
+                state.user = action.payload.userInfo;
+                state.userError = null;
+            })
+            .addCase(getUserData.rejected, (state, action) => {
+                state.userLoading = false;
+                state.user = null;
+                state.userError = action.error.message;
+            })
+
+            .addCase(userEdit.pending, (state) => {
+                state.userLoading = true;
             })
             .addCase(userEdit.fulfilled, (state, action) => {
                 state.userLoading = false;
-                state.user = action.payload; 
+                state.user = action.payload.userInfo;
                 state.userError = null;
             })
             .addCase(userEdit.rejected, (state, action) => {
@@ -132,20 +173,17 @@ const UserReducer = createSlice({
                 state.userError = action.error.message;
             })
 
-            .addCase(uploadUserImage.pending, (state) => {
-                state.userLoading = false;
-                state.userError = null;
+            .addCase(userChangePassword.pending, (state) => {
+                state.userLoading = true;
             })
-            .addCase(uploadUserImage.fulfilled, (state, action) => {
+            .addCase(userChangePassword.fulfilled, (state, action) => {
                 state.userLoading = false;
-                console.log('image in reducer', action.payload)
-                //state.user.image = action.payload; 
-                state.userError = null;
             })
-            .addCase(uploadUserImage.rejected, (state, action) => {
+            .addCase(userChangePassword.rejected, (state, action) => {
                 state.userLoading = false;
                 state.userError = action.error.message;
-            });
+            })
+
     }
 })
 

@@ -1,7 +1,10 @@
 import { Box, Typography } from '@mui/material';
 import BookingRequestItem from './BookingRequestItem';
+import { useSelector } from 'react-redux';
 
 function BookingRequests() {
+
+    const { bookings } = useSelector((state) => state.data)
 
     const bookingRequests = [
         {
@@ -34,7 +37,7 @@ function BookingRequests() {
         },
     ]
 
-    const currentDate = Math.floor(Date.now() / 1000); 
+    const currentDate = Math.floor(Date.now() / 1000);
 
     return (
 
@@ -49,9 +52,15 @@ function BookingRequests() {
 
             <Typography variant='h4'>Booking Requests</Typography>
 
-            {bookingRequests.map((booking, index) => (
-                <BookingRequestItem key={index} booking={booking} currentDate={currentDate}></BookingRequestItem>
-            ))}
+            {bookings.length > 0 ?
+
+                bookings.map((booking, index) => (
+                    <BookingRequestItem key={index} booking={booking} currentDate={currentDate}></BookingRequestItem>
+                ))
+                :
+                <Typography variant='p'>Currently there are no bookings for you.</Typography>
+            }
+
 
         </Box>
 

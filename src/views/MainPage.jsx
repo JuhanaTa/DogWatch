@@ -8,8 +8,13 @@ import InfoCards from '../components/InfoCards';
 import SearchBox from '../components/SearchBox';
 import ReviewCarousel from '../components/ReviewCarousel';
 import SearchResults from '../components/SearchResults';
+import { useEffect } from 'react';
 
 function MainPage() {
+
+    useEffect(() => {
+        console.log('Component re-rendered');
+    });
 
     return (
         <Box sx={{
@@ -29,27 +34,30 @@ function MainPage() {
 
 
 
-            <Box sx={{ padding: 7, position: 'relative' }}>
+            <Box sx={{ pb: 22, position: 'relative' }}>
                 <SearchBox></SearchBox>
             </Box>
 
             <Box sx={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 2
+                display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 10
             }}>
 
-                <Typography variant="h4">
-                    Why Choose Us
-                </Typography>
-
-                <InfoCards></InfoCards>
+                <Box>
+                    <Typography variant="h4">
+                        Why Choose Us
+                    </Typography>
+                    <InfoCards></InfoCards>
+                </Box>
 
                 <ReviewCarousel></ReviewCarousel>
 
-                <Typography variant="h4">
-                    Our Dog Sitters
-                </Typography>
+                <Box>
+                    <Typography variant="h4">
+                        Our Dog Sitters
+                    </Typography>
 
-                <SearchResults preview={true}></SearchResults>
+                    <SearchResults preview={true}></SearchResults>
+                </Box>
 
             </Box>
 

@@ -9,7 +9,7 @@ function ReviewCarousel() {
     const [showReview, setShowReview] = useState(0)
 
     const handleReviewForward = () => {
-        if (reviewData.length != showReview + 1) setShowReview(showReview + 1);
+        if (reviewData.length != showReview) setShowReview(showReview + 1);
     };
 
     const handleReviewBack = () => {
@@ -28,21 +28,35 @@ function ReviewCarousel() {
             reviewTxt: 'I’m grateful too!!!',
             grade: 5,
             img: 'ADD IMAGE HERE'
-        }
+        },
+        {
+            name: 'Christine Beckam',
+            reviewTxt: 'I’m so grateful for the opportunity DogWatch provides! I got a wonderful care of my dog, he was well-fed, entertained, and comfortable throughout my absence. My dog sitter’s attention to detail and genuine love for dogs were evident in the daily updates and photos they provided.',
+            grade: 4,
+            img: 'ADD IMAGE HERE'
+        },
+        {
+            name: 'Liam nelsson',
+            reviewTxt: 'I’m grateful too!!!',
+            grade: 5,
+            img: 'ADD IMAGE HERE'
+        },
 
     ]
 
+    console.log('vlaues', reviewData.length, showReview)
+
     return (
 
-        <Box sx={{ display: 'flex', width: '100%', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', width: '100%', maxWidth: 1000, justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
 
             <Typography variant='h4'>What Our Customers Say</Typography>
 
-            <List sx={{ flexDirection: 'row', display: 'flex', width: '60%' }}>
+            <List sx={{ flexDirection: 'row', display: 'flex' }}>
 
-                <ListItem sx={{ gap: 6, width: '100%', height: 350 }}>
+                <ListItem sx={{ gap: 6, width: '100%'}}>
 
-                    <IconButton disabled={reviewData.length != showReview + 1} onClick={() => { handleReviewBack() }}
+                    <IconButton disabled={showReview === 0 } onClick={handleReviewBack}
                         sx={{
                             backgroundColor: 'primary.main',
                             '&:hover': {
@@ -63,7 +77,7 @@ function ReviewCarousel() {
                     </Box>
 
 
-                    <IconButton disabled={showReview > 0} onClick={() => { handleReviewForward() }}
+                    <IconButton disabled={reviewData.length - 1 > showReview ? false : true} onClick={handleReviewForward}
                         sx={{
                             backgroundColor: 'primary.main',
                             '&:hover': {

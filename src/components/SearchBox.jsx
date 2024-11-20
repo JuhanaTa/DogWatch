@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchSitters } from '../reducers/SearchReducer';
+import { searchSitters } from '../reducers/DataReducer';
 
 function SearchBox() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { searchParameters, availableLocations, serviceTypes, searchLoading } = useSelector((state) => state.search)
+    const { searchParameters, availableLocations, services, searchLoading } = useSelector((state) => state.data)
     const [service, setService] = useState(searchParameters.service);
     const [location, setLocation] = useState(searchParameters.location)
     const [rating, setRating] = useState(searchParameters.rating);
@@ -52,7 +52,8 @@ function SearchBox() {
         <Container
             sx={{
                 backgroundColor: 'background.paper',
-                minWidth: '70vw',
+                width: '70vw',
+                maxWidth: 700,
                 display: 'flex',
                 flexDirection: 'column',
                 p: 4,
@@ -77,8 +78,8 @@ function SearchBox() {
                         label="Service"
                         onChange={handleService}
                     >
-                        {serviceTypes.map((service, index) => (
-                            <MenuItem key={index} value={service}>{service}</MenuItem>
+                        {services.map((service, index) => (
+                            <MenuItem key={index} value={service.name}>{service.name}</MenuItem>
                         ))}
                     </Select>
 

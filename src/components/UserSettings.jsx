@@ -1,39 +1,62 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Card, Checkbox, CircularProgress, Container, FormControl, FormControlLabel, FormGroup, Input, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import ProfilePhoto from '../assets/sitter4.jpg';
 import { useDispatch, useSelector } from 'react-redux';
-import { uploadUserImage, userEdit } from '../reducers/UserReducer';
+import { userChangePassword, userEdit } from '../reducers/UserReducer';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 function UserSettings() {
+    const token = localStorage.getItem('token');
+    const userUUID = localStorage.getItem('userUUID');
+
     const { user, userLoading, userError } = useSelector((state) => state.user)
-    const [firstname, setFirstname] = useState(user.firstname)
-    const [lastname, setLastname] = useState(user.lastname)
+
+    const [firstName, setFirstName] = useState(user.firstName)
+    const [lastName, setLastName] = useState(user.lastName)
     const [email, setEmail] = useState(user.email)
+    const [description, setDescription] = useState(user.description)
+    const [service, setService] = useState([
+        false,
+        false,
+        false
+    ]);
+    const [avatar, setAvatar] = useState(user.avatar);
+    const [inputImage, setInputImage] = useState(null);
+
     const [curPassword, setCurPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [desc, setDesc] = useState(user.desc)
-    const [service, setService] = useState([false, false, false]);
-    const [imgFile, setImgFile] = useState();
-
+    const [showCurPassword, setShowCurPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showNewPassword, setShowNewPassword] = useState(false);
 
     const navigate = useNavigate();
-
     const dispatch = useDispatch();
 
-    const handleFirstname = (event) => setFirstname(event.target.value);
-    const handleLastname = (event) => setLastname(event.target.value);
+    const handleFirstName = (event) => setFirstName(event.target.value);
+    const handleLastName = (event) => setLastName(event.target.value);
     const handleEmail = (event) => setEmail(event.target.value);
-    const handleDesc = (event) => setDesc(event.target.value);
-
+    const handleDesc = (event) => setDescription(event.target.value);
     const handleCurPassword = (event) => setCurPassword(event.target.value);
     const handleNewPassword = (event) => setNewPassword(event.target.value);
     const handleConfirmPassword = (event) => setConfirmPassword(event.target.value);
+
+    const handleClickshowCurPassword = () => setShowCurPassword(!showCurPassword);
+    const handleClickShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
+    const handleClickShowNewPassword = () => setShowNewPassword(!showNewPassword);
+
+
+    const handleMouseDownPassword = (event) => {
+        event.preventDefault();
+    };
+
+    const handleMouseUpPassword = (event) => {
+        event.preventDefault();
+    };
 
     const handleDogWalking = (event) => {
         setService([!service[0], service[1], service[2]]);
@@ -47,50 +70,46 @@ function UserSettings() {
         setService([service[0], service[1], !service[2]]);
     };
 
-    const handleSettingsSave = () => {
+    const handleUserDataEdit = () => {
 
-        let newCredentials = {
-            firstname: firstname,
-            lastname: lastname,
-            desc: desc,
+        let updatedData = {
+            firstName: firstName,
+            lastName: lastName,
+            description: description,
             email: email,
-            password: user.password,
-            role: 'owner'
         }
 
-        dispatch(userEdit(newCredentials)).then((result) => {
-            if (result.payload) {
-                navigate(`/profile`)
-            }
-        })
+        dispatch(userEdit({
+            uuid: userUUID,
+            token: token,
+            updatedData: updatedData,
+            avatar: inputImage
+        }))
     }
 
-    const handleImageUpload = async () => {
+    const handlePasswordChange = () => {
 
+        let passwords = {
+            curPassword: curPassword,
+            newPassword: newPassword,
+            confirmPassword: confirmPassword,
+        }
+
+        dispatch(userChangePassword({passwords: passwords, uuid: userUUID, token: token}))
     }
+
+    console.log('file', inputImage)
 
     const handleImageChange = (event) => {
-
-        if (event.target.files[0] != undefined) {
-            const imageFile = event.target.files[0]
-            console.log(imageFile)
-
-
-            const fd = new FormData();
-            fd.append('image', imageFile, imageFile.name)
-
-            console.log(fd)
-
-            dispatch(uploadUserImage(fd)).then((result) => {
-                if (result.payload) {
-                    console.log('image upload success')
-                }
-            })
-
+        console.log('img', event.target.files[0])
+        if (event.target.files[0]) {
+            setInputImage(event.target.files[0]);
         }
-
     }
 
+    useEffect(() => {
+        console.log('Component re-rendered');
+    });
 
     return (
 
@@ -134,7 +153,7 @@ function UserSettings() {
                             left: 0,
                             width: '100%',
                             height: '100%',
-                            zIndex: 2, // Ensure label covers the card
+                            zIndex: 2,
                             cursor: 'pointer',
                         }}
                     >
@@ -142,15 +161,13 @@ function UserSettings() {
                             id="image-upload"
                             type="file"
                             onChange={handleImageChange}
-                            style={{
-                                display: 'none', // Completely hide the file input
-                            }}
+                            sx={{ display: 'none' }}
                         />
                     </label>
                     {userLoading ?
                         <CircularProgress />
                         :
-                        <img src={ProfilePhoto} />
+                        <img src={"http://localhost:8080/api/v1/" + user.avatar} alt="Avatar" />
 
                     }
                     <Typography variant='p'>Image size should be under 1MB and image ration needs to be 1:1</Typography>
@@ -172,8 +189,8 @@ function UserSettings() {
                             id="name-input"
                             label="First name"
                             variant="outlined"
-                            value={firstname}
-                            onChange={(e) => { handleFirstname(e) }}
+                            value={firstName}
+                            onChange={(e) => { handleFirstName(e) }}
                         />
                     </FormControl>
 
@@ -182,8 +199,8 @@ function UserSettings() {
                             id="lastname-input"
                             label="Last name"
                             variant="outlined"
-                            value={lastname}
-                            onChange={(e) => { handleLastname(e) }}
+                            value={lastName}
+                            onChange={(e) => { handleLastName(e) }}
                         />
                     </FormControl>
 
@@ -202,7 +219,7 @@ function UserSettings() {
                             id="desc-input"
                             label="Your title or other description"
                             variant="outlined"
-                            value={desc}
+                            value={description}
                             onChange={(e) => { handleDesc(e) }}
                         />
                     </FormControl>
@@ -212,7 +229,7 @@ function UserSettings() {
                     {userLoading ?
                         <CircularProgress />
                         :
-                        <Button sx={{ width: 175 }} onClick={() => { handleSettingsSave() }} variant="contained">Save Changes</Button>
+                        <Button sx={{ width: 150 }} onClick={() => { handleUserDataEdit() }} variant="contained">Save Changes</Button>
                     }
 
                     {userError && (
@@ -272,7 +289,7 @@ function UserSettings() {
                         {userLoading ?
                             <CircularProgress />
                             :
-                            <Button sx={{ width: 175 }} onClick={() => { handleSettingsSave() }} variant="contained">Save Services</Button>
+                            <Button onClick={handleUserDataEdit} variant="contained">Save Services</Button>
                         }
 
                         {userError && (
@@ -297,39 +314,90 @@ function UserSettings() {
                     <Typography variant='h6'>Change password</Typography>
 
                     <FormControl sx={{ width: '100%' }}>
-                        <TextField
+                        <InputLabel>Current password</InputLabel>
+                        <OutlinedInput
                             id="cur-pass-input"
-                            label="Current password"
                             variant="outlined"
+                            type='password'
                             value={curPassword}
-                            onChange={(e) => { handleFirstname(e) }}
+                            onChange={handleCurPassword}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label={
+                                            showCurPassword ? 'hide the password' : 'display the password'
+                                        }
+                                        onClick={handleClickshowCurPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        onMouseUp={handleMouseUpPassword}
+                                        edge="end"
+                                    >
+                                        {showCurPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Current password"
                         />
                     </FormControl>
 
                     <FormControl sx={{ width: '100%' }}>
-                        <TextField
+                        <InputLabel>New password</InputLabel>
+                        <OutlinedInput
                             id="new-pass-input"
-                            label="New password"
                             variant="outlined"
+                            type='password'
                             value={newPassword}
-                            onChange={(e) => { handleLastname(e) }}
+                            onChange={handleNewPassword}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label={
+                                            showNewPassword ? 'hide the password' : 'display the password'
+                                        }
+                                        onClick={handleClickShowNewPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        onMouseUp={handleMouseUpPassword}
+                                        edge="end"
+                                    >
+                                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="New password"
                         />
                     </FormControl>
 
                     <FormControl sx={{ width: '100%' }}>
-                        <TextField
+                        <InputLabel>Confirm new password</InputLabel>
+                        <OutlinedInput
                             id="confirm-pass-input"
-                            label="Confirm new password"
                             variant="outlined"
+                            type='password'
                             value={confirmPassword}
-                            onChange={(e) => { handleEmail(e) }}
+                            onChange={handleConfirmPassword}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label={
+                                            showConfirmPassword ? 'hide the password' : 'display the password'
+                                        }
+                                        onClick={handleClickShowConfirmPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        onMouseUp={handleMouseUpPassword}
+                                        edge="end"
+                                    >
+                                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            label="Confirm new password"
                         />
                     </FormControl>
 
                     {userLoading ?
                         <CircularProgress />
                         :
-                        <Button sx={{ width: 175 }} onClick={() => { handleSettingsSave() }} variant="contained">Save Password</Button>
+                        <Button onClick={handlePasswordChange} variant="contained">Save Password</Button>
                     }
 
                     {userError && (

@@ -9,8 +9,10 @@ import Messages from '../components/Messages';
 import BookingHistory from '../components/BookingHistory';
 import Settings from '../components/UserSettings';
 import BookingRequests from '../components/BookingRequests';
+import { useSelector } from 'react-redux';
 
 function ProfileOwner() {
+    const { user } = useSelector((state) => state.user)
 
     const [value, setValue] = useState(0);
 
@@ -18,7 +20,7 @@ function ProfileOwner() {
         setValue(newValue);
     };
 
-    function CustomTabPanel(props) {
+    const CustomTabPanel = ((props) => {
         const { children, value, index, ...other } = props;
 
         return (
@@ -36,7 +38,7 @@ function ProfileOwner() {
             </Box>
         );
 
-    }
+    })
 
     return (
 
@@ -75,8 +77,8 @@ function ProfileOwner() {
                     <img style={{ width: 200, borderRadius: '50%' }} src={ProfileImg} />
 
                     <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                        <Typography align='left' variant='h4'>Meri Suomalainen</Typography>
-                        <Typography align='left' variant='p'>Mother of Charlie</Typography>
+                        <Typography align='left' variant='h4'>{user.firstName} {user.lastName}</Typography>
+                        <Typography align='left' variant='p'>{user.headline}</Typography>
                     </Box>
 
                 </Box>

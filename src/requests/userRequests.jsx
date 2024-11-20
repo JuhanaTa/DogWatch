@@ -1,55 +1,71 @@
 import axios from 'axios';
 
 const userLoginReq = async (credentials, token) => {
-
     const config = {
         headers: {
             'Authorization': 'Bearer ' + token,
             'Content-Type': 'application/json',
         },
     };
-    const resp = await axios.post('https://dummyjson.com/posts', credentials, config);
-
-
-
-    //Should return user token and other user data e.g:
-    /*const userInfo = {
-        firstname: 'asd',
-        lastname: 'asd',
-        email: 'asd',
-        password: 'asd,
-        role: 'owner',
-        desc: 'asdasd',
-        
-        //NOT ADDED YET
-        bookingRequests: [],
-        bookingHistory: [],
-        messages: [] ???????? Maybe
-        image:
-    }*/
+    const resp = await axios.post('http://localhost:8080/api/v1/login', credentials, config);
+    console.log("login resp")
     return resp.data;
+}
+
+const userRegisterReq = async (credentials) => {
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+    const resp = await axios.post('http://localhost:8080/api/v1/register', credentials, config);
+    return resp.data
+}
+
+const userUpdatePassword = async (passwords, uuid, token) => {
+    const resp = await axios.put(`http://localhost:8080/api/v1/users/${uuid}`, passwords, {
+        headers: {
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json'
+        },
+    })
+    console.log('resp', resp.data)
+    return resp.data
+}
+
+const userDataFetch = async (uuid) => {
+    const resp = await axios.get(`http://localhost:8080/api/v1/users/${uuid}`)
+    return resp.data
+}
+
+const updateUserData = async (uuid, token, updatedData, avatar) => {
+
+    const formData = new FormData();
+
+    if (updatedData.firstName) formData.append('firstName', updatedData.firstName);
+    if (updatedData.lastName) formData.append('lastName', updatedData.lastName);
+    if (updatedData.email) formData.append('email', updatedData.email);
+    if (updatedData.role) formData.append('role', updatedData.role);
+    if (updatedData.location) formData.append('location', updatedData.location);
+    if (updatedData.headline) formData.append('headline', updatedData.headline);
+    if (updatedData.description) formData.append('description', updatedData.description);
+
+    // Append file
+    avatar && formData.append('file', avatar, avatar.name);
+
+    const resp = await axios.put(`http://localhost:8080/api/v1/users/${uuid}`, formData, {
+        headers: {
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'multipart/form-data', 
+        },
+    })
+
+    return resp
 
 }
 
-const userRegisterReq = async () => {
 
-    //Should return new user token and other user data e.g:
-    /*const userInfo = {
-        firstname: 'asd',
-        lastname: 'asd',
-        email: 'asd',
-        password: 'asd,
-        role: 'owner',
-        desc: 'asdasd',
 
-        //NOT ADDED YET
-        bookingRequests: [],
-        bookingHistory: [],
-        messages: [] ???????? Maybe
-        image:
-    }*/
-
-}
 
 const userEdit = async () => {
     //Posts new user data with edited content. Token stays the same.
@@ -75,10 +91,6 @@ const uploadImage = async (image) => {
 
 
     //axios.post()
-}
-
-const userPasswordChange = async () => {
-    // Are we implementing this yet?
 }
 
 const searchSitters = async (service, location, rating) => {
@@ -118,7 +130,7 @@ const getPublicUserInfo = async (id) => {
     //Fetches public user information with id.
     //returns user information 
     //including these: (same stuff as in search sitters)
-    
+
 
 
     const resp = await axios.get(`https://dummyjson.com/products`)
@@ -143,9 +155,11 @@ const requestBooking = async (bookingData) => {
 export {
     userLoginReq,
     userRegisterReq,
+    userUpdatePassword,
     userEdit,
     uploadImage,
-    userPasswordChange,
     getPublicUserInfo,
-    searchSitters
+    searchSitters,
+    userDataFetch,
+    updateUserData
 };
