@@ -19,7 +19,7 @@ function LoginForm({ setShowRegister }) {
     const [password, setPassword] = useState('')
 
     //redux states
-    const { userLoading, userError } = useSelector((state) => state.user)
+    const { userLoginLoad, userLoginError } = useSelector((state) => state.user)
 
     const navigate = useNavigate();
 
@@ -39,17 +39,13 @@ function LoginForm({ setShowRegister }) {
         event.preventDefault();
 
         let credentials = {
-            firstname: 'Tester',
-            lastname: 'Testing',
-            username: 'Test',
-            desc: 'This is test desc',
             email: email,
             password: password,
         }
 
-        dispatch(userLogin(credentials)).then((result) => {
-            if (result.payload) {
-                navigate(`/`)
+        dispatch(userLogin(credentials)).then((res) => {
+            if (res.payload) {
+                navigate(`/`);
             }
         })
     }
@@ -110,7 +106,7 @@ function LoginForm({ setShowRegister }) {
                     />
                 </FormControl>
 
-                {userLoading ?
+                {userLoginLoad ?
                     <CircularProgress />
                     :
                     <Button
@@ -124,8 +120,8 @@ function LoginForm({ setShowRegister }) {
                     </Button>
                 }
 
-                {userError && (
-                    <Typography variant='p'>Login failed {userError}</Typography>
+                {userLoginError && (
+                    <Typography variant='p'>Login failed {userLoginError}</Typography>
                 )}
 
                 <Typography align='left' variant="p" sx={{ color: 'text.primary' }}>

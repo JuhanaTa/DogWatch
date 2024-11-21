@@ -1,22 +1,25 @@
 import { AccountCircle } from '@mui/icons-material';
 import { Box, FormControl, InputLabel, Select, MenuItem, Button, TextField, InputAdornment, Rating, Typography, Container, CircularProgress } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { searchSitters } from '../reducers/DataReducer';
+import { searchFilteredSitters } from '../reducers/DataReducer';
 
 function SearchBox() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { searchParameters, availableLocations, services, searchLoading } = useSelector((state) => state.data)
-    const [service, setService] = useState(searchParameters.service);
+    const { searchParameters, availableLocations, services, filterLoad } = useSelector((state) => state.data)
+    const [service, setService] = useState(searchParameters.service.name);
     const [location, setLocation] = useState(searchParameters.location)
     const [rating, setRating] = useState(searchParameters.rating);
 
+    console.log('service and services', searchParameters.service, services)
+
     const handleService = (event) => {
+        console.log('selected service',event.target.value)
         setService(event.target.value);
     };
 
@@ -26,26 +29,36 @@ function SearchBox() {
 
     const handleRating = (event) => {
         console.log('rating', event.target.value)
-        setRating(event.target.value);
+        setRating(parseInt(event.target.value));
     };
 
     const handleSearch = (event) => {
         event.preventDefault();
 
+        //need to find the service id
+        const usedService = services.find(serItem => serItem.name === service)
+
+        console.log('used service', usedService)
+
         let filters = {
-            service: service,
+            service: usedService,
             location: location,
             rating: rating,
         }
 
-        dispatch(searchSitters(filters)).then((result) => {
+        dispatch(searchFilteredSitters(filters)).then((result) => {
             if (result.payload) {
                 //Finally go to search page when sitters fetched
+                console.log('should navigate to search')
                 navigate(`/search`)
             }
         })
 
     }
+
+    useEffect(() => {
+        console.log('Search component mounted');
+    }, []);
 
     return (
 
@@ -78,8 +91,8 @@ function SearchBox() {
                         label="Service"
                         onChange={handleService}
                     >
-                        {services.map((service, index) => (
-                            <MenuItem key={index} value={service.name}>{service.name}</MenuItem>
+                        {services.map((item, index) => (
+                            <MenuItem key={index} value={item.name}>{item.name}</MenuItem>
                         ))}
                     </Select>
 
@@ -122,7 +135,7 @@ function SearchBox() {
 
             </Box>
 
-            {searchLoading ?
+            {filterLoad ?
                 <CircularProgress />
                 :
                 <Box>

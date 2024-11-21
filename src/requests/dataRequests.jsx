@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const sittersDataFetch = async () => {
-    const resp = await axios.get(`http://localhost:8080/api/v1/users`)
+const getSittersDataFetch = async () => {
+    const resp = await axios.get(`http://localhost:8080/api/v1/sitters`)
     return resp.data
 }
 
@@ -26,9 +26,29 @@ const getUserBookings = async (token) => {
     return resp.data
 }
 
+const getSittersWithFilter = async (filters) => {
+    //Have to use service id for request
+    const reqFilters = {
+        serviceId: filters.service.uuid,
+        location: filters.location,
+        rating: filters.rating,
+    }
+    console.log('filters', reqFilters, filters)
+
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    };
+    const resp = await axios.post('http://localhost:8080/api/v1/search', reqFilters, config);
+    return resp.data
+}
+
+
 export {
-    sittersDataFetch,
+    getSittersDataFetch,
     getPubliUserData,
     getServices,
-    getUserBookings
+    getUserBookings,
+    getSittersWithFilter
 };

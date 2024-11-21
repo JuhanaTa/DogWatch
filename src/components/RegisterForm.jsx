@@ -14,7 +14,7 @@ import { NearMeOutlined } from '@mui/icons-material';
 
 function RegisterForm({ setShowRegister }) {
     const navigate = useNavigate();
-    const { userLoading, userError } = useSelector((state) => state.user)
+    const { userRegisterLoad, userRegisterError } = useSelector((state) => state.user)
     const { availableLocations } = useSelector((state) => state.data)
     const dispatch = useDispatch();
 
@@ -235,14 +235,14 @@ function RegisterForm({ setShowRegister }) {
                     </Box>
 
 
-                    {userLoading ?
+                    {userRegisterLoad ?
                         <CircularProgress />
                         :
                         <Button onClick={handleRegister} variant="contained">Create Account</Button>
                     }
 
-                    {userError && (
-                        <Typography variant='p'>Register failed</Typography>
+                    {userRegisterError && (
+                        <Typography variant='p'>Register failed {userRegisterError}</Typography>
                     )}
 
                     <Typography variant="p" sx={{ color: 'text.primary', p: 1 }}>

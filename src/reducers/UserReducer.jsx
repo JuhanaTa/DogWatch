@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getPublicUserInfo, updateUserData, uploadImage, userDataFetch, userLoginReq, userRegisterReq, userUpdatePassword } from "../requests/userRequests";
+import { getPublicUserInfo, postUserServices, updateUserData, uploadImage, userDataFetch, userLoginReq, userRegisterReq, userUpdatePassword } from "../requests/userRequests";
 
 
 
@@ -20,11 +20,11 @@ export const userLogin = createAsyncThunk(
         }
 
         const userAuth = await userLoginReq(userInfo)
-        const userPersonalData = await userDataFetch(userAuth.userInfo.uuid)
+        const userPersonalData = await userDataFetch(userAuth.userId)
 
-        //set login token
+        //Local Storage updated
         localStorage.setItem('token', userAuth.token)
-        localStorage.setItem('userUUID', userAuth.userInfo.uuid)
+        localStorage.setItem('userUUID', userAuth.userId)
 
         return { token: userAuth.token, userInfo: userPersonalData }
     }
@@ -34,11 +34,13 @@ export const userRegister = createAsyncThunk(
     'user/userRegister',
     async (credentials) => {
 
-        const userData = await userRegisterReq(credentials)
+        const userAuth = await userRegisterReq(credentials)
+        const userPersonalData = await userDataFetch(userAuth.userId)
 
-        localStorage.setItem('user', JSON.stringify(userInfo))
-        //needs to return all user info
-        return userData
+        //Local Storage updated
+        localStorage.setItem('token', userAuth.token)
+        localStorage.setItem('userUUID', userAuth.userId)
+        return { token: userAuth.token, userInfo: userPersonalData }
     }
 )
 
@@ -58,10 +60,22 @@ export const userEdit = createAsyncThunk(
         //Api call to user edit here
         const updateUserResp = await updateUserData(data.uuid, data.token, data.updatedData, data.avatar)
 
-        if(updateUserResp.status == 201){
+        if (updateUserResp.status == 201) {
             const userPersonalData = await userDataFetch(data.uuid)
-            return {userInfo: userPersonalData}
+            return { userInfo: userPersonalData }
         }
+
+    }
+)
+
+export const updateUserServices = createAsyncThunk(
+    'user/userServicesEdit',
+    async (serviceUpdateData) => {
+        //Api call to user edit here
+        await postUserServices(serviceUpdateData.services, serviceUpdateData.id, serviceUpdateData.token)
+        const userPersonalData = await userDataFetch(serviceUpdateData.id)
+
+        return { userInfo: userPersonalData }
 
     }
 )
@@ -75,113 +89,145 @@ export const userChangePassword = createAsyncThunk(
     }
 )
 
-// Retrieve current User if already present
-const currentUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
-
 const UserReducer = createSlice({
     name: 'user',
     initialState: {
-        userLoading: false,
-        user: null,
-        userError: null
+        //loaders
+        userInitLoad: true,
+        userLoginLoad: false,
+        userRegisterLoad: false,
+        getUserDataLoad: false,
+        userEditLoad: false,
+        userServicesUpdateLoad: false,
+        userPasswordChangeLoad: false,
+
+        //errors
+        userInitError: null,
+        userLoginError: null,
+        userRegisterError: null,
+        getUserDataError: null,
+        userEditError: null,
+        userServicesUpdateError: null,
+        userPasswordChangeError: null,
+
+        //Main / other stuff
+        user: null
     },
     reducers: {
         userLogout: (state) => {
             // Clear user state and localStorage on logout
             state.user = null;
             state.error = null;
-            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            localStorage.removeItem('userUUID');
         }
     },
     extraReducers: (builder) => {
         builder
 
             .addCase(userInit.pending, (state) => {
-                state.userLoading = true;
+                state.userInitLoad = true;
                 state.user = null;
-                state.userError = null;
+                state.userInitError = null;
             })
             .addCase(userInit.fulfilled, (state, action) => {
-                state.userLoading = false;
+                state.userInitLoad = false;
                 state.user = action.payload.userInfo;
-                state.userError = null;
+                state.userInitError = null;
             })
             .addCase(userInit.rejected, (state, action) => {
-                state.userLoading = false;
+                state.userInitLoad = false;
                 state.user = null;
-                state.userError = action.error.message;
+                state.userInitError = action.error.message;
             })
 
             .addCase(userLogin.pending, (state) => {
-                state.userLoading = true;
+                state.userLoginLoad = true;
                 state.user = null;
-                state.userError = null;
+                state.userLoginError = null;
             })
             .addCase(userLogin.fulfilled, (state, action) => {
-                state.userLoading = false;
+                state.userLoginLoad = false;
                 state.user = action.payload.userInfo;
-                state.userError = null;
+                state.userLoginError = null;
             })
             .addCase(userLogin.rejected, (state, action) => {
-                state.userLoading = false;
+                state.userLoginLoad = false;
                 state.user = null;
-                state.userError = action.error.message;
+                state.userLoginError = action.error.message;
             })
 
             .addCase(userRegister.pending, (state) => {
-                state.userLoading = true;
+                state.userRegisterLoad = true;
                 state.user = null;
-                state.userError = null;
+                state.userRegisterError = null;
             })
             .addCase(userRegister.fulfilled, (state, action) => {
-                state.userLoading = false;
-                state.user = action.payload;
-                state.userError = null;
+                state.userRegisterLoad = false;
+                state.user = action.payload.userInfo;
+                state.userRegisterError = null;
             })
             .addCase(userRegister.rejected, (state, action) => {
-                state.userLoading = false;
+                state.userRegisterLoad = false;
                 state.user = null;
-                state.userError = action.error.message;
+                state.userRegisterError = action.error.message;
             })
 
             .addCase(getUserData.pending, (state) => {
-                state.userLoading = true;
+                state.getUserDataLoad = true;
                 state.user = null;
-                state.userError = null;
+                state.getUserDataError = null;
             })
             .addCase(getUserData.fulfilled, (state, action) => {
-                state.userLoading = false;
+                state.getUserDataLoad = false;
                 state.user = action.payload.userInfo;
-                state.userError = null;
+                state.getUserDataError = null;
             })
             .addCase(getUserData.rejected, (state, action) => {
-                state.userLoading = false;
+                state.getUserDataLoad = false;
                 state.user = null;
-                state.userError = action.error.message;
+                state.getUserDataError = action.error.message;
             })
 
             .addCase(userEdit.pending, (state) => {
-                state.userLoading = true;
+                state.userEditLoad = true;
+                state.userEditError = null;
             })
             .addCase(userEdit.fulfilled, (state, action) => {
-                state.userLoading = false;
+                state.userEditLoad = false;
                 state.user = action.payload.userInfo;
-                state.userError = null;
+                state.userEditError = null;
             })
             .addCase(userEdit.rejected, (state, action) => {
-                state.userLoading = false;
-                state.userError = action.error.message;
+                state.userEditLoad = false;
+                state.userEditError = action.error.message;
+            })
+
+            .addCase(updateUserServices.pending, (state) => {
+                state.userServicesUpdateLoad = true;
+                state.userServicesUpdateError = null;
+            })
+            .addCase(updateUserServices.fulfilled, (state, action) => {
+                state.userServicesUpdateLoad = false;
+                state.user = action.payload.userInfo;
+                state.userServicesUpdateError = null;
+            })
+            .addCase(updateUserServices.rejected, (state, action) => {
+                state.userServicesUpdateLoad = false;
+                state.userServicesUpdateError = action.error.message;
             })
 
             .addCase(userChangePassword.pending, (state) => {
-                state.userLoading = true;
+                state.userPasswordChangeLoad = true;
+                state.userPasswordChangeError = null
             })
             .addCase(userChangePassword.fulfilled, (state, action) => {
-                state.userLoading = false;
+                state.userPasswordChangeLoad = false;
+                state.userPasswordChangeError = null
             })
             .addCase(userChangePassword.rejected, (state, action) => {
-                state.userLoading = false;
-                state.userError = action.error.message;
+                state.userPasswordChangeLoad = false;
+                state.userPasswordChangeError = action.error.message;
             })
 
     }

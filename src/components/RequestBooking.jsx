@@ -10,14 +10,16 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import SendIcon from '@mui/icons-material/Send';
+import { useSelector } from 'react-redux';
 
 function RequestBooking({ handleBookingForm }) {
+    const { user } = useSelector((state) => state.user)
+    const { services, availableLocations } = useSelector((state) => state.data)
     const navigate = useNavigate();
 
-    const [service, setService] = useState(1);
-    const [location, setLocation] = useState(1);
+    const [service, setService] = useState(services[0].name);
+    const [location, setLocation] = useState(availableLocations[0]);
     const [description, setDescription] = useState('');
-
 
     const handleService = (event) => {
         event.preventDefault();
@@ -48,7 +50,7 @@ function RequestBooking({ handleBookingForm }) {
                 : [...prevDates, dateString] // Add to selected dates
         );
     };
-    console.log('selected dates', selectedDates)
+    console.log('selections', selectedDates, service, location)
 
     const isSelected = (date) => selectedDates.includes(date.format('YYYY-MM-DD'));
 
@@ -62,7 +64,7 @@ function RequestBooking({ handleBookingForm }) {
             <Typography variant="h6" sx={{ color: 'text.primary' }}>Request Booking</Typography>
 
 
-            <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column'}}>
+            <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column' }}>
                 <FormControl sx={{ width: '100%' }}>
                     <InputLabel id="service-select-label">Service</InputLabel>
                     <Select
@@ -72,8 +74,9 @@ function RequestBooking({ handleBookingForm }) {
                         label="Select Service"
                         onChange={handleService}
                     >
-                        <MenuItem value={1}>Dog sitting</MenuItem>
-                        <MenuItem value={2}>Dog walking</MenuItem>
+                        {services.map((service, index) => (
+                            <MenuItem key={index} value={service.name}>{service.name}</MenuItem>
+                        ))}
                     </Select>
 
                 </FormControl>
@@ -87,8 +90,11 @@ function RequestBooking({ handleBookingForm }) {
                         label="Where do you live..."
                         onChange={handleLocation}
                     >
-                        <MenuItem value={1}>Location 1</MenuItem>
-                        <MenuItem value={2}>Location 2</MenuItem>
+
+                        {availableLocations.map((location, index) => (
+                            <MenuItem key={index} value={location}>{location}</MenuItem>
+                        ))}
+
                     </Select>
                 </FormControl>
 

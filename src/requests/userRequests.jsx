@@ -23,7 +23,7 @@ const userRegisterReq = async (credentials) => {
 }
 
 const userUpdatePassword = async (passwords, uuid, token) => {
-    const resp = await axios.put(`http://localhost:8080/api/v1/users/${uuid}`, passwords, {
+    const resp = await axios.patch(`http://localhost:8080/api/v1/users/${uuid}`, passwords, {
         headers: {
             Authorization: `Bearer ${token}`, 
             'Content-Type': 'application/json'
@@ -64,6 +64,18 @@ const updateUserData = async (uuid, token, updatedData, avatar) => {
 
 }
 
+const postUserServices = async (services, id, token) => {
+    console.log('update services',services,id,token)
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`, 
+            'Content-Type': 'application/json',
+        },
+    };
+    const resp = await axios.post(`http://localhost:8080/api/v1/users/${id}/services`, {services}, config);
+    return resp.data
+}
+
 
 
 
@@ -93,10 +105,10 @@ const uploadImage = async (image) => {
     //axios.post()
 }
 
-const searchSitters = async (service, location, rating) => {
+/*const searchSitters = async (service, location, rating) => {
     //Fetches sitters with specific filters (service, location and rating)
     //returns sitter data including e.g.:
-    /*
+    
         {
                 userId: 0,
                 firstname: "Sitter",
@@ -122,8 +134,8 @@ const searchSitters = async (service, location, rating) => {
 
             //NOT ADDED YET
             CurrentBookings: []
-    */
-}
+    
+}*/
 
 const getPublicUserInfo = async (id) => {
 
@@ -157,9 +169,9 @@ export {
     userRegisterReq,
     userUpdatePassword,
     userEdit,
+    postUserServices,
     uploadImage,
     getPublicUserInfo,
-    searchSitters,
     userDataFetch,
     updateUserData
 };

@@ -12,7 +12,7 @@ import { userLogout } from '../reducers/UserReducer'
 
 function TopToolbar() {
 
-  const { user, userLoading, userError } = useSelector((state) => state.user)
+  const { user } = useSelector((state) => state.user)
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);

@@ -6,26 +6,27 @@ import '@fontsource/roboto/700.css';
 import { Box, Button, Card, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { userChangePassword, userEdit } from '../reducers/UserReducer';
+import { updateUserServices, userChangePassword, userEdit } from '../reducers/UserReducer';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 function UserSettings() {
     const token = localStorage.getItem('token');
     const userUUID = localStorage.getItem('userUUID');
 
-    const { user, userLoading, userError } = useSelector((state) => state.user)
+    const { user, userPasswordChangeLoad, userEditLoad, userEditError, userPasswordChangeError, userServicesUpdateLoad, userServicesUpdateError } = useSelector((state) => state.user)
+    const { services } = useSelector((state) => state.data)
+
+    console.log('user Settings user', user)
 
     const [firstName, setFirstName] = useState(user.firstName)
     const [lastName, setLastName] = useState(user.lastName)
     const [email, setEmail] = useState(user.email)
     const [description, setDescription] = useState(user.description)
-    const [service, setService] = useState([
-        false,
-        false,
-        false
-    ]);
     const [avatar, setAvatar] = useState(user.avatar);
     const [inputImage, setInputImage] = useState(null);
+    console.log('user services', user.services)
+    const userServiceUUIDs = user.services.map((service) => service.uuid);
+    const [selectedServices, setSelectedServices] = useState(userServiceUUIDs);
 
     const [curPassword, setCurPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
@@ -49,7 +50,6 @@ function UserSettings() {
     const handleClickShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
     const handleClickShowNewPassword = () => setShowNewPassword(!showNewPassword);
 
-
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
@@ -58,17 +58,15 @@ function UserSettings() {
         event.preventDefault();
     };
 
-    const handleDogWalking = (event) => {
-        setService([!service[0], service[1], service[2]]);
+    const handleUserServices = (serviceId) => {
+        setSelectedServices((prevSelected) =>
+            prevSelected.includes(serviceId)
+                ? prevSelected.filter((uuid) => uuid !== serviceId)
+                : [...prevSelected, serviceId]
+        );
     };
 
-    const handleHouseSitting = (event) => {
-        setService([service[0], !service[1], service[2]]);
-    };
-
-    const handleDaycare = (event) => {
-        setService([service[0], service[1], !service[2]]);
-    };
+    console.log("Selected Services:", selectedServices);
 
     const handleUserDataEdit = () => {
 
@@ -87,15 +85,22 @@ function UserSettings() {
         }))
     }
 
+    const handleUserServicesSave = () => {
+        dispatch(updateUserServices({
+            services: selectedServices,
+            id: userUUID,
+            token: token
+        }))
+    }
+
     const handlePasswordChange = () => {
 
         let passwords = {
-            curPassword: curPassword,
+            currentPassword: curPassword,
             newPassword: newPassword,
-            confirmPassword: confirmPassword,
         }
 
-        dispatch(userChangePassword({passwords: passwords, uuid: userUUID, token: token}))
+        dispatch(userChangePassword({ passwords: passwords, uuid: userUUID, token: token }))
     }
 
     console.log('file', inputImage)
@@ -164,12 +169,9 @@ function UserSettings() {
                             sx={{ display: 'none' }}
                         />
                     </label>
-                    {userLoading ?
-                        <CircularProgress />
-                        :
-                        <img src={"http://localhost:8080/api/v1/" + user.avatar} alt="Avatar" />
 
-                    }
+                    <img src={"http://localhost:8080/api/v1/" + user.avatar} alt="Avatar" />
+
                     <Typography variant='p'>Image size should be under 1MB and image ration needs to be 1:1</Typography>
 
 
@@ -226,13 +228,13 @@ function UserSettings() {
 
 
 
-                    {userLoading ?
+                    {userEditLoad ?
                         <CircularProgress />
                         :
                         <Button sx={{ width: 150 }} onClick={() => { handleUserDataEdit() }} variant="contained">Save Changes</Button>
                     }
 
-                    {userError && (
+                    {userEditError && (
                         <Typography variant='p'>Changing settings failed</Typography>
                     )}
 
@@ -266,34 +268,33 @@ function UserSettings() {
                         <Typography variant='h6'>Services</Typography>
 
                         <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={service[0]} onChange={handleDogWalking} name="Dog walking" />
-                                }
-                                label="Dog walking"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={service[1]} onChange={handleHouseSitting} name="Dog sitting" />
-                                }
-                                label="Dog sitting"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={service[2]} onChange={handleDaycare} name="Daycare" />
-                                }
-                                label="Daycare"
-                            />
+                            {services.map((serviceItem, index) => (
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+
+                                            checked={selectedServices.includes(serviceItem.uuid)}
+                                            onChange={() => handleUserServices(serviceItem.uuid)}
+                                            name={serviceItem.name}
+
+
+
+                                        />
+                                    }
+                                    label={serviceItem.name}
+                                    key={index}
+                                />
+                            ))}
                         </FormGroup>
 
-                        {userLoading ?
+                        {userServicesUpdateLoad ?
                             <CircularProgress />
                             :
-                            <Button onClick={handleUserDataEdit} variant="contained">Save Services</Button>
+                            <Button onClick={handleUserServicesSave} variant="contained">Save Services</Button>
                         }
 
-                        {userError && (
-                            <Typography variant='p'>Changing settings failed</Typography>
+                        {userServicesUpdateError && (
+                            <Typography variant='p'>Changing services failed</Typography>
                         )}
 
                     </Box>
@@ -394,13 +395,13 @@ function UserSettings() {
                         />
                     </FormControl>
 
-                    {userLoading ?
+                    {userPasswordChangeLoad ?
                         <CircularProgress />
                         :
                         <Button onClick={handlePasswordChange} variant="contained">Save Password</Button>
                     }
 
-                    {userError && (
+                    {userPasswordChangeError && (
                         <Typography variant='p'>Changing settings failed</Typography>
                     )}
                 </Box>
@@ -416,3 +417,25 @@ function UserSettings() {
 }
 
 export default UserSettings
+
+
+/*
+<FormControlLabel
+                                control={
+                                    <Checkbox checked={service[0]} onChange={handleDogWalking} name="Dog walking" />
+                                }
+                                label="Dog walking"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox checked={service[1]} onChange={handleHouseSitting} name="Dog sitting" />
+                                }
+                                label="Dog sitting"
+                            />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox checked={service[2]} onChange={handleDaycare} name="Daycare" />
+                                }
+                                label="Daycare"
+                            />
+*/

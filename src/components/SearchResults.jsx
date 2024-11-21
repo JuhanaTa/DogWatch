@@ -9,83 +9,15 @@ function SearchResults({ preview }) {
 
     let results = []
 
-    console.log('sitters', sittersList[0])
-
     if (preview) {
-
+        //Sitters on mainpage
         results = sittersList
-
-        /*[
-            {
-                userId: 0,
-                firstname: "Sitter",
-                lastname: "1",
-                image: "",
-                desc: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                reviews: [
-                    {
-                        from: "Robert Harris",
-                        rating: 5,
-                        created_at: 1731604851,
-                        comment: "Alina is exceptional with Oscar! She ensured he got his swimming sessions and followed his supplement schedule precisely. It was clear Oscar adored her, and we felt relieved knowing he was with someone so caring.",
-                    },
-                    {
-                        from: "Robert Harris",
-                        rating: 5,
-                        created_at: 1731604851,
-                        comment: "Alina is exceptional with Oscar! She ensured he got his swimming sessions and followed his supplement schedule precisely. It was clear Oscar adored her, and we felt relieved knowing he was with someone so caring.",
-                    },
-                ]
-            },
-            {
-                userId: 1,
-                firstname: "Sitter",
-                lastname: "2",
-                image: "",
-                desc: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                reviews: [
-                    {
-                        from: "Robert Harris",
-                        rating: 5,
-                        created_at: 1731604851,
-                        comment: "Alina is exceptional with Oscar! She ensured he got his swimming sessions and followed his supplement schedule precisely. It was clear Oscar adored her, and we felt relieved knowing he was with someone so caring.",
-                    },
-                    {
-                        from: "Robert Harris",
-                        rating: 5,
-                        created_at: 1731604851,
-                        comment: "Alina is exceptional with Oscar! She ensured he got his swimming sessions and followed his supplement schedule precisely. It was clear Oscar adored her, and we felt relieved knowing he was with someone so caring.",
-                    },
-                ]
-            },
-            {
-                userId: 2,
-                firstname: "Sitter",
-                lastname: "3",
-                image: "",
-                desc: "Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all continents except Antarctica",
-                reviews: [
-                    {
-                        from: "Robert Harris",
-                        rating: 5,
-                        created_at: 1731604851,
-                        comment: "Alina is exceptional with Oscar! She ensured he got his swimming sessions and followed his supplement schedule precisely. It was clear Oscar adored her, and we felt relieved knowing he was with someone so caring.",
-                    },
-                    {
-                        from: "Robert Harris",
-                        rating: 5,
-                        created_at: 1731604851,
-                        comment: "Alina is exceptional with Oscar! She ensured he got his swimming sessions and followed his supplement schedule precisely. It was clear Oscar adored her, and we felt relieved knowing he was with someone so caring.",
-                    },
-                ]
-            },
-        ]*/
-
     } else {
-        //search results come from search state
-        results = sittersList[0]
+        //Filtered sitters
+        results = searchResults
     }
 
+    console.log('search sitters', results)
 
     return (
         <Grid

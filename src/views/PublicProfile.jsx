@@ -186,6 +186,7 @@ function PublicProfile() {
                                 </FormControl>
 
                             </Box>
+                            <ReviewList reviews={viewedProfile.receivedReviews}></ReviewList>
 
                         </Card>
 
@@ -206,6 +207,5 @@ export default PublicProfile
 
 /*
     For reviews once reviews fetched with user data
-                            <ReviewList reviews={viewedProfile.reviews}></ReviewList>
 
 */

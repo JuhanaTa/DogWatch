@@ -5,7 +5,7 @@ import '@fontsource/roboto/700.css';
 import './App.css'
 import MainPage from './views/MainPage';
 import Login from './views/Login';
-import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Navigate, Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
 import Contact from './views/Contact';
 import Search from './views/Search';
 import Footer from './components/Footer';
@@ -37,8 +37,8 @@ function App() {
 
   const AppInit = ({ children }) => {
     const dispatch = useDispatch();
-    const { userLoading } = useSelector((state) => state.user);
-    const { searchLoading } = useSelector((state) => state.data)
+    const { userInitLoad } = useSelector((state) => state.user);
+    const { dataInitLoad } = useSelector((state) => state.data)
 
     useEffect(() => {
 
@@ -57,11 +57,11 @@ function App() {
 
     }, [token, dispatch]);
 
-    if (userLoading || searchLoading) {
+    if (userInitLoad || dataInitLoad) {
       return <CircularProgress />;
     }
-
     return children;
+
   };
 
   const ProtectedRoute = ({ children }) => {
@@ -74,6 +74,16 @@ function App() {
     return children;
   };
 
+  //Guarantee that navigation causes screen to go up
+  const ScrollToTop = () => {
+    const location = useLocation();
+
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [location]);
+
+    return null;
+  };
 
 
   return (
@@ -82,17 +92,19 @@ function App() {
         <ThemeProvider theme={theme}>
 
           <Router>
+            <ScrollToTop></ScrollToTop>
 
             <TopToolbar></TopToolbar>
 
             <Box className='content'>
 
               <Routes>
+                <Route path="/" element={<MainPage />} />
+
                 <Route path="/publicprofile/:uuid" element={<PublicProfile />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/" element={<MainPage />} />
 
                 <Route
                   path="/profile"

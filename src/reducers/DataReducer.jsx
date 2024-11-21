@@ -1,15 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getServices, getUserBookings, sittersDataFetch } from "../requests/dataRequests";
+import { getServices, getSittersDataFetch, getSittersWithFilter, getUserBookings } from "../requests/dataRequests";
 
 
 
-let serviceTypes = ["Dog sitting", "Dog walking"]
 let availableLocations = ["Helsinki", "Espoo", "Vantaa"]
-let initialParameters = {
-    service: 'Dog sitting',
-    location: 'Helsinki',
-    rating: 0,
-}
 
 let exampleSearchResults = [
     {
@@ -86,10 +80,17 @@ export const dataInit = createAsyncThunk(
     async (token) => {
 
         const bookings = token ? await getUserBookings(token) : []
-        const sitters = await sittersDataFetch()
+        const sitters = await getSittersDataFetch()
         const services = await getServices()
+        const initSearchParams = {
+            service: services[0],
+            location: 'Helsinki',
+            rating: 0
+        }
 
-        return { bookings: bookings, sitters: sitters, services: services }
+        console.log('init data', initSearchParams)
+
+        return { bookings: bookings, sitters: sitters, services: services, initSearchParams: initSearchParams }
 
     }
 )
@@ -106,8 +107,16 @@ export const searchSitters = createAsyncThunk(
 export const searchAllSitters = createAsyncThunk(
     'data/allSitters',
     async () => {
-        const sitters = await sittersDataFetch()
+        const sitters = await getSittersDataFetch()
         return sitters
+    }
+)
+
+export const searchFilteredSitters = createAsyncThunk(
+    'data/filteredSitters',
+    async (filters) => {
+        const sitters = await getSittersWithFilter(filters)
+        return {sitters: sitters, filters: filters}
     }
 )
 
@@ -130,101 +139,117 @@ export const getBookings = createAsyncThunk(
 const DataReducer = createSlice({
     name: 'search',
     initialState: {
-        searchLoading: false,
+        //loaders
+        dataInitLoad: true,
+        sittersLoad: false,
+        filterLoad: false,
+        serviceTypesLoad: false,
+        bookingsLoad: false,
+
+        //errors
+        dataInitError: null,
+        sittersLoadError: null,
+        filterLoadError: null,
+        serviceTypesError: null,
+        bookingsError: null,
+
+        //Main / other stuff
         availableLocations: availableLocations,
         services: [],
-        searchParameters: initialParameters,
+        searchParameters: {
+            service: null,
+            location: '',
+            rating: null
+        },
         searchResults: [],
         sittersList: [],
         bookingHistory: [],
         bookings: [],
-        searchError: null
     },
 
     extraReducers: (builder) => {
         builder
 
             .addCase(dataInit.pending, (state) => {
-                state.searchLoading = true;
+                state.dataInitLoad = true;
                 state.bookings = []
                 state.services = []
                 state.sittersList = []
-                state.searchError = null;
+                state.dataInitError = null;
             })
             .addCase(dataInit.fulfilled, (state, action) => {
-                state.searchLoading = false;
+                state.dataInitLoad = false;
                 state.bookings = action.payload.bookings
                 state.services = action.payload.services
                 state.sittersList = action.payload.sitters
-                state.searchError = null;
+                state.searchParameters = action.payload.initSearchParams
+                state.dataInitError = null;
             })
             .addCase(dataInit.rejected, (state, action) => {
-                state.searchLoading = false;
+                state.dataInitLoad = false;
                 state.bookings = []
                 state.services = []
                 state.sittersList = []
-                state.searchError = action.error.message;
-            })
-
-            .addCase(searchSitters.pending, (state) => {
-                state.searchLoading = true;
-                state.searchParameters = initialParameters;
-                state.searchResults = []
-                state.searchError = null;
-            })
-            .addCase(searchSitters.fulfilled, (state, action) => {
-                state.searchLoading = false;
-                state.searchParameters = action.payload.searchParameters;
-                state.searchResults = action.payload.searchResults;
-                state.searchError = null;
-            })
-            .addCase(searchSitters.rejected, (state, action) => {
-                state.searchLoading = false;
-                state.searchParameters = initialParameters;
-                state.searchResults = []
-                state.searchError = action.error.message;
+                state.dataInitError = action.error.message;
             })
 
             .addCase(searchAllSitters.pending, (state) => {
-                state.searchLoading = true;
-                state.searchError = false;
+                state.sittersLoad = true;
+                state.sittersLoadError = false;
             })
             .addCase(searchAllSitters.fulfilled, (state, action) => {
-                state.searchLoading = false;
+                state.sittersLoad = false;
                 state.sittersList = action.payload
-                state.searchError = false;
+                state.sittersLoadError = false;
             })
             .addCase(searchAllSitters.rejected, (state, action) => {
-                state.searchLoading = false;
-                state.searchError = action.error.message;
+                state.sittersLoad = false;
+                state.sittersLoadError = action.error.message;
+            })
+
+            .addCase(searchFilteredSitters.pending, (state) => {
+                state.filterLoad = true;
+                state.searchResults = []
+                state.filterLoadError = null;
+            })
+            .addCase(searchFilteredSitters.fulfilled, (state, action) => {
+                state.filterLoad = false;
+                state.searchParameters = action.payload.filters;
+                state.searchResults = action.payload.sitters;
+                state.filterLoadError = null;
+            })
+            .addCase(searchFilteredSitters.rejected, (state, action) => {
+                state.filterLoad = false;
+                state.searchResults = []
+                state.filterLoadError = action.error.message;
             })
 
             .addCase(getServiceTypes.pending, (state) => {
-                state.searchLoading = true;
-                state.searchError = false;
+                state.serviceTypesLoad = true;
+                state.serviceTypesError = false;
             })
             .addCase(getServiceTypes.fulfilled, (state, action) => {
-                state.searchLoading = false;
+                state.serviceTypesLoad = false;
                 state.services = action.payload
-                state.searchError = false;
+                state.serviceTypesError = false;
             })
             .addCase(getServiceTypes.rejected, (state, action) => {
-                state.searchLoading = false;
-                state.searchError = action.error.message;
+                state.serviceTypesLoad = false;
+                state.serviceTypesError = action.error.message;
             })
 
             .addCase(getBookings.pending, (state) => {
-                state.searchLoading = true;
-                state.searchError = false;
+                state.bookingsLoad = true;
+                state.bookingsError = false;
             })
             .addCase(getBookings.fulfilled, (state, action) => {
-                state.searchLoading = false;
+                state.bookingsLoad = false;
                 state.bookings = action.payload
-                state.searchError = false;
+                state.bookingsError = false;
             })
             .addCase(getBookings.rejected, (state, action) => {
-                state.searchLoading = false;
-                state.searchError = action.error.message;
+                state.bookingsLoad = false;
+                state.bookingsError = action.error.message;
             })
     }
 })
