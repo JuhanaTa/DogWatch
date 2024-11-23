@@ -2,7 +2,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Divider, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -10,16 +10,21 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import SendIcon from '@mui/icons-material/Send';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { createSitterBooking } from '../reducers/DataReducer';
 
-function RequestBooking({ handleBookingForm }) {
+function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
     const { user } = useSelector((state) => state.user)
     const { services, availableLocations } = useSelector((state) => state.data)
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const token = localStorage.getItem('token');
 
     const [service, setService] = useState(services[0].name);
     const [location, setLocation] = useState(availableLocations[0]);
     const [description, setDescription] = useState('');
+    const [selectedDates, setSelectedDates] = useState([]);
 
     const handleService = (event) => {
         event.preventDefault();
@@ -36,26 +41,44 @@ function RequestBooking({ handleBookingForm }) {
         setDescription(event.target.value);
     };
 
-
-
-
-
-    const [selectedDates, setSelectedDates] = useState([]);
-
     const handleDateChange = (date) => {
-        const dateString = date.format('YYYY-MM-DD');
-        setSelectedDates((prevDates) =>
-            prevDates.includes(dateString)
+        console.log('date', date.toISOString());
+        const dateString = date.toISOString();
+    
+        setSelectedDates((prevDates) => {
+            const updatedDates = prevDates.includes(dateString)
                 ? prevDates.filter((d) => d !== dateString) // Deselect if already selected
-                : [...prevDates, dateString] // Add to selected dates
-        );
+                : [...prevDates, dateString]; // Add to selected dates
+    
+            // Sort dates from earliest to latest
+            return updatedDates.sort((a, b) => new Date(a) - new Date(b));
+        });
     };
     console.log('selections', selectedDates, service, location)
 
-    const isSelected = (date) => selectedDates.includes(date.format('YYYY-MM-DD'));
+    const isSelected = (date) => selectedDates.includes(date.toISOString());
 
+    const handleBookingRequest = () => {
 
+        const usedService = services.find(serviceItem => service === serviceItem.name)
 
+        if(selectedDates.length > 0) {
+            let bookingData = {
+                startDate: selectedDates[0],
+                endDate: selectedDates[selectedDates.length - 1],
+                location: location,
+                serviceId: usedService.uuid,
+                sitterId: viewedProfile.uuid
+            }
+
+            console.log('booking data', bookingData)
+    
+            dispatch(createSitterBooking({
+                bookingData: bookingData,
+                token: token
+            }))
+        }
+    }
 
     return (
 
@@ -108,11 +131,6 @@ function RequestBooking({ handleBookingForm }) {
                     />
                 </FormControl>
 
-
-
-
-
-
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DateCalendar
                         onChange={handleDateChange}
@@ -137,14 +155,10 @@ function RequestBooking({ handleBookingForm }) {
                     />
                 </LocalizationProvider>
 
-
-
             </Box>
 
             <Button
-                onClick={(e) => {
-                    handleBookingForm(e)
-                }}
+                onClick={handleBookingRequest}
                 variant="contained"
                 endIcon={<SendIcon />}
             >

@@ -90,7 +90,7 @@ function PublicProfile() {
                         onClose={handleBookingForm}
                     >
                         <Box sx={modalStyle}>
-                            <RequestBooking handleBookingForm={handleBookingForm}></RequestBooking>
+                            <RequestBooking handleBookingForm={handleBookingForm} viewedProfile={viewedProfile} setBookingOpen={setBookingOpen}></RequestBooking>
                         </Box>
                     </Modal>
 

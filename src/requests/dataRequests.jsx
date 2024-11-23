@@ -26,6 +26,17 @@ const getUserBookings = async (token) => {
     return resp.data
 }
 
+const postSitterRequest = async (bookingData, token) => {
+    const config = {
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+        },
+    };
+    const resp = await axios.post('http://localhost:8080/api/v1/bookings', bookingData, config);
+    return resp.data
+}
+
 const getSittersWithFilter = async (filters) => {
     //Have to use service id for request
     const reqFilters = {
@@ -50,5 +61,6 @@ export {
     getPubliUserData,
     getServices,
     getUserBookings,
+    postSitterRequest,
     getSittersWithFilter
 };

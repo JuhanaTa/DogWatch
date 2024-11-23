@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getServices, getSittersDataFetch, getSittersWithFilter, getUserBookings } from "../requests/dataRequests";
+import { getServices, getSittersDataFetch, getSittersWithFilter, getUserBookings, postSitterRequest } from "../requests/dataRequests";
 
 
 
@@ -57,6 +57,16 @@ export const getBookings = createAsyncThunk(
     }
 )
 
+export const createSitterBooking = createAsyncThunk(
+    'data/createBooking',
+    async (data) => {
+
+        console.log('req data', data.bookingData, data.token)
+        const bookingResp = await postSitterRequest(data.bookingData, data.token)
+        return bookingResp
+    }
+)
+
 const DataReducer = createSlice({
     name: 'search',
     initialState: {
@@ -66,6 +76,7 @@ const DataReducer = createSlice({
         filterLoad: false,
         serviceTypesLoad: false,
         bookingsLoad: false,
+        createBookingLoad: false,
 
         //errors
         dataInitError: null,
@@ -73,6 +84,7 @@ const DataReducer = createSlice({
         filterLoadError: null,
         serviceTypesError: null,
         bookingsError: null,
+        createBookingError: null,
 
         //Main / other stuff
         availableLocations: availableLocations,
@@ -121,7 +133,7 @@ const DataReducer = createSlice({
             .addCase(searchAllSitters.fulfilled, (state, action) => {
                 state.sittersLoad = false;
                 state.sittersList = action.payload
-                state.sittersLoadError = false;
+                state.sittersLoadError = null;
             })
             .addCase(searchAllSitters.rejected, (state, action) => {
                 state.sittersLoad = false;
@@ -147,12 +159,12 @@ const DataReducer = createSlice({
 
             .addCase(getServiceTypes.pending, (state) => {
                 state.serviceTypesLoad = true;
-                state.serviceTypesError = false;
+                state.serviceTypesError = null;
             })
             .addCase(getServiceTypes.fulfilled, (state, action) => {
                 state.serviceTypesLoad = false;
                 state.services = action.payload
-                state.serviceTypesError = false;
+                state.serviceTypesError = null;
             })
             .addCase(getServiceTypes.rejected, (state, action) => {
                 state.serviceTypesLoad = false;
@@ -161,16 +173,30 @@ const DataReducer = createSlice({
 
             .addCase(getBookings.pending, (state) => {
                 state.bookingsLoad = true;
-                state.bookingsError = false;
+                state.bookingsError = null;
             })
             .addCase(getBookings.fulfilled, (state, action) => {
                 state.bookingsLoad = false;
                 state.bookings = action.payload
-                state.bookingsError = false;
+                state.bookingsError = null;
             })
             .addCase(getBookings.rejected, (state, action) => {
                 state.bookingsLoad = false;
                 state.bookingsError = action.error.message;
+            })
+
+            .addCase(createSitterBooking.pending, (state) => {
+                state.createBookingLoad = true;
+                state.createBookingError = null;
+            })
+            .addCase(createSitterBooking.fulfilled, (state, action) => {
+                state.createBookingLoad = false;
+                state.bookings.push(action.payload.booking) 
+                state.createBookingError = null;
+            })
+            .addCase(createSitterBooking.rejected, (state, action) => {
+                state.createBookingLoad = false;
+                state.createBookingError = action.error.message;
             })
     }
 })

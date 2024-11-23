@@ -6,9 +6,17 @@ import { format } from 'date-fns';
 
 function BookingRequestItem({ currentDate, booking }) {
     const { user } = useSelector((state) => state.user)
+    const { services } = useSelector((state) => state.data)
 
-    const endDate = format(new Date(booking.startDate * 1000), 'MMMM dd, yyyy HH:mm')
-    const startDate = format(new Date(booking.endDate * 1000), 'MMMM dd, yyyy HH:mm')
+    const bookingService = services.find(serviceItem => booking.serviceId === serviceItem.uuid)
+
+    //const endDate = format(new Date(booking.startDate * 1000), 'MMMM dd, yyyy HH:mm')
+    //const startDate = format(new Date(booking.endDate * 1000), 'MMMM dd, yyyy HH:mm')
+
+    const endDate = format(new Date(booking.endDate), "MMMM d, yyyy")
+    const startDate = format(new Date(booking.startDate), "MMMM d, yyyy")
+
+    console.log('booking', booking)
 
     return (
 
@@ -49,8 +57,8 @@ function BookingRequestItem({ currentDate, booking }) {
                         }}
                     >
                         <Typography variant='p' sx={{ fontWeight: 'bold' }}>{startDate} - {endDate}</Typography>
-                        <Typography>Services: {booking.serviceType}</Typography>
-                        <Typography variant='p'>By: {booking.serviceProvider}</Typography>
+                        <Typography>Service: {bookingService.name}</Typography>
+                        <Typography variant='p'>By: {booking.ownerId}</Typography>
                     </Box>
                 </Box>
 
