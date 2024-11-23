@@ -5,37 +5,8 @@ import { useSelector } from 'react-redux';
 function BookingRequests() {
 
     const { bookings } = useSelector((state) => state.data)
-
-    const bookingRequests = [
-        {
-            serviceType: 'Dog sitting',
-            startDate: 1731612988,
-            endDate: 1731611988,
-            createdDate: 1731602988,
-            serviceProvider: 'Liam Nelsson'
-        },
-        {
-            serviceType: 'Dog sitting',
-            startDate: 1731612988,
-            endDate: 1731611988,
-            createdDate: 1731602988,
-            serviceProvider: 'Liam Nelsson'
-        },
-        {
-            serviceType: 'Dog sitting',
-            startDate: 1731612988,
-            endDate: 1731611988,
-            createdDate: 1731602988,
-            serviceProvider: 'Liam Nelsson'
-        },
-        {
-            serviceType: 'Dog sitting',
-            startDate: 1731612988,
-            endDate: 1731611988,
-            createdDate: 1731602988,
-            serviceProvider: 'Liam Nelsson'
-        },
-    ]
+    console.log('bookings!!!', bookings)
+    const bookingReqs = bookings.filter(booking => booking.status === "pending" || booking.status === "denied")
 
     const currentDate = Math.floor(Date.now() / 1000);
 
@@ -52,13 +23,13 @@ function BookingRequests() {
 
             <Typography variant='h4'>Booking Requests</Typography>
 
-            {bookings.length > 0 ?
+            {bookingReqs.length > 0 ?
 
-                bookings.map((booking, index) => (
+                bookingReqs.map((booking, index) => (
                     <BookingRequestItem key={index} booking={booking} currentDate={currentDate}></BookingRequestItem>
                 ))
                 :
-                <Typography variant='p'>Currently there are no bookings for you.</Typography>
+                <Typography variant='p'>Currently there are no new booking requests for you.</Typography>
             }
 
 

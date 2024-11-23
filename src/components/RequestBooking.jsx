@@ -12,10 +12,12 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSitterBooking } from '../reducers/DataReducer';
+import { DateTimePicker } from '@mui/x-date-pickers';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 
 function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
     const { user } = useSelector((state) => state.user)
-    const { services, availableLocations } = useSelector((state) => state.data)
+    const { services, availableLocations, createBookingError } = useSelector((state) => state.data)
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -24,7 +26,11 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
     const [service, setService] = useState(services[0].name);
     const [location, setLocation] = useState(availableLocations[0]);
     const [description, setDescription] = useState('');
-    const [selectedDates, setSelectedDates] = useState([]);
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
+
+    const [inputError, setInpuError] = useState(null);
+
 
     const handleService = (event) => {
         event.preventDefault();
@@ -41,44 +47,43 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
         setDescription(event.target.value);
     };
 
-    const handleDateChange = (date) => {
-        console.log('date', date.toISOString());
-        const dateString = date.toISOString();
-    
-        setSelectedDates((prevDates) => {
-            const updatedDates = prevDates.includes(dateString)
-                ? prevDates.filter((d) => d !== dateString) // Deselect if already selected
-                : [...prevDates, dateString]; // Add to selected dates
-    
-            // Sort dates from earliest to latest
-            return updatedDates.sort((a, b) => new Date(a) - new Date(b));
-        });
-    };
-    console.log('selections', selectedDates, service, location)
-
-    const isSelected = (date) => selectedDates.includes(date.toISOString());
-
     const handleBookingRequest = () => {
 
         const usedService = services.find(serviceItem => service === serviceItem.name)
 
-        if(selectedDates.length > 0) {
+        if (startTime && endTime) {
             let bookingData = {
-                startDate: selectedDates[0],
-                endDate: selectedDates[selectedDates.length - 1],
+                startDate: startTime.toISOString(),
+                endDate: endTime.toISOString(),
                 location: location,
                 serviceId: usedService.uuid,
                 sitterId: viewedProfile.uuid
             }
 
             console.log('booking data', bookingData)
-    
+
             dispatch(createSitterBooking({
                 bookingData: bookingData,
                 token: token
-            }))
+            })).then(() => {
+                handleBookingForm()
+            })
+        } else {
+            setInpuError("Both dates must be selected")
         }
     }
+
+    // Handle date changes
+    const handleStartTimeChange = (newValue) => {
+        setStartTime(newValue);
+    };
+
+    const handleEndTimeChange = (newValue) => {
+        setEndTime(newValue);
+    };
+
+    console.log('Selected times:', startTime?.toISOString(), endTime?.toISOString());
+
 
     return (
 
@@ -87,7 +92,7 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
             <Typography variant="h6" sx={{ color: 'text.primary' }}>Request Booking</Typography>
 
 
-            <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ gap: 2, display: 'flex', flexDirection: 'column', minWidth: 250 }}>
                 <FormControl sx={{ width: '100%' }}>
                     <InputLabel id="service-select-label">Service</InputLabel>
                     <Select
@@ -132,27 +137,30 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
                 </FormControl>
 
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DateCalendar
-                        onChange={handleDateChange}
-                        renderDay={(day, selectedDay, pickersDayProps) => {
-                            const isSelectedDay = isSelected(day);
 
-                            return (
-                                <div
-                                    {...pickersDayProps}
-                                    style={{
-                                        ...pickersDayProps.style,
-                                        backgroundColor: isSelectedDay ? '#1976d2' : undefined, // Highlight selected days
-                                        color: isSelectedDay ? '#fff' : undefined, // White text
-                                        borderRadius: '50%', // Circular shape
-                                        cursor: 'pointer', // Hand cursor on hover
-                                    }}
-                                >
-                                    {day.date()}
-                                </div>
-                            );
+
+                    <DateTimePicker
+                        label="Start time"
+                        value={startTime}
+                        onChange={handleStartTimeChange}
+                        viewRenderers={{
+                            hours: null,
+                            minutes: null,
+                            seconds: null,
                         }}
                     />
+
+                    <DateTimePicker
+                        label="End time"
+                        value={endTime}
+                        onChange={handleEndTimeChange}
+                        viewRenderers={{
+                            hours: null,
+                            minutes: null,
+                            seconds: null,
+                        }}
+                    />
+
                 </LocalizationProvider>
 
             </Box>
@@ -164,6 +172,14 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
             >
                 Send Request
             </Button>
+
+            {createBookingError &&
+                <Typography variant='p' color='error'>{createBookingError}</Typography>
+            }
+
+            {inputError &&
+                <Typography variant='p' color='error'>{inputError}</Typography>
+            }
 
         </Box>
 

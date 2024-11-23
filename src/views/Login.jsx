@@ -19,7 +19,7 @@ function Login() {
             backgroundImage: `url(${cover})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            minHeight: '80vh',
+            minHeight: '87.5vh',
             backgroundPosition: "center",
             display: 'block',
             width: '100%'

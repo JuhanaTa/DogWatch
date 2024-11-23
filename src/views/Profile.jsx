@@ -32,8 +32,8 @@ function ProfileOwner() {
                 sx={{ p: 2 }}
             >
                 {value === 0 && <BookingRequests></BookingRequests>}
-                {value === 1 && <Messages></Messages>}
-                {value === 2 && <BookingHistory></BookingHistory>}
+                {value === 1 && <BookingHistory></BookingHistory>}
+                {value === 2 && <Messages></Messages>}
                 {value === 3 && <Settings></Settings>}
             </Box>
         );
@@ -74,9 +74,14 @@ function ProfileOwner() {
                         gap: 2
                     }}>
 
-                    <img style={{ width: 200, borderRadius: '50%' }} src={ProfileImg} />
+                    <img
+                        style={{ width: 200, borderRadius: '50%' }}
+                        src={
+                            `http://localhost:5173/uploads/${user.avatar}`
+                        }
+                    />
 
-                    <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Typography align='left' variant='h4'>{user.firstName} {user.lastName}</Typography>
                         <Typography align='left' variant='p'>{user.headline}</Typography>
                     </Box>
@@ -95,8 +100,8 @@ function ProfileOwner() {
             }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="Booking Requests" />
+                    <Tab label="Bookings" />
                     <Tab label="Messages" />
-                    <Tab label="Booking History" />
                     <Tab label="Account settings" />
 
                 </Tabs>
@@ -106,10 +111,10 @@ function ProfileOwner() {
                 Booking Requests
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-                Messages
+                Bookings
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-                Booking History
+                Messages
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
                 Account settings

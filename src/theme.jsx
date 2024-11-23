@@ -14,7 +14,9 @@ const theme = createTheme({
         primary: "#000000",
         highlight: '#D99528',
         white: '#FFFFFF'
-      }
+      },
+
+      notice: '#D99528'
 
       //Define here custom colors to other elements e.g. error, warning success etc. if needed
     },

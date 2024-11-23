@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getPublicUserInfo, postUserServices, updateUserData, uploadImage, userDataFetch, userLoginReq, userRegisterReq, userUpdatePassword } from "../requests/userRequests";
+import { postUserServices, updateUserData, uploadImage, userDataFetch, userLoginReq, userRegisterReq, userUpdatePassword } from "../requests/userRequests";
 
 
 
@@ -154,7 +154,12 @@ const UserReducer = createSlice({
             .addCase(userLogin.rejected, (state, action) => {
                 state.userLoginLoad = false;
                 state.user = null;
-                state.userLoginError = action.error.message;
+
+                if(action.error.code === "ERR_BAD_REQUEST"){
+                    state.userLoginError = "Input fields are invalid. Please input valid credentials."
+                } else {
+                    state.userLoginError = action.error.message;
+                }
             })
 
             .addCase(userRegister.pending, (state) => {
@@ -170,7 +175,13 @@ const UserReducer = createSlice({
             .addCase(userRegister.rejected, (state, action) => {
                 state.userRegisterLoad = false;
                 state.user = null;
-                state.userRegisterError = action.error.message;
+                console.log('error',action.error.code, action.error )
+
+                if(action.error.code === "ERR_BAD_REQUEST"){
+                    state.userRegisterError = "Input fields are invalid. Please input valid credentials."
+                } else {
+                    state.userRegisterError = action.error.message;
+                }
             })
 
             .addCase(getUserData.pending, (state) => {

@@ -1,12 +1,14 @@
 import { useState } from 'react'
-import { Box, Button, Card, Typography } from '@mui/material';
-import { useSelector } from 'react-redux';
+import { Box, Button, Card, CircularProgress, Typography } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
 import ProfileImg from '../assets/sitter3.jpg';
 import { format } from 'date-fns';
+import { updateBookingStatus } from '../reducers/DataReducer';
 
 function BookingRequestItem({ currentDate, booking }) {
     const { user } = useSelector((state) => state.user)
-    const { services } = useSelector((state) => state.data)
+    const { services, updateBookinStatusLoad } = useSelector((state) => state.data)
+    const token = localStorage.getItem('token');
 
     const bookingService = services.find(serviceItem => booking.serviceId === serviceItem.uuid)
 
@@ -15,8 +17,20 @@ function BookingRequestItem({ currentDate, booking }) {
 
     const endDate = format(new Date(booking.endDate), "MMMM d, yyyy")
     const startDate = format(new Date(booking.startDate), "MMMM d, yyyy")
+    const dispatch = useDispatch();
+
 
     console.log('booking', booking)
+
+    const handleBookingStatusUpdate = (status) => {
+
+        dispatch(updateBookingStatus({
+            status: status,
+            bookingId: booking.uuid,
+            token: token
+        }))
+
+    }
 
     return (
 
@@ -58,25 +72,51 @@ function BookingRequestItem({ currentDate, booking }) {
                     >
                         <Typography variant='p' sx={{ fontWeight: 'bold' }}>{startDate} - {endDate}</Typography>
                         <Typography>Service: {bookingService.name}</Typography>
-                        <Typography variant='p'>By: {booking.ownerId}</Typography>
+                        <Typography variant='p'>By: {booking.owner.firstName} {booking.owner.lastName}</Typography>
+
+                        {booking.status === "pending" ?
+                            <Typography variant='p' color='notice'>Status: {booking.status}</Typography>
+                            : 
+                            <Typography variant='p' color='error'>Status: {booking.status}</Typography>
+                        }
+
                     </Box>
                 </Box>
 
-                <Box>
-                    {user.role === "sitter" ?
-                        <>
-                            <Button sx={{ mr: 1 }} variant="contained">Deny</Button>
+
+                {updateBookinStatusLoad ?
+
+                    <CircularProgress></CircularProgress>
+                    :
+                    <Box>
+                        {user.role === "sitter" ?
+                            <>
+                                <Button
+                                    sx={{ mr: 1 }}
+                                    color='error'
+                                    variant="contained"
+                                    onClick={() => handleBookingStatusUpdate('denied')}
+                                >
+                                    Deny
+                                </Button>
+                                <Button
+                                    sx={{ ml: 1 }}
+                                    disabled={parseInt(currentDate) >= parseInt(booking.endDate) ? false : true}
+                                    variant="contained"
+                                    onClick={() => handleBookingStatusUpdate('confirmed')}
+                                >
+                                    Accept
+                                </Button>
+                            </>
+                            :
                             <Button
-                                sx={{ ml: 1 }}
-                                disabled={parseInt(currentDate) >= parseInt(booking.endDate) ? false : true}
-                                variant="contained">
-                                Accept
-                            </Button>
-                        </>
-                        :
-                        <Button sx={{ mr: 1 }} variant="contained">Cancel Request</Button>
-                    }
-                </Box>
+                                sx={{ mr: 1 }}
+                                variant="contained"
+                                onClick={() => handleBookingStatusUpdate('cancelled')}
+                            >Cancel Request</Button>
+                        }
+                    </Box>
+                }
 
             </Box>
 

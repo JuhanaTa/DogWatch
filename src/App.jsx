@@ -16,7 +16,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import Profile from './views/Profile';
 import PublicProfile from './views/PublicProfile';
 import { configureStore } from '@reduxjs/toolkit';
-import UserReducer, { userInit } from './reducers/UserReducer';
+import UserReducer, { userInit, userLogout } from './reducers/UserReducer';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import DataReducer, { dataInit } from './reducers/DataReducer';
 import { useEffect } from 'react';
@@ -24,11 +24,23 @@ import { useEffect } from 'react';
 
 function App() {
 
+  const authMiddleware = ({ dispatch }) => (next) => (action) => {
+    if (action.type.endsWith('_REJECTED') && action.payload?.response?.status === 401) {
+      // Trigger logout action on 401 response
+      dispatch(userLogout());
+    }
+  
+    return next(action);
+  };
+  
+
   const store = configureStore({
     reducer: {
       user: UserReducer,
       data: DataReducer
-    }
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(authMiddleware),
   })
 
   const token = localStorage.getItem('token');

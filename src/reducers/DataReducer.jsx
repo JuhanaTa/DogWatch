@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getServices, getSittersDataFetch, getSittersWithFilter, getUserBookings, postSitterRequest } from "../requests/dataRequests";
+import { getServices, getSittersDataFetch, getSittersWithFilter, getUserBookings, patchUpdateBookingStatus, postSitterRequest, postSitterReview } from "../requests/dataRequests";
 
 
 
@@ -62,8 +62,29 @@ export const createSitterBooking = createAsyncThunk(
     async (data) => {
 
         console.log('req data', data.bookingData, data.token)
-        const bookingResp = await postSitterRequest(data.bookingData, data.token)
-        return bookingResp
+        await postSitterRequest(data.bookingData, data.token)
+        const bookings = await getUserBookings(data.token)
+        return bookings
+    }
+)
+
+export const updateBookingStatus = createAsyncThunk(
+    'data/updateBooking',
+    async (data) => {
+        console.log('req data', data.status, data.bookingId, data.token)
+        await patchUpdateBookingStatus(data.status, data.bookingId, data.token)
+
+        const bookings = await getUserBookings(data.token)
+        return bookings
+    }
+)
+
+export const leaveSitterReview = createAsyncThunk(
+    'data/leaveSitterReview',
+    async (data) => {
+        console.log('review data', data)
+        const reviewRep = await postSitterReview(data.ratingData, data.bookingId, data.token)
+        return reviewRep
     }
 )
 
@@ -77,6 +98,8 @@ const DataReducer = createSlice({
         serviceTypesLoad: false,
         bookingsLoad: false,
         createBookingLoad: false,
+        updateBookinStatusLoad: false,
+        leaveSitterReviewLoad: false,
 
         //errors
         dataInitError: null,
@@ -85,6 +108,8 @@ const DataReducer = createSlice({
         serviceTypesError: null,
         bookingsError: null,
         createBookingError: null,
+        updateBookinStatusError: null,
+        leaveSitterReviewError: null,
 
         //Main / other stuff
         availableLocations: availableLocations,
@@ -197,6 +222,33 @@ const DataReducer = createSlice({
             .addCase(createSitterBooking.rejected, (state, action) => {
                 state.createBookingLoad = false;
                 state.createBookingError = action.error.message;
+            })
+
+            .addCase(updateBookingStatus.pending, (state) => {
+                state.updateBookinStatusLoad = true;
+                state.updateBookinStatusError = null;
+            })
+            .addCase(updateBookingStatus.fulfilled, (state, action) => {
+                state.updateBookinStatusLoad = false;
+                state.bookings = action.payload
+                state.updateBookinStatusError = null;
+            })
+            .addCase(updateBookingStatus.rejected, (state, action) => {
+                state.updateBookinStatusLoad = false;
+                state.updateBookinStatusError = action.error.message;
+            })
+
+            .addCase(leaveSitterReview.pending, (state) => {
+                state.leaveSitterReviewLoad = true;
+                state.leaveSitterReviewError = null;
+            })
+            .addCase(leaveSitterReview.fulfilled, (state, action) => {
+                state.leaveSitterReviewLoad = false;
+                state.leaveSitterReviewError = null;
+            })
+            .addCase(leaveSitterReview.rejected, (state, action) => {
+                state.leaveSitterReviewLoad = false;
+                state.leaveSitterReviewError = action.error.message;
             })
     }
 })

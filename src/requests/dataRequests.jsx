@@ -37,6 +37,37 @@ const postSitterRequest = async (bookingData, token) => {
     return resp.data
 }
 
+const patchUpdateBookingStatus = async (status, bookingId, token) => {
+
+    console.log('update data', status, bookingId, token)
+
+    const statusData = {
+        status: status
+    }
+
+    const config = {
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+        },
+    };
+    const resp = await axios.patch(`http://localhost:8080/api/v1/bookings/${bookingId}`, statusData, config);
+    return resp.data
+
+}
+
+const postSitterReview = async (ratingData, bookingId, token) => {
+    console.log('ratingData', ratingData)
+    const config = {
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+        },
+    };
+    const resp = await axios.post(`http://localhost:8080/api/v1/reviews/${bookingId}`, ratingData, config);
+    return resp.data
+}
+
 const getSittersWithFilter = async (filters) => {
     //Have to use service id for request
     const reqFilters = {
@@ -62,5 +93,7 @@ export {
     getServices,
     getUserBookings,
     postSitterRequest,
+    patchUpdateBookingStatus,
+    postSitterReview,
     getSittersWithFilter
 };

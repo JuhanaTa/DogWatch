@@ -14,7 +14,7 @@ import { getPubliUserData } from '../requests/dataRequests';
 function PublicProfile() {
     const { user } = useSelector((state) => state.user)
 
-    const [rating, setRating] = useState(5);
+    const [ratingFilter, setRatingFilter] = useState(5)
     const [bookingOpen, setBookingOpen] = useState(false);
     const [profileLoading, setProfileLoading] = useState(true)
     const [viewedProfile, setViewedProfile] = useState(null)
@@ -30,7 +30,8 @@ function PublicProfile() {
     const navigate = useNavigate();
 
     const handleRating = (event) => {
-        setRating(event.target.value);
+        setRatingFilter(event.target.value);
+        
     };
 
     const handleBookingForm = () => {
@@ -118,12 +119,13 @@ function PublicProfile() {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 p: 2,
-                                gap: 2
+                                gap: 2,
+                                flexWrap: 'wrap'
                             }}>
 
                             <img style={{ width: 200 }} src={ProfileImg} />
 
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column'}}>
                                 <Typography align='left' variant='h4'>{viewedProfile.firstName} {viewedProfile.lastName}</Typography>
                                 <Typography align='left' variant='p'>--</Typography>
                             </Box>
@@ -160,7 +162,6 @@ function PublicProfile() {
                         <Card sx={{
                             flex: 2,
                             p: 2,
-                            width: '100%',
                             minWidth: 300,
                         }}>
 
@@ -172,7 +173,7 @@ function PublicProfile() {
                                     <Select
                                         labelId="rating-label"
                                         id="rating-select"
-                                        value={rating}
+                                        value={ratingFilter}
                                         label="Rating"
                                         onChange={handleRating}
                                     >
@@ -186,6 +187,7 @@ function PublicProfile() {
                                 </FormControl>
 
                             </Box>
+
                             <ReviewList reviews={viewedProfile.receivedReviews}></ReviewList>
 
                         </Card>

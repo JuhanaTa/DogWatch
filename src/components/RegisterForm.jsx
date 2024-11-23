@@ -84,13 +84,13 @@ function RegisterForm({ setShowRegister }) {
         <Box sx={{ width: '100%', height: '80vh', position: 'relative' }}>
 
             <Box sx={{
-                width: '45vw',
-                maxWidth: 700,
+                minWidth: 200,
+                maxWidth: 1000,
                 backgroundColor: 'background.paper',
                 position: 'absolute',
-                top: '50%',
+                top: '55%',
                 left: '15%',
-                transform: 'translate(-10%, -50%)',
+                transform: 'translate(-15%, -50%)',
                 display: 'flex',
                 flexDirection: 'column',
                 p: 4
@@ -242,10 +242,10 @@ function RegisterForm({ setShowRegister }) {
                     }
 
                     {userRegisterError && (
-                        <Typography variant='p'>Register failed {userRegisterError}</Typography>
+                        <Typography variant='p' color='error'>Register failed: {userRegisterError}</Typography>
                     )}
 
-                    <Typography variant="p" sx={{ color: 'text.primary', p: 1 }}>
+                    <Typography variant="p" sx={{ color: 'text.primary'}}>
                         Have you already created an account?{" "}
                         <Link onClick={() => setShowRegister(false)} color="inherit">
                             Sign in instead!

@@ -11,6 +11,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '../reducers/UserReducer';
+import { dataInit } from '../reducers/DataReducer';
 
 function LoginForm({ setShowRegister }) {
     // normal states
@@ -45,6 +46,10 @@ function LoginForm({ setShowRegister }) {
 
         dispatch(userLogin(credentials)).then((res) => {
             if (res.payload) {
+                //update data storage
+                dispatch(dataInit(res.payload.token)).then((res) => {
+                    console.log('res payload',res.payload)
+                })
                 navigate(`/`);
             }
         })
@@ -55,8 +60,8 @@ function LoginForm({ setShowRegister }) {
         <Box sx={{ width: '100%', height: '80vh', position: 'relative' }}>
 
             <Box sx={{
-                width: '45vw',
-                maxWidth: 700,
+                minWidth: 200,
+                maxWidth: 750,
                 backgroundColor: 'background.paper',
                 position: 'absolute',
                 top: '50%',
@@ -121,7 +126,7 @@ function LoginForm({ setShowRegister }) {
                 }
 
                 {userLoginError && (
-                    <Typography variant='p'>Login failed {userLoginError}</Typography>
+                    <Typography variant='p' color='error'>Login failed: {userLoginError}</Typography>
                 )}
 
                 <Typography align='left' variant="p" sx={{ color: 'text.primary' }}>
