@@ -60,7 +60,7 @@ function BookingItem({ currentDate, booking }) {
 
         <Card
             sx={{
-                width: '90vw',
+                width: '100%',
                 display: 'flex',
                 flexDirection: 'column',
 

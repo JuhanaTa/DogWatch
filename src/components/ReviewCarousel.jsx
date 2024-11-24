@@ -48,7 +48,7 @@ function ReviewCarousel() {
 
     return (
 
-        <Box sx={{ display: 'flex', width: '100%', maxWidth: 1000, justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', width: '100%', maxWidth: 800, justifyContent: 'center', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
 
             <Typography variant='h4'>What Our Customers Say</Typography>
 

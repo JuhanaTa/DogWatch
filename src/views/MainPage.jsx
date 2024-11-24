@@ -39,10 +39,10 @@ function MainPage() {
             </Box>
 
             <Box sx={{
-                display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 10
+                display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', gap: 6
             }}>
 
-                <Box>
+                <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column' }}>
                     <Typography variant="h4">
                         Why Choose Us
                     </Typography>
@@ -51,7 +51,7 @@ function MainPage() {
 
                 <ReviewCarousel></ReviewCarousel>
 
-                <Box>
+                <Box sx={{ display: 'flex', gap: 2, flexDirection: 'column' }}>
                     <Typography variant="h4">
                         Our Dog Sitters
                     </Typography>

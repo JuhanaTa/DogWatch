@@ -12,9 +12,8 @@ function SearchResults({ preview }) {
 
     if (preview) {
         //Sitters on mainpage
-        results = sittersList
-        console.log(sittersList[1].receivedReviews)
-        const avg = sittersList[1].receivedReviews.reduce((acc, review) => acc + review.rating, 0) / sittersList[1].receivedReviews.length
+        //Show only 6 first sitters.
+        results = sittersList.slice(0, 6)
     } else {
         //Filtered sitters
         results = searchResults
@@ -26,7 +25,11 @@ function SearchResults({ preview }) {
         <Grid
             container
             spacing={2}
-            sx={{ width: '70vw', p: 2 }}
+            sx={{
+                width: '70vw',
+                maxWidth: 850,
+                p: 2
+            }}
             justifyContent={"center"}
             alignItems={"center"}
         >

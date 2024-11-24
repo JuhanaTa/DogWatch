@@ -2,8 +2,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Avatar, Box, Divider, ListItem, ListItemButton, ListItemText, Rating, Typography } from '@mui/material';
-import { FixedSizeList } from 'react-window';
+import { Avatar, Box, Rating, Typography } from '@mui/material';
 import { format } from 'date-fns';
 
 function ReviewList({ reviews }) {
