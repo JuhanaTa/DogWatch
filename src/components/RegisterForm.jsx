@@ -74,7 +74,7 @@ function RegisterForm({ setShowRegister }) {
         console.log('creds', credentials)
         dispatch(userRegister(credentials)).then((result) => {
             if (result.payload) {
-                navigate(`/`)
+                navigate(`/DogWatch/`)
             }
         })
     }

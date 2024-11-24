@@ -119,16 +119,16 @@ function App() {
 
             <Box className='content'>
 
-              <Routes>
-                <Route path="/" element={<MainPage />} />
+              <Routes basename="/DogWatch/">
+                <Route path="/DogWatch/" element={<MainPage />} />
 
-                <Route path="/publicprofile/:uuid" element={<PublicProfile />} />
-                <Route path="/search" element={<Search />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/DogWatch/publicprofile/:uuid" element={<PublicProfile />} />
+                <Route path="/DogWatch/search" element={<Search />} />
+                <Route path="/DogWatch/contact" element={<Contact />} />
+                <Route path="/DogWatch/login" element={<Login />} />
 
                 <Route
-                  path="/profile"
+                  path="/DogWatch/profile"
                   element={
                     <ProtectedRoute>
                       <Profile />
@@ -161,7 +161,7 @@ function App() {
     const { user } = useSelector((state) => state.user);
 
     if (!user) {
-      return <Navigate to="/login" replace />;
+      return <Navigate to="/DogWatch/login" replace />;
     }
 
     return children;

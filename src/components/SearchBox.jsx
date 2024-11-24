@@ -51,7 +51,7 @@ function SearchBox() {
             if (result.payload) {
                 //Finally go to search page when sitters fetched
                 console.log('should navigate to search')
-                navigate(`/search`)
+                navigate(`/DogWatch/search`)
             }
         })
 

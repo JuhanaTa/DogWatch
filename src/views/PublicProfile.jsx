@@ -35,7 +35,7 @@ function PublicProfile() {
         if (user) {
             setBookingOpen(!bookingOpen);
         } else {
-            navigate(`/login`)
+            navigate(`/DogWatch/login`)
         }
     };
 
@@ -43,7 +43,7 @@ function PublicProfile() {
         if (user) {
             //setBookingOpen(!bookingOpen);
         } else {
-            navigate(`/login`)
+            navigate(`/DogWatch/login`)
         }
     };
 

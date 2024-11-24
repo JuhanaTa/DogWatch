@@ -34,7 +34,7 @@ function Messages() {
                 <Card sx={{ flex: 1, height: 600, minWidth: 300 }}>
 
                     <CardActionArea
-                        onClick={() => { navigate(`/publicprofile/${result.uuid}`) }}
+                        onClick={() => { navigate(`/DogWatch/publicprofile/${result.uuid}`) }}
                     >
 
                         <Box
@@ -70,7 +70,7 @@ function Messages() {
                     </CardActionArea>
 
                     <CardActionArea
-                        onClick={() => { navigate(`/publicprofile/${result.uuid}`) }}
+                        onClick={() => { navigate(`/DogWatch/publicprofile/${result.uuid}`) }}
                     >
 
                         <Box

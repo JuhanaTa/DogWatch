@@ -40,7 +40,7 @@ function TopToolbar() {
   const handleUserLogout = () => {
     dispatch(userLogout());
     handleCloseUserMenu()
-    navigate(`/`);
+    navigate(`/DogWatch/`);
   };
 
 
@@ -80,7 +80,7 @@ function TopToolbar() {
             >
 
               <MenuItem onClick={handleCloseNavMenu}>
-                <Link component={RouterLink} to="/" color="primary" sx={{
+                <Link component={RouterLink} to="/DogWatch/" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
@@ -89,7 +89,7 @@ function TopToolbar() {
               </MenuItem>
 
               <MenuItem onClick={handleCloseNavMenu}>
-                <Link component={RouterLink} to="/search" color="primary" sx={{
+                <Link component={RouterLink} to="/DogWatch/search" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
@@ -98,7 +98,7 @@ function TopToolbar() {
               </MenuItem>
 
               <MenuItem onClick={handleCloseNavMenu}>
-                <Link component={RouterLink} to="/contact" color="primary" sx={{
+                <Link component={RouterLink} to="/DogWatch/contact" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
@@ -120,7 +120,7 @@ function TopToolbar() {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             <Button>
-              <Link component={RouterLink} to="/" color="primary" sx={{
+              <Link component={RouterLink} to="/DogWatch/" color="primary" sx={{
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'none',
@@ -128,7 +128,7 @@ function TopToolbar() {
               }}>Home</Link>
             </Button>
             <Button>
-              <Link component={RouterLink} to="/search" color="primary" sx={{
+              <Link component={RouterLink} to="/DogWatch/search" color="primary" sx={{
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'none',
@@ -136,7 +136,7 @@ function TopToolbar() {
               }}>Search</Link>
             </Button>
             <Button>
-              <Link component={RouterLink} to="/contact" color="primary" sx={{
+              <Link component={RouterLink} to="/DogWatch/contact" color="primary" sx={{
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'none',
@@ -170,7 +170,7 @@ function TopToolbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <Link component={RouterLink} to="/profile" color="primary" sx={{
+              <Link component={RouterLink} to="/DogWatch/profile" color="primary" sx={{
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'none',
@@ -187,7 +187,7 @@ function TopToolbar() {
 
 
               {!user &&
-                <Link component={RouterLink} to="/Login" color="primary" sx={{
+                <Link component={RouterLink} to="/DogWatch/Login" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',

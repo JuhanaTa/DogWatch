@@ -47,7 +47,7 @@ function SearchResults({ preview }) {
 
                     >
                         <CardActionArea
-                            onClick={() => { navigate(`/publicprofile/${result.uuid}`) }}
+                            onClick={() => { navigate(`/DogWatch/publicprofile/${result.uuid}`) }}
                         >
 
                             <Avatar
