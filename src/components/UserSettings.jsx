@@ -3,11 +3,12 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Card, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserServices, userChangePassword, userEdit } from '../reducers/UserReducer';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import PersonIcon from '@mui/icons-material/Person';
 
 function UserSettings() {
     const token = localStorage.getItem('token');
@@ -18,13 +19,10 @@ function UserSettings() {
 
     console.log('user Settings user', user)
 
-    const [firstName, setFirstName] = useState(user.firstName)
-    const [lastName, setLastName] = useState(user.lastName)
-    const [email, setEmail] = useState(user.email)
-    const [description, setDescription] = useState(user.description)
-    const [avatar, setAvatar] = useState(user.avatar);
-    const [inputImage, setInputImage] = useState(null);
-    console.log('user services', user.services)
+    const [firstName, setFirstName] = useState(user.firstName != null ? user.firstName : "")
+    const [lastName, setLastName] = useState(user.lastName != null ? user.lastName : "")
+    const [email, setEmail] = useState(user.email != null ? user.email : "")
+    const [description, setDescription] = useState(user.description != null ? user.description : "")
     const userServiceUUIDs = user.services.map((service) => service.uuid);
     const [selectedServices, setSelectedServices] = useState(userServiceUUIDs);
 
@@ -76,12 +74,20 @@ function UserSettings() {
             description: description,
             email: email,
         }
-
         dispatch(userEdit({
             uuid: userUUID,
             token: token,
-            updatedData: updatedData,
-            avatar: inputImage
+            updatedData: updatedData
+        }))
+    }
+
+    const handleImageUpdate = (image) => {
+        console.log('image to send', image)
+        dispatch(userEdit({
+            uuid: userUUID,
+            token: token,
+            updatedData: {},
+            avatar: image
         }))
     }
 
@@ -93,6 +99,8 @@ function UserSettings() {
         }))
     }
 
+
+
     const handlePasswordChange = () => {
 
         let passwords = {
@@ -103,24 +111,18 @@ function UserSettings() {
         dispatch(userChangePassword({ passwords: passwords, uuid: userUUID, token: token }))
     }
 
-    console.log('file', inputImage)
-
     const handleImageChange = (event) => {
         console.log('img', event.target.files[0])
-        if (event.target.files[0]) {
-            setInputImage(event.target.files[0]);
-        }
+        const file = event.target.files[0]
+        handleImageUpdate(file)
     }
-
-    useEffect(() => {
-        console.log('Component re-rendered');
-    });
 
     return (
 
         <Box
             sx={{
                 width: '90vw',
+                maxWidth: 1600,
                 flexDirection: 'column',
                 display: 'flex',
                 justifyContent: 'space-between',
@@ -147,7 +149,6 @@ function UserSettings() {
                     maxWidth: 400,
                     minWidth: 280,
                     position: 'relative',
-                    flex: 1,
                     p: 2
                 }}>
                     <label
@@ -165,14 +166,32 @@ function UserSettings() {
                         <Input
                             id="image-upload"
                             type="file"
+                            name='avatar'
                             onChange={handleImageChange}
+                            value={""}
                             sx={{ display: 'none' }}
                         />
                     </label>
 
-                    <img src={"http://localhost:8080/api/v1/" + user.avatar} alt="Avatar" />
+                    <Avatar
+                        sx={{
+                            height: 280,
+                            width: 280
+                        }}
+                        variant='square'
+                        alt="Remy Sharp"
+                        src={"http://localhost:8080/" + user.avatar}
+                    >
+                        <PersonIcon
+                            sx={{
+                                width: 120,
+                                height: 120
+                            }}>
+                        </PersonIcon>
+                    </Avatar>
 
-                    <Typography variant='p'>Image size should be under 1MB and image ration needs to be 1:1</Typography>
+
+                    <Typography variant='p'>Images are transformed to 1:1 format.</Typography>
 
 
                 </Card>

@@ -3,13 +3,13 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Container, Tab, Tabs, Typography } from '@mui/material';
-import ProfileImg from '../assets/sitter3.jpg';
+import { Box, Tab, Tabs, Typography, Avatar } from '@mui/material';
 import Messages from '../components/Messages';
 import BookingHistory from '../components/BookingHistory';
 import Settings from '../components/UserSettings';
 import BookingRequests from '../components/BookingRequests';
 import { useSelector } from 'react-redux';
+import PersonIcon from '@mui/icons-material/Person';
 
 function ProfileOwner() {
     const { user } = useSelector((state) => state.user)
@@ -29,7 +29,10 @@ function ProfileOwner() {
                 hidden={value !== index}
                 id={`tabpanel-${index}`}
                 {...other}
-                sx={{ p: 2 }}
+                sx={{ 
+                    p: 2,
+                    maxWidth: 1600,
+                }}
             >
                 {value === 0 && <BookingRequests></BookingRequests>}
                 {value === 1 && <BookingHistory></BookingHistory>}
@@ -59,6 +62,7 @@ function ProfileOwner() {
                     sx={{
                         backgroundColor: 'background.paper',
                         width: '90vw',
+                        maxWidth: 1600,
                         height: 200,
                         display: 'flex',
                         position: 'absolute',
@@ -74,12 +78,22 @@ function ProfileOwner() {
                         gap: 2
                     }}>
 
-                    <img
-                        style={{ width: 200, borderRadius: '50%' }}
-                        src={
-                            `http://localhost:5173/uploads/${user.avatar}`
-                        }
-                    />
+                    <Avatar
+                        sx={{
+                            height: 150,
+                            width: 150
+                        }}
+                        sizes='150'
+                        alt="profile"
+                        src={"http://localhost:8080/" + user.avatar}
+                    >
+                        <PersonIcon
+                            sx={{
+                                width: 60,
+                                height: 60
+                            }}>
+                        </PersonIcon>
+                    </Avatar>
 
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Typography align='left' variant='h4'>{user.firstName} {user.lastName}</Typography>
@@ -96,6 +110,7 @@ function ProfileOwner() {
                 borderBottom: 1,
                 borderColor: 'divider',
                 width: '90vw',
+                maxWidth: 1600,
                 paddingBottom: 2
             }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">

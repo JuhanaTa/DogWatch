@@ -54,6 +54,7 @@ function BookingHistory() {
 
         <Box sx={{
             width: '90vw',
+            maxWidth: 1600,
             flexDirection: 'column',
             display: 'flex',
             justifyContent: 'space-between',

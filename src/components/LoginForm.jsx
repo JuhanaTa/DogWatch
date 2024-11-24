@@ -11,7 +11,9 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogin } from '../reducers/UserReducer';
-import { dataInit } from '../reducers/DataReducer';
+import { getUserBookings } from '../requests/dataRequests';
+import { dataAuthInitial } from '../reducers/DataReducer';
+//import { dataInit } from '../reducers/DataReducer';
 
 function LoginForm({ setShowRegister }) {
     // normal states
@@ -44,12 +46,16 @@ function LoginForm({ setShowRegister }) {
             password: password,
         }
 
-        dispatch(userLogin(credentials)).then((res) => {
+        dispatch(userLogin(credentials)).then(async(res) => {
             if (res.payload) {
-                //update data storage
-                dispatch(dataInit(res.payload.token)).then((res) => {
-                    console.log('res payload',res.payload)
-                })
+
+                try {
+                    const bookings = await getUserBookings(res.payload.token)
+                    dispatch(dataAuthInitial(bookings))
+                } catch (error) {
+                    dispatch(dataAuthInitial([]))
+                }
+ 
                 navigate(`/`);
             }
         })

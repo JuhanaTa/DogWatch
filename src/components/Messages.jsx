@@ -11,6 +11,7 @@ function Messages() {
 
         <Box sx={{
             width: '90vw',
+            maxWidth: 1600,
             height: 700,
             flexDirection: 'column',
             display: 'flex',
@@ -21,7 +22,7 @@ function Messages() {
             <Typography variant='h4'>Messages under construction</Typography>
 
             <Box sx={{
-                width: '90vw',
+                width: '100%',
                 flexDirection: 'row',
                 display: 'flex',
                 justifyContent: 'space-between',

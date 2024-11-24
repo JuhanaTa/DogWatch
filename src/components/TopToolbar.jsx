@@ -45,173 +45,175 @@ function TopToolbar() {
 
 
   return (
-      <AppBar position="fixed" color='secondary' elevation={0}>
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
+    <AppBar position="fixed" color='secondary' elevation={0}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
 
-            <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
 
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon />
-              </IconButton>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleOpenNavMenu}
+              color="inherit"
+            >
+              <MenuIcon />
+            </IconButton>
 
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'left',
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-                sx={{ display: { xs: 'block', md: 'none' } }}
-              >
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorElNav}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              open={Boolean(anchorElNav)}
+              onClose={handleCloseNavMenu}
+              sx={{ display: { xs: 'block', md: 'none' } }}
+            >
 
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Link component={RouterLink} to="/" color="primary" sx={{
-                    textDecoration: 'none',
-                    '&:hover': {
-                      textDecoration: 'none',
-                    },
-                  }}>Home</Link>
-                </MenuItem>
-
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Link component={RouterLink} to="/search" color="primary" sx={{
-                    textDecoration: 'none',
-                    '&:hover': {
-                      textDecoration: 'none',
-                    },
-                  }}>Search</Link>
-                </MenuItem>
-
-                <MenuItem onClick={handleCloseNavMenu}>
-                  <Link component={RouterLink} to="/contact" color="primary" sx={{
-                    textDecoration: 'none',
-                    '&:hover': {
-                      textDecoration: 'none',
-                    },
-                  }}>Contact</Link>
-                </MenuItem>
-
-              </Menu>
-
-            </Box>
-
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <img style={{ width: 300 }} src={Logo} />
-            </Box>
-
-            <Box sx={{ display: { xs: 'flex', md: 'none'} }}>
-              <img style={{ width: 150 }} src={Logo} />
-            </Box>
-
-            <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-              <Button>
+              <MenuItem onClick={handleCloseNavMenu}>
                 <Link component={RouterLink} to="/" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
                   },
                 }}>Home</Link>
-              </Button>
-              <Button>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseNavMenu}>
                 <Link component={RouterLink} to="/search" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
                   },
                 }}>Search</Link>
-              </Button>
-              <Button>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseNavMenu}>
                 <Link component={RouterLink} to="/contact" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
                   },
                 }}>Contact</Link>
-              </Button>
-            </Box>
+              </MenuItem>
 
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
-              {user && <Typography>{user.email}</Typography>}
-              <Menu
-                sx={{ mt: '45px' }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                <Link component={RouterLink} to="/profile" color="primary" sx={{
+            </Menu>
+
+          </Box>
+
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <img style={{ width: 300 }} src={Logo} />
+          </Box>
+
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <img style={{ width: 150 }} src={Logo} />
+          </Box>
+
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            <Button>
+              <Link component={RouterLink} to="/" color="primary" sx={{
+                textDecoration: 'none',
+                '&:hover': {
+                  textDecoration: 'none',
+                },
+              }}>Home</Link>
+            </Button>
+            <Button>
+              <Link component={RouterLink} to="/search" color="primary" sx={{
+                textDecoration: 'none',
+                '&:hover': {
+                  textDecoration: 'none',
+                },
+              }}>Search</Link>
+            </Button>
+            <Button>
+              <Link component={RouterLink} to="/contact" color="primary" sx={{
+                textDecoration: 'none',
+                '&:hover': {
+                  textDecoration: 'none',
+                },
+              }}>Contact</Link>
+            </Button>
+          </Box>
+
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt={user ? user.name : "profile"} src={
+                  user && "http://localhost:8080/" + user.avatar
+                } />
+              </IconButton>
+            </Tooltip>
+            {user && <Typography>{user.email}</Typography>}
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              <Link component={RouterLink} to="/profile" color="primary" sx={{
+                textDecoration: 'none',
+                '&:hover': {
+                  textDecoration: 'none',
+                },
+              }}>
+
+                <MenuItem onClick={handleCloseUserMenu}>
+
+                  <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
+
+                </MenuItem>
+
+              </Link>
+
+
+              {!user &&
+                <Link component={RouterLink} to="/Login" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
                   },
                 }}>
-
                   <MenuItem onClick={handleCloseUserMenu}>
 
-                    <Typography sx={{ textAlign: 'center' }}>Profile</Typography>
+                    <Typography sx={{ textAlign: 'center' }}>Login</Typography>
 
                   </MenuItem>
-
                 </Link>
+              }
 
+              {user &&
+                <MenuItem onClick={(e) => handleUserLogout(e)}>
 
-                {!user &&
-                  <Link component={RouterLink} to="/Login" color="primary" sx={{
-                    textDecoration: 'none',
-                    '&:hover': {
-                      textDecoration: 'none',
-                    },
-                  }}>
-                    <MenuItem onClick={handleCloseUserMenu}>
+                  <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
 
-                      <Typography sx={{ textAlign: 'center' }}>Login</Typography>
+                </MenuItem>
+              }
+            </Menu>
+          </Box>
 
-                    </MenuItem>
-                  </Link>
-                }
-
-                {user &&
-                  <MenuItem onClick={(e) => handleUserLogout(e)}>
-
-                    <Typography sx={{ textAlign: 'center' }}>Logout</Typography>
-
-                  </MenuItem>
-                }
-              </Menu>
-            </Box>
-
-          </Toolbar>
-        </Container>
-      </AppBar>
+        </Toolbar>
+      </Container>
+    </AppBar>
   )
 }
 

@@ -50,8 +50,9 @@ const updateUserData = async (uuid, token, updatedData, avatar) => {
     if (updatedData.headline) formData.append('headline', updatedData.headline);
     if (updatedData.description) formData.append('description', updatedData.description);
 
+    console.log('avatar', avatar)
     // Append file
-    avatar && formData.append('file', avatar, avatar.name);
+    if (avatar) formData.append('avatar', avatar);
 
     const resp = await axios.put(`http://localhost:8080/api/v1/users/${uuid}`, formData, {
         headers: {

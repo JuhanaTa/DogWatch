@@ -12,6 +12,7 @@ function SearchBox() {
     const dispatch = useDispatch();
 
     const { searchParameters, availableLocations, services, filterLoad } = useSelector((state) => state.data)
+    console.log('search params', searchParameters)
     const [service, setService] = useState(searchParameters.service.name);
     const [location, setLocation] = useState(searchParameters.location)
     const [rating, setRating] = useState(searchParameters.rating);

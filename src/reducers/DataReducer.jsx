@@ -5,26 +5,6 @@ import { getServices, getSittersDataFetch, getSittersWithFilter, getUserBookings
 
 let availableLocations = ["Helsinki", "Espoo", "Vantaa"]
 
-export const dataInit = createAsyncThunk(
-    'data/dataInit',
-    async (token) => {
-
-        const bookings = token ? await getUserBookings(token) : []
-        const sitters = await getSittersDataFetch()
-        const services = await getServices()
-        const initSearchParams = {
-            service: services[0],
-            location: 'Helsinki',
-            rating: 0
-        }
-
-        console.log('init data', initSearchParams)
-
-        return { bookings: bookings, sitters: sitters, services: services, initSearchParams: initSearchParams }
-
-    }
-)
-
 export const searchAllSitters = createAsyncThunk(
     'data/allSitters',
     async () => {
@@ -37,7 +17,7 @@ export const searchFilteredSitters = createAsyncThunk(
     'data/filteredSitters',
     async (filters) => {
         const sitters = await getSittersWithFilter(filters)
-        return {sitters: sitters, filters: filters}
+        return { sitters: sitters, filters: filters }
     }
 )
 
@@ -92,7 +72,6 @@ const DataReducer = createSlice({
     name: 'search',
     initialState: {
         //loaders
-        dataInitLoad: true,
         sittersLoad: false,
         filterLoad: false,
         serviceTypesLoad: false,
@@ -102,7 +81,6 @@ const DataReducer = createSlice({
         leaveSitterReviewLoad: false,
 
         //errors
-        dataInitError: null,
         sittersLoadError: null,
         filterLoadError: null,
         serviceTypesError: null,
@@ -125,31 +103,21 @@ const DataReducer = createSlice({
         bookings: [],
     },
 
+    reducers: {
+        dataInitial: (state, action) => {
+            // Clear user state and localStorage on logout
+            state.services = action.payload.services
+            state.sittersList = action.payload.sitters
+            state.searchParameters = action.payload.initSearchParams
+        },
+        dataAuthInitial: (state, action) => {
+            state.bookings = action.payload;
+        },
+
+    },
+
     extraReducers: (builder) => {
         builder
-
-            .addCase(dataInit.pending, (state) => {
-                state.dataInitLoad = true;
-                state.bookings = []
-                state.services = []
-                state.sittersList = []
-                state.dataInitError = null;
-            })
-            .addCase(dataInit.fulfilled, (state, action) => {
-                state.dataInitLoad = false;
-                state.bookings = action.payload.bookings
-                state.services = action.payload.services
-                state.sittersList = action.payload.sitters
-                state.searchParameters = action.payload.initSearchParams
-                state.dataInitError = null;
-            })
-            .addCase(dataInit.rejected, (state, action) => {
-                state.dataInitLoad = false;
-                state.bookings = []
-                state.services = []
-                state.sittersList = []
-                state.dataInitError = action.error.message;
-            })
 
             .addCase(searchAllSitters.pending, (state) => {
                 state.sittersLoad = true;
@@ -216,7 +184,7 @@ const DataReducer = createSlice({
             })
             .addCase(createSitterBooking.fulfilled, (state, action) => {
                 state.createBookingLoad = false;
-                state.bookings.push(action.payload.booking) 
+                state.bookings.push(action.payload.booking)
                 state.createBookingError = null;
             })
             .addCase(createSitterBooking.rejected, (state, action) => {
@@ -252,5 +220,7 @@ const DataReducer = createSlice({
             })
     }
 })
+
+export const { dataInitial, dataAuthInitial } = DataReducer.actions;
 
 export default DataReducer.reducer;

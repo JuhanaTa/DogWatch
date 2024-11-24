@@ -1,16 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { postUserServices, updateUserData, uploadImage, userDataFetch, userLoginReq, userRegisterReq, userUpdatePassword } from "../requests/userRequests";
 
-
-
-export const userInit = createAsyncThunk(
-    'user/userInit',
-    async (uuid) => {
-        const userPersonalData = await userDataFetch(uuid)
-        return { userInfo: userPersonalData }
-    }
-)
-
 export const userLogin = createAsyncThunk(
     'user/userLogin',
     async (credentials) => {
@@ -120,26 +110,14 @@ const UserReducer = createSlice({
             state.error = null;
             localStorage.removeItem('token');
             localStorage.removeItem('userUUID');
-        }
+        },
+        userInitial: (state, action) => {
+            state.user = action.payload.userInfo;
+        },
+
     },
     extraReducers: (builder) => {
         builder
-
-            .addCase(userInit.pending, (state) => {
-                state.userInitLoad = true;
-                state.user = null;
-                state.userInitError = null;
-            })
-            .addCase(userInit.fulfilled, (state, action) => {
-                state.userInitLoad = false;
-                state.user = action.payload.userInfo;
-                state.userInitError = null;
-            })
-            .addCase(userInit.rejected, (state, action) => {
-                state.userInitLoad = false;
-                state.user = null;
-                state.userInitError = action.error.message;
-            })
 
             .addCase(userLogin.pending, (state) => {
                 state.userLoginLoad = true;
@@ -244,6 +222,6 @@ const UserReducer = createSlice({
     }
 })
 
-export const { userLogout } = UserReducer.actions;
+export const { userLogout, userInitial } = UserReducer.actions;
 
 export default UserReducer.reducer;

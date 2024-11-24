@@ -3,13 +3,14 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Card, CircularProgress, Container, FormControl, InputLabel, MenuItem, Modal, Select, Tab, Tabs, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, CircularProgress, Container, FormControl, InputLabel, MenuItem, Modal, Select, Tab, Tabs, Typography } from '@mui/material';
 import ProfileImg from '../assets/sitter3.jpg';
 import ReviewList from '../components/ReviewList';
 import RequestBooking from '../components/RequestBooking';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPubliUserData } from '../requests/dataRequests';
+import PersonIcon from '@mui/icons-material/Person';
 
 function PublicProfile() {
     const { user } = useSelector((state) => state.user)
@@ -22,16 +23,12 @@ function PublicProfile() {
     console.log('viewed prof', viewedProfile)
 
     const { uuid } = useParams();
-    const dispatch = useDispatch();
-    console.log('UUID:', uuid);
-    //const viewedProfile = sittersList.find(search => search.uuid === parseInt(uuid));
-
 
     const navigate = useNavigate();
 
     const handleRating = (event) => {
         setRatingFilter(event.target.value);
-        
+
     };
 
     const handleBookingForm = () => {
@@ -61,7 +58,7 @@ function PublicProfile() {
         p: 4,
     };
 
-    const getViewedProfile = async() => {
+    const getViewedProfile = async () => {
         try {
             const profile = await getPubliUserData(uuid)
             console.log('profile', profile)
@@ -109,6 +106,7 @@ function PublicProfile() {
                             sx={{
                                 backgroundColor: 'background.paper',
                                 width: '90vw',
+                                maxWidth: 1600,
                                 display: 'flex',
                                 position: 'absolute',
                                 top: '0%',
@@ -123,9 +121,23 @@ function PublicProfile() {
                                 flexWrap: 'wrap'
                             }}>
 
-                            <img style={{ width: 200 }} src={ProfileImg} />
+                            <Avatar
+                                sx={{
+                                    height: 150,
+                                    width: 150
+                                }}
+                                alt="Remy Sharp"
+                                src={"http://localhost:8080/" + viewedProfile.avatar}
+                            >
+                                <PersonIcon
+                                    sx={{
+                                        width: 60,
+                                        height: 60
+                                    }}>
+                                </PersonIcon>
+                            </Avatar>
 
-                            <Box sx={{ display: 'flex', flexDirection: 'column'}}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <Typography align='left' variant='h4'>{viewedProfile.firstName} {viewedProfile.lastName}</Typography>
                                 <Typography align='left' variant='p'>--</Typography>
                             </Box>
@@ -134,7 +146,7 @@ function PublicProfile() {
 
                     </Box>
 
-                    <Box sx={{ width: '95vw', pb: 2, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2 }}>
+                    <Box sx={{ width: '95vw', maxWidth: 1600, pb: 2, display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 2 }}>
 
                         <Card sx={{
                             flex: 1,
@@ -144,7 +156,7 @@ function PublicProfile() {
                         }}>
                             <Typography variant='h6'>ABOUT ME</Typography>
                             <Typography variant='p'>
-                                {viewedProfile.desc}
+                                {viewedProfile.description}
                             </Typography>
 
                             <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>

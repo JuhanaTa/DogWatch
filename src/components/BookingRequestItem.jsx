@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { Box, Button, Card, CircularProgress, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, CircularProgress, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import ProfileImg from '../assets/sitter3.jpg';
 import { format } from 'date-fns';
 import { updateBookingStatus } from '../reducers/DataReducer';
+import PersonIcon from '@mui/icons-material/Person';
 
 function BookingRequestItem({ currentDate, booking }) {
     const { user } = useSelector((state) => state.user)
@@ -11,6 +12,7 @@ function BookingRequestItem({ currentDate, booking }) {
     const token = localStorage.getItem('token');
 
     const bookingService = services.find(serviceItem => booking.serviceId === serviceItem.uuid)
+    console.log('booking', booking)
 
     //const endDate = format(new Date(booking.startDate * 1000), 'MMMM dd, yyyy HH:mm')
     //const startDate = format(new Date(booking.endDate * 1000), 'MMMM dd, yyyy HH:mm')
@@ -61,7 +63,22 @@ function BookingRequestItem({ currentDate, booking }) {
                         gap: 2
                     }}
                 >
-                    <img style={{ width: 150, heigh: 150, borderRadius: '50%' }} src={ProfileImg} />
+
+                    <Avatar
+                        sx={{
+                            height: 120,
+                            width: 120
+                        }}
+                        alt="ReviewAvatar"
+                        src={"http://localhost:8080/" + booking.owner.avatar}
+                    >
+                        <PersonIcon
+                            sx={{
+                                width: 60,
+                                height: 60
+                            }}>
+                        </PersonIcon>
+                    </Avatar>
 
                     <Box
                         sx={{
@@ -76,7 +93,7 @@ function BookingRequestItem({ currentDate, booking }) {
 
                         {booking.status === "pending" ?
                             <Typography variant='p' color='notice'>Status: {booking.status}</Typography>
-                            : 
+                            :
                             <Typography variant='p' color='error'>Status: {booking.status}</Typography>
                         }
 

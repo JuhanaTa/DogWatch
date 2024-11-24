@@ -10,29 +10,32 @@ import Contact from './views/Contact';
 import Search from './views/Search';
 import Footer from './components/Footer';
 import TopToolbar from './components/TopToolbar';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import Profile from './views/Profile';
 import PublicProfile from './views/PublicProfile';
 import { configureStore } from '@reduxjs/toolkit';
-import UserReducer, { userInit, userLogout } from './reducers/UserReducer';
+import UserReducer, { userInitial, userLogout } from './reducers/UserReducer';
 import { Provider, useDispatch, useSelector } from 'react-redux';
-import DataReducer, { dataInit } from './reducers/DataReducer';
-import { useEffect } from 'react';
+import DataReducer, { dataAuthInitial, dataInitial } from './reducers/DataReducer';
+import { useEffect, useState } from 'react';
+import { getServices, getSittersDataFetch, getUserBookings } from './requests/dataRequests';
+import { userDataFetch } from './requests/userRequests';
 
 
 function App() {
 
   const authMiddleware = ({ dispatch }) => (next) => (action) => {
-    if (action.type.endsWith('_REJECTED') && action.payload?.response?.status === 401) {
+    console.log('action happened', action, action.error?.message)
+    if (action.type.endsWith('rejected') && action.error?.message === "Request failed with status code 401") {
       // Trigger logout action on 401 response
       dispatch(userLogout());
     }
-  
+
     return next(action);
   };
-  
+
 
   const store = configureStore({
     reducer: {
@@ -47,60 +50,66 @@ function App() {
   const userUUID = localStorage.getItem('userUUID');
 
 
-  const AppInit = ({ children }) => {
+  const AppInit = () => {
     const dispatch = useDispatch();
-    const { userInitLoad } = useSelector((state) => state.user);
-    const { dataInitLoad } = useSelector((state) => state.data)
+
+    const [waitInit, setWaitInit] = useState(true)
+    const [pageError, setPageError] = useState(null)
 
     useEffect(() => {
 
-      const fetchData = async () => {
+      const fetchInitialData = async () => {
 
-        console.log('userUUID', userUUID)
-        //Initial user data
-        await dispatch(userInit(userUUID))
+        try {
 
-        //Initial app data
-        await dispatch(dataInit(token))
+          if (userUUID) {
+            const userPersonalData = await userDataFetch(userUUID)
+            dispatch(userInitial({ userInfo: userPersonalData }))
+          }
 
+          const sitters = await getSittersDataFetch()
+          const services = await getServices()
+          const initSearchParams = {
+            service: services[0],
+            location: 'Helsinki',
+            rating: 0
+          }
+          dispatch(dataInitial({ sitters: sitters, services: services, initSearchParams: initSearchParams }))
+
+          if (token) {
+            const bookings = token ? await getUserBookings(token) : []
+            dispatch(dataAuthInitial(bookings))
+
+          }
+
+          setWaitInit(false)
+
+        } catch (error) {
+          console.log('error', error)
+
+          if(error.status === 401){
+            //Server returns 401 if token is no more valid.
+            //Logout in such case
+            dispatch(userLogout())
+            setWaitInit(false)
+          } else {
+            setPageError('App load failed: ' + error.message)
+          }
+
+        }
       };
 
-      fetchData();
+      fetchInitialData();
 
-    }, [token, dispatch]);
+    }, []);
 
-    if (userInitLoad || dataInitLoad) {
+    if (pageError) {
+      return <Typography align='left' variant='h4'>{pageError}</Typography>
+    } else if (waitInit) {
       return <CircularProgress />;
-    }
-    return children;
-
-  };
-
-  const ProtectedRoute = ({ children }) => {
-    const { user } = useSelector((state) => state.user);
-
-    if (!user) {
-      return <Navigate to="/login" replace />;
-    }
-
-    return children;
-  };
-
-  //Guarantee that navigation causes screen to go up
-  const ScrollToTop = () => {
-    const location = useLocation();
-
-    useEffect(() => {
-      window.scrollTo(0, 0);
-    }, [location]);
-
-    return null;
-  };
-
-
-  return (
-    <Provider store={store}>
-      <AppInit>
+    } else {
+      console.log('returnin app')
+      return (
         <ThemeProvider theme={theme}>
 
           <Router>
@@ -139,12 +148,42 @@ function App() {
             }}>
               <Footer></Footer>
             </Box>
-
           </Router>
 
         </ThemeProvider>
+      )
+    }
+
+
+  };
+
+  const ProtectedRoute = ({ children }) => {
+    const { user } = useSelector((state) => state.user);
+
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+
+    return children;
+  };
+
+  //Guarantee that navigation causes screen to go up
+  const ScrollToTop = () => {
+    const location = useLocation();
+
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, [location]);
+
+    return null;
+  };
+
+
+  return (
+    <Provider store={store}>
+      <AppInit>
       </AppInit>
-    </Provider>
+    </Provider >
   )
 }
 

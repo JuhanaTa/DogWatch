@@ -3,7 +3,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Card, CircularProgress, Container, Divider, FormControl, IconButton, Modal, Tab, Tabs, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, CircularProgress, Container, Divider, FormControl, IconButton, Modal, Tab, Tabs, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import ProfilePhoto from '../assets/sitter4.jpg';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,7 @@ import ProfileImg from '../assets/sitter3.jpg';
 import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
 import { format } from 'date-fns';
 import ReviewSitter from './ReviewSitter';
+import PersonIcon from '@mui/icons-material/Person';
 
 function BookingItem({ currentDate, booking }) {
 
@@ -141,7 +142,22 @@ function BookingItem({ currentDate, booking }) {
                                 gap: 2
                             }}
                         >
-                            <img style={{ width: 150, heigh: 150, borderRadius: '50%' }} src={ProfileImg} />
+
+                            <Avatar
+                                sx={{
+                                    height: 120,
+                                    width: 120
+                                }}
+                                alt="BookingAvatar"
+                                src={"http://localhost:8080/" + booking.owner.avatar}
+                            >
+                                <PersonIcon
+                                    sx={{
+                                        width: 60,
+                                        height: 60
+                                    }}>
+                                </PersonIcon>
+                            </Avatar>
 
                             <Box
                                 sx={{

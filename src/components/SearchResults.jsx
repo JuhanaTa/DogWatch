@@ -1,6 +1,7 @@
-import { Card, CardContent, Box, Typography, CardActionArea, CardMedia, Grid2 as Grid, Rating } from '@mui/material';
+import { Card, CardContent, Box, Typography, CardActionArea, CardMedia, Grid2 as Grid, Rating, Avatar } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import PersonIcon from '@mui/icons-material/Person';
 
 function SearchResults({ preview }) {
     const navigate = useNavigate();
@@ -12,6 +13,8 @@ function SearchResults({ preview }) {
     if (preview) {
         //Sitters on mainpage
         results = sittersList
+        console.log(sittersList[1].receivedReviews)
+        const avg = sittersList[1].receivedReviews.reduce((acc, review) => acc + review.rating, 0) / sittersList[1].receivedReviews.length
     } else {
         //Filtered sitters
         results = searchResults
@@ -37,32 +40,50 @@ function SearchResults({ preview }) {
                     key={index}
                 >
                     <Card
-                        sx={{ width: 250 }}
+                        sx={{ width: 250, p: 0 }}
 
                     >
                         <CardActionArea
                             onClick={() => { navigate(`/publicprofile/${result.uuid}`) }}
                         >
-                            <CardMedia
-                                component="img"
-                                height="140"
-                                image={result.image}
-                                alt="Image"
-                            />
+
+                            <Avatar
+                                sx={{
+                                    height: 250,
+                                    width: 250
+                                }}
+                                variant='square'
+                                alt="profilepic"
+                                src={"http://localhost:8080/" + result.avatar}
+                            >
+                                <PersonIcon
+                                    sx={{
+                                        width: 100,
+                                        height: 100
+                                    }}>
+                                </PersonIcon>
+                            </Avatar>
                             <CardContent
                                 sx={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    alignItems: 'flex-start'
+                                    alignItems: 'flex-start',
+                                    p: 1,
+                                    gap: 0.5
                                 }}
                             >
 
                                 <Rating
                                     name="read-only"
                                     value={
-                                        //result.reviews[0].rating
-                                        0
+                                        result.receivedReviews?.length > 0 ?
+                                            result.receivedReviews.reduce((acc, review) => acc + review.rating, 0) / result.receivedReviews.length
+                                            :
+                                            0
                                     }
+                                    //result.reviews[0].rating
+                                    //0
+
                                     readOnly
                                 />
 
@@ -81,6 +102,16 @@ function SearchResults({ preview }) {
 }
 
 export default SearchResults
+
+/*
+                                    {
+                                        result.reviews ?
+                                            result.reviews.reduce((acc, review) => acc + review.rating, 0) / result.reviews.length
+                                            :
+                                            0
+
+                                    }
+*/
 
 /*
         <Grid container spacing={3} sx={{ maxWidth: '80vw' }}>
