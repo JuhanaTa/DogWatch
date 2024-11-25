@@ -21,10 +21,11 @@ function UserSettings() {
 
     const [firstName, setFirstName] = useState(user.firstName != null ? user.firstName : "")
     const [lastName, setLastName] = useState(user.lastName != null ? user.lastName : "")
-    const [email, setEmail] = useState(user.email != null ? user.email : "")
+    const [headline, setHeadline] = useState(user.headline != null ? user.headline : "")
     const [description, setDescription] = useState(user.description != null ? user.description : "")
     const userServiceUUIDs = user.services.map((service) => service.uuid);
     const [selectedServices, setSelectedServices] = useState(userServiceUUIDs);
+    const [errors, setErrors] = useState({});
 
     const [curPassword, setCurPassword] = useState('')
     const [newPassword, setNewPassword] = useState('')
@@ -32,13 +33,15 @@ function UserSettings() {
     const [showCurPassword, setShowCurPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
+    const [passwordErrors, setPasswordErrors] = useState({});
+
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleFirstName = (event) => setFirstName(event.target.value);
     const handleLastName = (event) => setLastName(event.target.value);
-    const handleEmail = (event) => setEmail(event.target.value);
+    const handleHeadline = (event) => setHeadline(event.target.value);
     const handleDesc = (event) => setDescription(event.target.value);
     const handleCurPassword = (event) => setCurPassword(event.target.value);
     const handleNewPassword = (event) => setNewPassword(event.target.value);
@@ -64,21 +67,21 @@ function UserSettings() {
         );
     };
 
-    console.log("Selected Services:", selectedServices);
-
     const handleUserDataEdit = () => {
+        if (validate()) {
+            let updatedData = {
+                firstName: firstName,
+                lastName: lastName,
+                description: description,
+                headline: headline,
+            }
 
-        let updatedData = {
-            firstName: firstName,
-            lastName: lastName,
-            description: description,
-            email: email,
+            dispatch(userEdit({
+                uuid: userUUID,
+                token: token,
+                updatedData: updatedData
+            }))
         }
-        dispatch(userEdit({
-            uuid: userUUID,
-            token: token,
-            updatedData: updatedData
-        }))
     }
 
     const handleImageUpdate = (image) => {
@@ -99,22 +102,81 @@ function UserSettings() {
         }))
     }
 
-
-
     const handlePasswordChange = () => {
 
-        let passwords = {
-            currentPassword: curPassword,
-            newPassword: newPassword,
+        if (validatePasswords()) {
+            let passwords = {
+                currentPassword: curPassword,
+                newPassword: newPassword,
+            }
+
+            dispatch(userChangePassword({ passwords: passwords, uuid: userUUID, token: token }))
         }
 
-        dispatch(userChangePassword({ passwords: passwords, uuid: userUUID, token: token }))
     }
 
     const handleImageChange = (event) => {
-        console.log('img', event.target.files[0])
         const file = event.target.files[0]
         handleImageUpdate(file)
+    }
+
+
+    const validate = () => {
+        const allErrors = {};
+
+        if (!firstName.trim()) {
+            allErrors.firstName = 'Firstname is required';
+        } else if (firstName.length < 3 || firstName.length > 100) {
+            allErrors.firstName = 'Firstname must be between 3 to 100 characters';
+        }
+
+        if (!lastName.trim()) {
+            allErrors.lastName = 'Lastname is required';
+        } else if (lastName.length < 3 || lastName.length > 100) {
+            allErrors.lastName = 'Lastname must be between 3 to 100 characters';
+        }
+
+        if (!headline.trim()) {
+            allErrors.headline = 'Headline is required';
+        } else if (headline.length < 4 || headline.length > 150) {
+            allErrors.headline = 'Headline must be between 4 to 150 characters';
+        }
+
+        if (!description.trim()) {
+            allErrors.description = 'Description is required';
+        } else if (description.length < 4 || description.length > 1000) {
+            allErrors.description = 'Description must be between 4 to 1000 characters';
+        }
+
+        setErrors(allErrors)
+
+        return Object.keys(allErrors).length === 0;
+    }
+
+    const validatePasswords = () => {
+        const allPasswordErrors = {};
+
+        if (!curPassword.trim()) {
+            allPasswordErrors.curPassword = 'Password is required';
+        } else if (curPassword.length < 8) {
+            allPasswordErrors.curPassword = 'Password must be at least 8 characters.';
+        }
+
+        if (!newPassword.trim()) {
+            allPasswordErrors.newPassword = 'Password is required';
+        } else if (newPassword.length < 8) {
+            allPasswordErrors.newPassword = 'Password must be at least 8 characters.';
+        }
+
+        if (!confirmPassword.trim()) {
+            allPasswordErrors.confirmPassword = 'Confirm password is required';
+        } else if (confirmPassword !== newPassword) {
+            allPasswordErrors.confirmPassword = 'Confirm password must match with new password.';
+        }
+
+        setPasswordErrors(allPasswordErrors)
+
+        return Object.keys(allPasswordErrors).length === 0;
     }
 
     return (
@@ -212,6 +274,8 @@ function UserSettings() {
                             variant="outlined"
                             value={firstName}
                             onChange={(e) => { handleFirstName(e) }}
+                            error={!!errors.firstName}
+                            helperText={errors.firstName}
                         />
                     </FormControl>
 
@@ -222,16 +286,20 @@ function UserSettings() {
                             variant="outlined"
                             value={lastName}
                             onChange={(e) => { handleLastName(e) }}
+                            error={!!errors.lastName}
+                            helperText={errors.lastName}
                         />
                     </FormControl>
 
                     <FormControl sx={{ width: '100%' }}>
                         <TextField
-                            id="email-input"
-                            label="Email address"
+                            id="headline-input"
+                            label="Headline"
                             variant="outlined"
-                            value={email}
-                            onChange={(e) => { handleEmail(e) }}
+                            value={headline}
+                            onChange={(e) => { handleHeadline(e) }}
+                            error={!!errors.headline}
+                            helperText={errors.headline}
                         />
                     </FormControl>
 
@@ -242,6 +310,8 @@ function UserSettings() {
                             variant="outlined"
                             value={description}
                             onChange={(e) => { handleDesc(e) }}
+                            error={!!errors.description}
+                            helperText={errors.description}
                         />
                     </FormControl>
 
@@ -254,7 +324,7 @@ function UserSettings() {
                     }
 
                     {userEditError && (
-                        <Typography variant='p'>Changing settings failed</Typography>
+                        <Typography align='left' variant='p' color='error'>Changing user info failed.</Typography>
                     )}
 
                 </Box>
@@ -334,14 +404,32 @@ function UserSettings() {
                     <Typography variant='h6'>Change password</Typography>
 
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel>Current password</InputLabel>
-                        <OutlinedInput
+                        <TextField
                             id="cur-pass-input"
                             variant="outlined"
-                            type='password'
+                            type={showCurPassword ? 'text' : 'password'}
                             value={curPassword}
                             onChange={handleCurPassword}
-                            endAdornment={
+
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <IconButton
+                                            aria-label={
+                                                showCurPassword ? 'hide the password' : 'display the password'
+                                            }
+                                            onClick={handleClickshowCurPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            onMouseUp={handleMouseUpPassword}
+                                            edge="end"
+                                        >
+                                            {showCurPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    ),
+                                },
+                            }}
+
+                            /*endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label={
@@ -355,20 +443,40 @@ function UserSettings() {
                                         {showCurPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
-                            }
+                            }*/
+                            error={!!passwordErrors.curPassword}
+                            helperText={passwordErrors.curPassword}
                             label="Current password"
                         />
                     </FormControl>
 
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel>New password</InputLabel>
-                        <OutlinedInput
+                        <TextField
                             id="new-pass-input"
                             variant="outlined"
-                            type='password'
+                            type={showNewPassword ? 'text' : 'password'}
                             value={newPassword}
                             onChange={handleNewPassword}
-                            endAdornment={
+
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <IconButton
+                                            aria-label={
+                                                showNewPassword ? 'hide the password' : 'display the password'
+                                            }
+                                            onClick={handleClickShowNewPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            onMouseUp={handleMouseUpPassword}
+                                            edge="end"
+                                        >
+                                            {showNewPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    ),
+                                },
+                            }}
+
+                            /*endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label={
@@ -382,20 +490,40 @@ function UserSettings() {
                                         {showNewPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
-                            }
+                            }*/
+                            error={!!passwordErrors.newPassword}
+                            helperText={passwordErrors.newPassword}
                             label="New password"
                         />
                     </FormControl>
 
                     <FormControl sx={{ width: '100%' }}>
-                        <InputLabel>Confirm new password</InputLabel>
-                        <OutlinedInput
+                        <TextField
                             id="confirm-pass-input"
                             variant="outlined"
-                            type='password'
+                            type={showConfirmPassword ? 'text' : 'password'}
                             value={confirmPassword}
                             onChange={handleConfirmPassword}
-                            endAdornment={
+
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <IconButton
+                                            aria-label={
+                                                showConfirmPassword ? 'hide the password' : 'display the password'
+                                            }
+                                            onClick={handleClickShowConfirmPassword}
+                                            onMouseDown={handleMouseDownPassword}
+                                            onMouseUp={handleMouseUpPassword}
+                                            edge="end"
+                                        >
+                                            {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                        </IconButton>
+                                    ),
+                                },
+                            }}
+
+                            /*endAdornment={
                                 <InputAdornment position="end">
                                     <IconButton
                                         aria-label={
@@ -409,7 +537,9 @@ function UserSettings() {
                                         {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 </InputAdornment>
-                            }
+                            }*/
+                            error={!!passwordErrors.confirmPassword}
+                            helperText={passwordErrors.confirmPassword}
                             label="Confirm new password"
                         />
                     </FormControl>

@@ -42,8 +42,11 @@ export const createSitterBooking = createAsyncThunk(
     async (data) => {
 
         console.log('req data', data.bookingData, data.token)
-        await postSitterRequest(data.bookingData, data.token)
+        const reqBooking = await postSitterRequest(data.bookingData, data.token)
+        console.log('reqBooking', reqBooking)
+
         const bookings = await getUserBookings(data.token)
+        console.log('fetched bookings', bookings)
         return bookings
     }
 )
@@ -63,8 +66,9 @@ export const leaveSitterReview = createAsyncThunk(
     'data/leaveSitterReview',
     async (data) => {
         console.log('review data', data)
-        const reviewRep = await postSitterReview(data.ratingData, data.bookingId, data.token)
-        return reviewRep
+        await postSitterReview(data.ratingData, data.bookingId, data.token)
+        const bookings = await getUserBookings(data.token)
+        return bookings 
     }
 )
 
@@ -184,7 +188,7 @@ const DataReducer = createSlice({
             })
             .addCase(createSitterBooking.fulfilled, (state, action) => {
                 state.createBookingLoad = false;
-                state.bookings.push(action.payload.booking)
+                state.bookings = action.payload
                 state.createBookingError = null;
             })
             .addCase(createSitterBooking.rejected, (state, action) => {
@@ -212,6 +216,7 @@ const DataReducer = createSlice({
             })
             .addCase(leaveSitterReview.fulfilled, (state, action) => {
                 state.leaveSitterReviewLoad = false;
+                state.bookings = action.payload
                 state.leaveSitterReviewError = null;
             })
             .addCase(leaveSitterReview.rejected, (state, action) => {

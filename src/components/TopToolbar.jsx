@@ -49,7 +49,7 @@ function TopToolbar() {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none', height: 80, alignItems: 'center' } }}>
 
             <IconButton
               size="large"
@@ -58,6 +58,7 @@ function TopToolbar() {
               aria-haspopup="true"
               onClick={handleOpenNavMenu}
               color="inherit"
+              sx={{ height: 50 }}
             >
               <MenuIcon />
             </IconButton>
@@ -108,41 +109,61 @@ function TopToolbar() {
 
             </Menu>
 
+            <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center' }}>
+              <img style={{ width: 180, height: 55 }} src={Logo} />
+            </Box>
           </Box>
 
           <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <img style={{ width: 300 }} src={Logo} />
           </Box>
 
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <img style={{ width: 150 }} src={Logo} />
-          </Box>
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            <Button>
-              <Link component={RouterLink} to="/DogWatch/" color="primary" sx={{
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+            <Link
+              component={RouterLink}
+              to="/DogWatch/"
+              color="primary"
+              sx={{
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'none',
                 },
-              }}>Home</Link>
-            </Button>
-            <Button>
-              <Link component={RouterLink} to="/DogWatch/search" color="primary" sx={{
+              }}
+              type='button'
+              fontWeight='bold'
+            >
+              Home
+            </Link>
+            <Link
+              component={RouterLink}
+              to="/DogWatch/search"
+              color="primary"
+              sx={{
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'none',
                 },
-              }}>Search</Link>
-            </Button>
-            <Button>
-              <Link component={RouterLink} to="/DogWatch/contact" color="primary" sx={{
+              }}
+              type='button'
+              fontWeight='bold'
+            >
+              Search
+            </Link>
+            <Link
+              component={RouterLink}
+              to="/DogWatch/contact"
+              color="primary"
+              sx={{
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'none',
                 },
-              }}>Contact</Link>
-            </Button>
+              }}
+              type='button'
+              fontWeight='bold'
+            >
+              Contact
+            </Link>
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
@@ -153,7 +174,6 @@ function TopToolbar() {
                 } />
               </IconButton>
             </Tooltip>
-            {user && <Typography>{user.email}</Typography>}
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"

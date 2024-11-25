@@ -20,6 +20,7 @@ function LoginForm({ setShowRegister }) {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [errors, setErrors] = useState({});
 
     //redux states
     const { userLoginLoad, userLoginError } = useSelector((state) => state.user)
@@ -41,24 +42,45 @@ function LoginForm({ setShowRegister }) {
     const handleLogin = (event) => {
         event.preventDefault();
 
-        let credentials = {
-            email: email,
-            password: password,
+        if (validate()) {
+
+            let credentials = {
+                email: email,
+                password: password,
+            }
+
+            dispatch(userLogin(credentials)).then(async (res) => {
+                if (res.payload) {
+
+                    try {
+                        const bookings = await getUserBookings(res.payload.token)
+                        dispatch(dataAuthInitial(bookings))
+                    } catch (error) {
+                        dispatch(dataAuthInitial([]))
+                    }
+
+                    navigate(`/DogWatch/`);
+                }
+            })
+        }
+    }
+
+    const validate = () => {
+        const allErrors = {};
+
+        if (!email.trim()) {
+            allErrors.email = 'Email is required';
         }
 
-        dispatch(userLogin(credentials)).then(async(res) => {
-            if (res.payload) {
+        if (!password.trim()) {
+            allErrors.password = 'Password is required';
+        } else if (password.length < 8) {
+            allErrors.password = 'Password must be at least 8 characters.';
+        }
 
-                try {
-                    const bookings = await getUserBookings(res.payload.token)
-                    dispatch(dataAuthInitial(bookings))
-                } catch (error) {
-                    dispatch(dataAuthInitial([]))
-                }
- 
-                navigate(`/DogWatch/`);
-            }
-        })
+        setErrors(allErrors)
+
+        return Object.keys(allErrors).length === 0;
     }
 
     return (
@@ -83,34 +105,40 @@ function LoginForm({ setShowRegister }) {
 
                 <FormControl sx={{ width: '100%' }}>
                     <TextField
-                        id="user-input"
-                        label="Username or email address..."
+                        id="email-input"
+                        label="User email"
                         variant="outlined"
                         value={email}
+                        error={!!errors.email}
+                        helperText={errors.email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </FormControl>
 
                 <FormControl sx={{ width: '100%' }} variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">Create Password</InputLabel>
-                    <OutlinedInput
+                    <TextField
                         id="outlined-adornment-password"
                         type={showPassword ? 'text' : 'password'}
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label={
-                                        showPassword ? 'hide the password' : 'display the password'
-                                    }
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                    onMouseUp={handleMouseUpPassword}
-                                    edge="end"
-                                >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                        }
+
+                        slotProps={{
+                            input: {
+                                endAdornment: (
+                                    <IconButton
+                                        aria-label={
+                                            showPassword ? 'hide the password' : 'display the password'
+                                        }
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        onMouseUp={handleMouseUpPassword}
+                                        edge="end"
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                ),
+                            },
+                        }}
+                        error={!!errors.password}
+                        helperText={errors.password}
                         label="Create Password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}

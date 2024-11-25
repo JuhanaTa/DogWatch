@@ -55,7 +55,7 @@ function ReviewSitter({ handleReviewForm, booking }) {
 
             <Box>
                 <Typography align='left' variant="h6" sx={{ color: 'text.primary' }}>Leave a review</Typography>
-                <Typography align='left' variant="p" sx={{ color: 'text.primary' }}>for: {booking.sitterId}</Typography>
+                <Typography align='left' variant="p" sx={{ color: 'text.primary' }}>for: {booking.sitter.firstName} {booking.sitter.lastName}</Typography>
             </Box>
 
 
@@ -71,7 +71,7 @@ function ReviewSitter({ handleReviewForm, booking }) {
 
             </Box>
 
-            <FormControl sx={{ width: '100%' }}>
+            <FormControl sx={{ width: '100%', minWidth: 225 }}>
                 <TextField
                     id="desc-input"
                     label="Description"

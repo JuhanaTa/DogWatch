@@ -1,24 +1,38 @@
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import { Avatar, Box, Rating, Typography } from '@mui/material';
 import { format } from 'date-fns';
+import PersonIcon from '@mui/icons-material/Person';
+import { useState } from 'react';
 
 function ReviewList({ reviews }) {
 
-    function ReviewItem({review}) {
-        console.log('reviews', reviews)
-        const createdDate = format(new Date(review.createdAt), "MMMM d, yyyy, h:mm a")
+    reviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
+    function ReviewItem({ review }) {
+
+        const createdDate = format(new Date(review.createdAt), "MMMM d, yyyy, HH:mm")
 
         return (
 
             <Box
-                sx={{display: 'flex', alignItems: 'flex-start'}}
+                sx={{ display: 'flex', alignItems: 'flex-start' }}
             >
                 <Box sx={{ p: 1 }}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+
+                    <Avatar
+                        sx={{
+                            height: 60,
+                            width: 60
+                        }}
+                        alt="reviewAvatar"
+                        src={"http://localhost:8080/" + review.reviewer.avatar}
+                    >
+                        <PersonIcon
+                            sx={{
+                                width: 20,
+                                height: 20
+                            }}>
+                        </PersonIcon>
+                    </Avatar>
                 </Box>
 
                 <Box sx={{
@@ -26,7 +40,7 @@ function ReviewList({ reviews }) {
                     flexDirection: 'column',
                     alignItems: 'flex-start'
                 }}>
-                    <Typography variant='h6'>{review.from}</Typography>
+                    <Typography variant='p' fontWeight='bold'>{review.reviewer.firstName} {review.reviewer.lastName}</Typography>
                     <Rating name="read-only" value={parseInt(review.rating)} readOnly />
                     <Typography variant='p'>{createdDate}</Typography>
                     <Typography align='left' variant='p'>{review.comment}</Typography>
@@ -38,14 +52,14 @@ function ReviewList({ reviews }) {
 
     return (
         <Box
-            sx={{ maxHeight: 1000, bgcolor: 'secondary.main', display: 'flex', flexDirection: 'row', gap: 2, overflowY: 'auto' }}
+            sx={{ maxHeight: 900, bgcolor: 'secondary.main', display: 'flex', flexDirection: 'column', gap: 2, overflowY: 'auto' }}
         >
             {reviews.length > 0 ?
                 reviews.map((review, index) => (
                     <ReviewItem key={index} review={review}></ReviewItem>
                 ))
                 :
-                <Typography align='left' variant='p'>No reviews yet on this profile.</Typography>
+                <Typography align='left' variant='p'>No reviews with selected filter.</Typography>
             }
 
         </Box>
@@ -53,44 +67,3 @@ function ReviewList({ reviews }) {
 }
 
 export default ReviewList
-
-/*
-
-                            <FixedSizeList
-                    height={400}
-                    itemSize={175}
-                    itemCount={reviews.length}
-                    overscanCount={5}
-                >
-                    {({ index, style }) => reviewItem({ index, style })}
-                </FixedSizeList>
-
-
-            <ListItem
-                style={{
-                    ...style,
-                    display: 'flex',
-                    alignItems: 'flex-start',
-                }}
-                key={index}
-                component="div"
-                disablePadding
-            >
-
-                <Box sx={{p: 1}}>
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />                
-                </Box>
-
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start'
-                }}>
-                    <Typography variant='h6'>{reviews[index].from}</Typography>
-                    <Rating name="read-only" value={reviews[index].rating} readOnly />
-                    <Typography variant='p'>{formattedDate}</Typography>
-                    <Typography variant='p'>{reviews[index].comment}</Typography>
-                </Box>
-
-            </ListItem>
-*/

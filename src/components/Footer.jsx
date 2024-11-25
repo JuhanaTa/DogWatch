@@ -1,10 +1,11 @@
-import { Box, Divider, Stack, Typography } from '@mui/material';
+import { Box, Divider, Link, Stack, Typography } from '@mui/material';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
+import { Link as RouterLink } from 'react-router-dom';
 
 function Footer() {
 
@@ -89,17 +90,57 @@ function Footer() {
 
                         <Stack alignItems="center" direction="row" gap={2}>
                             <PlayArrowIcon sx={{ color: 'text.white' }} />
-                            <Typography color='text.white' variant='p' >Home</Typography>
+                            <Link
+                                component={RouterLink}
+                                to="/DogWatch/"
+                                color="text.white"
+                                sx={{
+                                    textDecoration: 'none',
+                                    '&:hover': {
+                                        textDecoration: 'none',
+                                    },
+                                }}
+                                type='button'
+                            >
+                                Home
+                            </Link>
+
                         </Stack>
 
                         <Stack alignItems="center" direction="row" gap={2}>
                             <PlayArrowIcon sx={{ color: 'text.white' }} />
-                            <Typography color='text.white' variant='p' >Search</Typography>
+                            <Link
+                                component={RouterLink}
+                                to="/DogWatch/search"
+                                color="text.white"
+                                sx={{
+                                    textDecoration: 'none',
+                                    '&:hover': {
+                                        textDecoration: 'none',
+                                    },
+                                }}
+                                type='button'
+                            >
+                                Search
+                            </Link>
                         </Stack>
 
                         <Stack alignItems="center" direction="row" gap={2}>
                             <PlayArrowIcon sx={{ color: 'text.white' }} />
-                            <Typography color='text.white' variant='p' >Log In</Typography>
+                            <Link
+                                component={RouterLink}
+                                to="/DogWatch/login"
+                                color="text.white"
+                                sx={{
+                                    textDecoration: 'none',
+                                    '&:hover': {
+                                        textDecoration: 'none',
+                                    },
+                                }}
+                                type='button'
+                            >
+                                Log In
+                            </Link>
                         </Stack>
 
                         <Stack alignItems="center" direction="row" gap={2}>

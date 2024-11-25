@@ -2,7 +2,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, Checkbox, CircularProgress, MenuItem, Select } from '@mui/material';
+import { Box, Button, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, Checkbox, CircularProgress, MenuItem, Select, FormHelperText } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -25,12 +25,13 @@ function RegisterForm({ setShowRegister }) {
     const [rePassword, setRePassword] = useState('')
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPass, setShowConfirmPass] = useState(false);
-    const [roleChecked, setRoleChecked] = useState([false, false]);
+    const [roleChecked, setRoleChecked] = useState([true, false]);
     const [location, setLocation] = useState(availableLocations[0])
+    const [errors, setErrors] = useState({});
 
 
 
-    
+
 
 
     const handleFirstname = (event) => setFirstname(event.target.value);
@@ -62,21 +63,60 @@ function RegisterForm({ setShowRegister }) {
     const handleRegister = (event) => {
         event.preventDefault();
 
-        let credentials = {
-            firstName: firstname,
-            lastName: lastname,
-            email: email,
-            password: password,
-            role: roleChecked[0] ? 'sitter' : 'owner',
-            location: location
+        if (validate()) {
+            let credentials = {
+                firstName: firstname,
+                lastName: lastname,
+                email: email,
+                password: password,
+                role: roleChecked[0] ? 'sitter' : 'owner',
+                location: location
+            }
+
+            console.log('creds', credentials)
+            dispatch(userRegister(credentials)).then((result) => {
+                if (result.payload) {
+                    navigate(`/DogWatch/`)
+                }
+            })
+        }
+    }
+
+
+    const validate = () => {
+        const allErrors = {};
+
+        if (!firstname.trim()) {
+            allErrors.firstname = 'Firstname is required';
+        } else if (firstname.length < 3 || firstname.length > 100) {
+            allErrors.firstname = 'Firstname must be between 3 to 100 characters';
         }
 
-        console.log('creds', credentials)
-        dispatch(userRegister(credentials)).then((result) => {
-            if (result.payload) {
-                navigate(`/DogWatch/`)
-            }
-        })
+        if (!lastname.trim()) {
+            allErrors.lastname = 'Lastname is required';
+        } else if (lastname.length < 3 || lastname.length > 100) {
+            allErrors.lastname = 'Lastname must be between 3 to 100 characters';
+        }
+
+        if (!email.trim()) {
+            allErrors.email = 'Email is required';
+        }
+
+        if (!password.trim()) {
+            allErrors.password = 'Password is required';
+        } else if (password.length < 8) {
+            allErrors.password = 'Password must be at least 8 characters.';
+        }
+
+        if (!rePassword.trim()) {
+            allErrors.rePassword = 'Confirm password is required';
+        } else if (rePassword !== password) {
+            allErrors.rePassword = 'Passwords must match';
+        }
+
+        setErrors(allErrors)
+
+        return Object.keys(allErrors).length === 0;
     }
 
     return (
@@ -112,6 +152,8 @@ function RegisterForm({ setShowRegister }) {
                                 variant="outlined"
                                 value={firstname}
                                 onChange={handleFirstname}
+                                error={!!errors.firstname}
+                                helperText={errors.firstname}
                             />
                         </FormControl>
 
@@ -122,6 +164,8 @@ function RegisterForm({ setShowRegister }) {
                                 variant="outlined"
                                 value={lastname}
                                 onChange={handleLastname}
+                                error={!!errors.lastname}
+                                helperText={errors.lastname}
                             />
                         </FormControl>
                     </Box>
@@ -134,10 +178,12 @@ function RegisterForm({ setShowRegister }) {
                             variant="outlined"
                             value={email}
                             onChange={handleEmail}
+                            error={!!errors.email}
+                            helperText={errors.email}
                         />
                     </FormControl>
 
-                    <FormControl sx={{ width: '100%'  }}>
+                    <FormControl sx={{ width: '100%' }}>
 
                         <InputLabel id="location-label">Location</InputLabel>
 
@@ -164,54 +210,67 @@ function RegisterForm({ setShowRegister }) {
 
                     <Box sx={{ width: '100%', display: 'flex', flexWrap: 'wrap' }}>
                         <FormControl sx={{ flex: 1, mr: 1 }} variant="outlined">
-                            <InputLabel>Create Password</InputLabel>
-                            <OutlinedInput
+                            <TextField
                                 id="outlined-password"
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={handlePassword}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label={
-                                                showPassword ? 'hide the password' : 'display the password'
-                                            }
-                                            onClick={handleClickShowPassword}
-                                            onMouseDown={handleMouseDownPassword}
-                                            onMouseUp={handleMouseUpPassword}
-                                            edge="end"
-                                        >
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
+
+
+
+                                slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <IconButton
+                                                aria-label={
+                                                    showPassword ? 'hide the password' : 'display the password'
+                                                }
+                                                onClick={handleClickShowPassword}
+                                                onMouseDown={handleMouseDownPassword}
+                                                onMouseUp={handleMouseUpPassword}
+                                                edge="end"
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        ),
+                                    },
+                                }}
+
+                                error={!!errors.password}
+                                helperText={errors.password}
                                 label="Create Password"
                             />
                         </FormControl>
 
 
                         <FormControl sx={{ flex: 1, ml: 1 }} variant="outlined">
-                            <InputLabel>Confirm Password</InputLabel>
-                            <OutlinedInput
+                            <TextField
                                 id="outlined-reenter-password"
                                 type={showConfirmPass ? 'text' : 'password'}
                                 value={rePassword}
                                 onChange={handleRePassword}
-                                endAdornment={
-                                    <InputAdornment position="end">
-                                        <IconButton
-                                            aria-label={
-                                                showConfirmPass ? 'hide the password' : 'display the password'
-                                            }
-                                            onClick={handleClickShowConfirmPass}
-                                            onMouseDown={handleMouseDownPassword}
-                                            onMouseUp={handleMouseUpPassword}
-                                            edge="end"
-                                        >
-                                            {showConfirmPass ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                }
+
+
+                                slotProps={{
+                                    input: {
+                                        endAdornment: (
+                                            <IconButton
+                                                aria-label={
+                                                    showConfirmPass ? 'hide the password' : 'display the password'
+                                                }
+                                                onClick={handleClickShowConfirmPass}
+                                                onMouseDown={handleMouseDownPassword}
+                                                onMouseUp={handleMouseUpPassword}
+                                                edge="end"
+                                            >
+                                                {showConfirmPass ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        ),
+                                    },
+                                }}
+
+                                error={!!errors.rePassword}
+                                helperText={errors.rePassword}
                                 label="Confirm Password"
                             />
                         </FormControl>
@@ -245,7 +304,7 @@ function RegisterForm({ setShowRegister }) {
                         <Typography variant='p' color='error'>Register failed: {userRegisterError}</Typography>
                     )}
 
-                    <Typography variant="p" sx={{ color: 'text.primary'}}>
+                    <Typography variant="p" sx={{ color: 'text.primary' }}>
                         Have you already created an account?{" "}
                         <Link onClick={() => setShowRegister(false)} color="inherit">
                             Sign in instead!

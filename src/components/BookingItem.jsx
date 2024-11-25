@@ -3,27 +3,24 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Avatar, Box, Button, Card, CircularProgress, Container, Divider, FormControl, IconButton, Modal, Tab, Tabs, TextField, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import ProfilePhoto from '../assets/sitter4.jpg';
-import { useDispatch, useSelector } from 'react-redux';
-import { userEdit } from '../reducers/UserReducer';
-import ProfileImg from '../assets/sitter3.jpg';
+import { Avatar, Box, Button, Card, Divider, IconButton, Modal, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
 import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
 import { format } from 'date-fns';
 import ReviewSitter from './ReviewSitter';
 import PersonIcon from '@mui/icons-material/Person';
+import ForumIcon from '@mui/icons-material/Forum';
 
-function BookingItem({ currentDate, booking }) {
+function BookingItem({ booking }) {
 
     const { services } = useSelector((state) => state.data)
     const { user } = useSelector((state) => state.user)
 
-    console.log('booking', booking)
+    console.log('booking', booking, user.uuid)
 
-    const endDate = format(new Date(booking.endDate), "MMMM d, yyyy")
-    const startDate = format(new Date(booking.startDate), "MMMM d, yyyy")
-    const createdDate = format(new Date(booking.createdAt), "MMMM d, yyyy, h:mm a")
+    const endDate = format(new Date(booking.endDate), "MMMM d, yyyy, HH:mm")
+    const startDate = format(new Date(booking.startDate), "MMMM d, yyyy, HH:mm")
+    const createdDate = format(new Date(booking.createdAt), "MMMM d, yyyy, HH:mm")
 
     const bookingService = services.find(serviceItem => booking.serviceId === serviceItem.uuid)
 
@@ -40,9 +37,6 @@ function BookingItem({ currentDate, booking }) {
     const handleReviewForm = () => {
         setReviewOpen(!reviewOpen);
     };
-
-
-    console.log('contains review', booking.reviews.some(review => review.reviewerId === user.uuid))
 
     const modalStyle = {
         position: 'absolute',
@@ -166,40 +160,66 @@ function BookingItem({ currentDate, booking }) {
                                     alignItems: 'start',
                                 }}
                             >
-                                <Typography variant='p' sx={{ fontWeight: 'bold' }}>When: {startDate} - {endDate}</Typography>
-                                <Typography variant='p'>Sitter: {booking.sitter.firstName} {booking.sitter.lastName}</Typography>
-                                <Typography variant='p'>Owner: {booking.owner.firstName} {booking.owner.lastName}</Typography>
+                                <Typography variant='p'>Services</Typography>
+                                <Typography variant='p' sx={{ fontWeight: 'bold' }}>{bookingService.name} in {booking.location}</Typography>
+
+                                <Typography variant='p' sx={{ fontWeight: 'bold' }}>{startDate} - {endDate}</Typography>
+
+                                {booking.ownerId === user.uuid ?
+                                    <Typography variant='p'>Requested by: You</Typography>
+                                    :
+                                    <Typography variant='p'>Requested by: {booking.owner.firstName} {booking.owner.lastName}</Typography>
+                                }
+
+                                {booking.sitterId === user.uuid ?
+                                    <Typography variant='p'>Sitter: You</Typography>
+                                    :
+                                    <Typography variant='p'>Sitter: {booking.sitter.firstName} {booking.sitter.lastName}</Typography>
+                                }
 
                             </Box>
                         </Box>
 
-                        {user.role === "owner" &&
-                            <Box>
-                                <Button
-                                    sx={{ mr: 1 }}
-                                    variant="contained"
-                                    onClick={handleMessagesOpen}
-                                >
-                                    Contact
-                                </Button>
 
-                                {booking.status === "completed" &&
-                                    <Button
-                                        sx={{ ml: 1 }}
-                                        variant="contained"
-                                        disabled={booking.reviews.some(review => review.reviewerId === user.uuid)}
-                                        onClick={handleReviewForm}
-                                    >
 
-                                        {booking.reviews.some(review => review.reviewerId === user.uuid) ?
-                                            "Reviewed"
-                                            :
-                                            "Review"
-                                        }
-                                    </Button>
-                                }
-                            </Box>
-                        }
+                        <Box>
+
+                            <IconButton
+                                color="secondary"
+                                sx={{
+                                    backgroundColor: "primary.main",
+                                    '&:hover': {
+                                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                    },
+                                }}
+                                aria-label="open messages"
+                                onClick={handleMessagesOpen}
+                            >
+                                <ForumIcon />
+                            </IconButton>
+
+                            {user.role === "owner" &&
+                                <>
+                                    {
+                                        booking.status === "completed" &&
+                                        <Button
+                                            sx={{ ml: 1 }}
+                                            variant="contained"
+                                            disabled={booking.reviews.some(review => review.reviewerId === user.uuid)}
+                                            onClick={handleReviewForm}
+                                        >
+
+                                            {booking.reviews.some(review => review.reviewerId === user.uuid) ?
+                                                "Reviewed"
+                                                :
+                                                "Review"
+                                            }
+                                        </Button>
+                                    }
+                                </>
+                            }
+                        </Box>
+
 
                     </Box>
                 </>

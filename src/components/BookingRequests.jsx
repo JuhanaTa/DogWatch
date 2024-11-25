@@ -5,10 +5,8 @@ import { useSelector } from 'react-redux';
 function BookingRequests() {
 
     const { bookings } = useSelector((state) => state.data)
-    console.log('bookings!!!', bookings)
     const bookingReqs = bookings.filter(booking => booking.status === "pending" || booking.status === "denied")
-
-    const currentDate = Math.floor(Date.now() / 1000);
+    bookingReqs.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
     return (
 
@@ -27,7 +25,7 @@ function BookingRequests() {
             {bookingReqs.length > 0 ?
 
                 bookingReqs.map((booking, index) => (
-                    <BookingRequestItem key={index} booking={booking} currentDate={currentDate}></BookingRequestItem>
+                    <BookingRequestItem key={index} booking={booking}></BookingRequestItem>
                 ))
                 :
                 <Typography variant='p'>Currently there are no new booking requests for you.</Typography>

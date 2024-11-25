@@ -25,10 +25,8 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
 
     const [service, setService] = useState(services[0].name);
     const [location, setLocation] = useState(availableLocations[0]);
-    const [description, setDescription] = useState('');
     const [startTime, setStartTime] = useState(null);
     const [endTime, setEndTime] = useState(null);
-
     const [inputError, setInpuError] = useState(null);
 
 
@@ -40,11 +38,6 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
     const handleLocation = (event) => {
         event.preventDefault();
         setLocation(event.target.value);
-    };
-
-    const handleDescription = (event) => {
-        event.preventDefault();
-        setDescription(event.target.value);
     };
 
     const handleBookingRequest = () => {
@@ -81,9 +74,6 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
     const handleEndTimeChange = (newValue) => {
         setEndTime(newValue);
     };
-
-    console.log('Selected times:', startTime?.toISOString(), endTime?.toISOString());
-
 
     return (
 
@@ -126,16 +116,6 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
                     </Select>
                 </FormControl>
 
-                <FormControl sx={{ width: '100%' }}>
-                    <TextField
-                        id="desc-input"
-                        label="Description"
-                        variant="outlined"
-                        value={description}
-                        onChange={handleDescription}
-                    />
-                </FormControl>
-
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
 
 
@@ -165,14 +145,6 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
 
             </Box>
 
-            <Button
-                onClick={handleBookingRequest}
-                variant="contained"
-                endIcon={<SendIcon />}
-            >
-                Send Request
-            </Button>
-
             {createBookingError &&
                 <Typography variant='p' color='error'>{createBookingError}</Typography>
             }
@@ -180,6 +152,14 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
             {inputError &&
                 <Typography variant='p' color='error'>{inputError}</Typography>
             }
+
+            <Button
+                onClick={handleBookingRequest}
+                variant="contained"
+                endIcon={<SendIcon />}
+            >
+                Send Request
+            </Button>
 
         </Box>
 

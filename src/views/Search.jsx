@@ -11,7 +11,7 @@ function Search() {
 
     return (
         <Box sx={{
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between'
+            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', pb: 5
         }}>
 
             <Box sx={{

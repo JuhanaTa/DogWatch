@@ -17,23 +17,30 @@ function PublicProfile() {
 
     const [ratingFilter, setRatingFilter] = useState(5)
     const [bookingOpen, setBookingOpen] = useState(false);
-    const [profileLoading, setProfileLoading] = useState(true)
     const [viewedProfile, setViewedProfile] = useState(null)
-
-    console.log('viewed prof', viewedProfile)
+    const [requestError, setRequestError] = useState(null)
+    const [currentReviews, setCurrentReviews] = useState([])
 
     const { uuid } = useParams();
-
     const navigate = useNavigate();
 
-    const handleRating = (event) => {
-        setRatingFilter(event.target.value);
+    const handleReviewFilter = (rating, reviews) => {
+        const filteredReviews = reviews.filter(review => review.rating === rating);
+        setCurrentReviews(filteredReviews)
+    }
 
+    const handleRating = (event) => {
+        setRatingFilter(parseInt(event.target.value));
+        handleReviewFilter(parseInt(event.target.value), viewedProfile.receivedReviews);
     };
 
     const handleBookingForm = () => {
         if (user) {
-            setBookingOpen(!bookingOpen);
+            if (user.role === "owner") {
+                setBookingOpen(!bookingOpen);
+            } else {
+                setRequestError("Sitters can't make requests.")
+            }
         } else {
             navigate(`/DogWatch/login`)
         }
@@ -63,6 +70,8 @@ function PublicProfile() {
             const profile = await getPubliUserData(uuid)
             console.log('profile', profile)
             setViewedProfile(profile)
+            handleReviewFilter(ratingFilter, profile.receivedReviews)
+            //setCurrentReviews(profile.receivedReviews)
         } catch (error) {
             console.log('fail to load profile')
         }
@@ -152,14 +161,17 @@ function PublicProfile() {
                             flex: 1,
                             p: 2,
                             minWidth: 300,
-                            height: ''
+                            height: '',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 1
                         }}>
                             <Typography variant='h6'>ABOUT ME</Typography>
-                            <Typography variant='p'>
+                            <Typography align='left' variant='p'>
                                 {viewedProfile.description}
                             </Typography>
 
-                            <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', gap: 1 }}>
                                 <Button
                                     variant="contained"
                                     onClick={() => { handleBookingForm() }}
@@ -169,6 +181,9 @@ function PublicProfile() {
                                     onClick={() => { handleSendMessage() }}
                                 >Send Message</Button>
                             </Box>
+                            {requestError != null &&
+                                <Typography variant='p' color='error'>{requestError}</Typography>
+                            }
                         </Card>
 
                         <Card sx={{
@@ -180,27 +195,27 @@ function PublicProfile() {
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', flexWrap: 'wrap' }}>
 
                                 <Typography variant='h5'>Customers Feedback</Typography>
-                                <FormControl sx={{ m: 1 }}>
-                                    <InputLabel id="demo-simple-select-label">Rating</InputLabel>
+                                <FormControl sx={{ m: 1, width: 125 }}>
+                                    <InputLabel id="demo-simple-select-label">Sort by rating</InputLabel>
                                     <Select
                                         labelId="rating-label"
                                         id="rating-select"
                                         value={ratingFilter}
-                                        label="Rating"
+                                        label="Sort by rating"
                                         onChange={handleRating}
                                     >
                                         <MenuItem value={1}>1 star</MenuItem>
-                                        <MenuItem value={2}>2 star</MenuItem>
-                                        <MenuItem value={3}>3 star</MenuItem>
-                                        <MenuItem value={4}>4 star</MenuItem>
-                                        <MenuItem value={5}>5 star</MenuItem>
+                                        <MenuItem value={2}>2 stars</MenuItem>
+                                        <MenuItem value={3}>3 stars</MenuItem>
+                                        <MenuItem value={4}>4 stars</MenuItem>
+                                        <MenuItem value={5}>5 stars</MenuItem>
                                     </Select>
 
                                 </FormControl>
 
                             </Box>
 
-                            <ReviewList reviews={viewedProfile.receivedReviews}></ReviewList>
+                            <ReviewList reviews={currentReviews}></ReviewList>
 
                         </Card>
 

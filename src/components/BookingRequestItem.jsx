@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import { Avatar, Box, Button, Card, CircularProgress, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, CircularProgress, IconButton, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import ProfileImg from '../assets/sitter3.jpg';
 import { format } from 'date-fns';
 import { updateBookingStatus } from '../reducers/DataReducer';
 import PersonIcon from '@mui/icons-material/Person';
+import ForumIcon from '@mui/icons-material/Forum';
 
-function BookingRequestItem({ currentDate, booking }) {
+function BookingRequestItem({ booking }) {
     const { user } = useSelector((state) => state.user)
     const { services, updateBookinStatusLoad } = useSelector((state) => state.data)
     const token = localStorage.getItem('token');
@@ -17,8 +18,8 @@ function BookingRequestItem({ currentDate, booking }) {
     //const endDate = format(new Date(booking.startDate * 1000), 'MMMM dd, yyyy HH:mm')
     //const startDate = format(new Date(booking.endDate * 1000), 'MMMM dd, yyyy HH:mm')
 
-    const endDate = format(new Date(booking.endDate), "MMMM d, yyyy")
-    const startDate = format(new Date(booking.startDate), "MMMM d, yyyy")
+    const endDate = format(new Date(booking.endDate), "MMMM d, yyyy, HH:mm")
+    const startDate = format(new Date(booking.startDate), "MMMM d, yyyy, HH:mm")
     const dispatch = useDispatch();
 
 
@@ -32,6 +33,10 @@ function BookingRequestItem({ currentDate, booking }) {
             token: token
         }))
 
+    }
+
+    const handleMessagesOpen = () => {
+        console.log('messages should open')
     }
 
     return (
@@ -87,9 +92,22 @@ function BookingRequestItem({ currentDate, booking }) {
                             alignItems: 'start',
                         }}
                     >
+                        <Typography variant='p'>Services</Typography>
+                        <Typography variant='p' sx={{ fontWeight: 'bold' }}>{bookingService.name}</Typography>
                         <Typography variant='p' sx={{ fontWeight: 'bold' }}>{startDate} - {endDate}</Typography>
-                        <Typography>Service: {bookingService.name}</Typography>
-                        <Typography variant='p'>By: {booking.owner.firstName} {booking.owner.lastName}</Typography>
+
+
+                        {booking.ownerId === user.uuid ?
+                            <Typography variant='p'>Requested by: You</Typography>
+                            :
+                            <Typography variant='p'>Requested by: {booking.owner.firstName} {booking.owner.lastName}</Typography>
+                        }
+
+                        {booking.sitterId === user.uuid ?
+                            <Typography variant='p'>Sitter: You</Typography>
+                            :
+                            <Typography variant='p'>Sitter: {booking.sitter.firstName} {booking.sitter.lastName}</Typography>
+                        }
 
                         {booking.status === "pending" ?
                             <Typography variant='p' color='notice'>Status: {booking.status}</Typography>
@@ -105,20 +123,41 @@ function BookingRequestItem({ currentDate, booking }) {
 
                     <CircularProgress></CircularProgress>
                     :
-                    <Box>
+
+
+                    <Box sx={{
+                        display: 'flex',
+                        height: '100%',
+                        gap: 1
+
+                    }}>
+
+                        <IconButton
+                            color="secondary"
+                            sx={{
+                                backgroundColor: "primary.main",
+                                '&:hover': {
+                                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                                },
+                                height: '100%'
+                            }}
+                            aria-label="open messages"
+                            onClick={handleMessagesOpen}
+                        >
+                            <ForumIcon />
+                        </IconButton>
+
+
                         {user.role === "sitter" ?
                             <>
                                 <Button
-                                    sx={{ mr: 1 }}
-                                    color='error'
+                                    sx={{ backgroundColor: 'notice' }}
                                     variant="contained"
                                     onClick={() => handleBookingStatusUpdate('denied')}
                                 >
                                     Deny
                                 </Button>
                                 <Button
-                                    sx={{ ml: 1 }}
-                                    disabled={parseInt(currentDate) >= parseInt(booking.endDate) ? false : true}
                                     variant="contained"
                                     onClick={() => handleBookingStatusUpdate('confirmed')}
                                 >
@@ -127,7 +166,6 @@ function BookingRequestItem({ currentDate, booking }) {
                             </>
                             :
                             <Button
-                                sx={{ mr: 1 }}
                                 variant="contained"
                                 onClick={() => handleBookingStatusUpdate('cancelled')}
                             >Cancel Request</Button>
