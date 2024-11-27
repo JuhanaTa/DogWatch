@@ -6,11 +6,12 @@ import { Box, Button, FormControl, FormControlLabel, FormGroup, IconButton, Inpu
 import { Link } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { userRegister } from '../reducers/UserReducer';
 import { NearMeOutlined } from '@mui/icons-material';
+import { SocketContext } from '../App';
 
 function RegisterForm({ setShowRegister }) {
     const navigate = useNavigate();
@@ -29,8 +30,7 @@ function RegisterForm({ setShowRegister }) {
     const [location, setLocation] = useState(availableLocations[0])
     const [errors, setErrors] = useState({});
 
-
-
+    const socket = useContext(SocketContext);
 
 
 
@@ -76,6 +76,18 @@ function RegisterForm({ setShowRegister }) {
             console.log('creds', credentials)
             dispatch(userRegister(credentials)).then((result) => {
                 if (result.payload) {
+
+                    //Before new user can use socket disconnect the previous
+                    socket.disconnect()
+
+                    console.log('Before connecting to socket', result.payload)
+
+                    socket.connect("http://localhost:8080",
+                        {
+                            query: { userId: result.payload.userInfo.uuid }
+                        }
+                    );
+
                     navigate(`/DogWatch/`)
                 }
             })

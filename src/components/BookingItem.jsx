@@ -10,11 +10,14 @@ import { format } from 'date-fns';
 import ReviewSitter from './ReviewSitter';
 import PersonIcon from '@mui/icons-material/Person';
 import ForumIcon from '@mui/icons-material/Forum';
+import SendUserMessage from './SendUserMessage';
 
 function BookingItem({ booking }) {
 
     const { services } = useSelector((state) => state.data)
     const { user } = useSelector((state) => state.user)
+    const [sendMessageOpen, setSendMessageOpen] = useState(false);
+    const [open, setOpen] = useState(false)
 
     console.log('booking', booking, user.uuid)
 
@@ -24,7 +27,6 @@ function BookingItem({ booking }) {
 
     const bookingService = services.find(serviceItem => booking.serviceId === serviceItem.uuid)
 
-    const [open, setOpen] = useState(false)
 
     const handleOpen = () => setOpen(!open);
 
@@ -36,6 +38,14 @@ function BookingItem({ booking }) {
 
     const handleReviewForm = () => {
         setReviewOpen(!reviewOpen);
+    };
+
+    const handleMessageForm = () => {
+        if (user) {
+            setSendMessageOpen(!sendMessageOpen);
+        } else {
+            navigate(`/DogWatch/login`)
+        }
     };
 
     const modalStyle = {
@@ -70,6 +80,20 @@ function BookingItem({ booking }) {
                 </Box>
             </Modal>
 
+            <Modal
+                open={sendMessageOpen}
+                onClose={() => setSendMessageOpen(false)}
+            >
+                <Box sx={modalStyle}>
+                    <SendUserMessage
+                        receiverId={user.role === "sitter" ? booking.ownerId : booking.sitterId}
+                        receiverFirstName={user.role === "sitter" ? booking.owner.firstName : booking.sitter.firstName}
+                        receiverLastname={user.role === "sitter" ? booking.owner.lastName : booking.sitter.lastName}
+                        setSendMessageOpen={setSendMessageOpen}>
+                    </SendUserMessage>
+                </Box>
+            </Modal>
+
             <Box
                 sx={{
                     flexDirection: 'row',
@@ -88,12 +112,8 @@ function BookingItem({ booking }) {
                 >
                     <Typography variant='p' sx={{ fontWeight: 'bold' }}>{createdDate}</Typography>
                     <Typography variant='p'>{bookingService.name} in {booking.location}</Typography>
-
-                    {booking.status === "completed" ?
-                        <Typography variant='p' color='success'>Status: {booking.status}</Typography>
-                        :
-                        <Typography variant='p' color='warning'>Status: {booking.status}</Typography>
-                    }
+                    <Typography variant='p' color='success'>Status: {booking.status}</Typography>
+   
                 </Box>
 
                 <IconButton
@@ -143,7 +163,7 @@ function BookingItem({ booking }) {
                                     width: 120
                                 }}
                                 alt="BookingAvatar"
-                                src={"http://localhost:8080/" + booking.owner.avatar}
+                                src={booking.owner.avatar ? "http://localhost:8080/" + booking.owner.avatar : null}
                             >
                                 <PersonIcon
                                     sx={{
@@ -193,7 +213,7 @@ function BookingItem({ booking }) {
                                     },
                                 }}
                                 aria-label="open messages"
-                                onClick={handleMessagesOpen}
+                                onClick={handleMessageForm}
                             >
                                 <ForumIcon />
                             </IconButton>

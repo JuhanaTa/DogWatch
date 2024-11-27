@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -11,7 +11,8 @@ import BookingRequests from '../components/BookingRequests';
 import { useSelector } from 'react-redux';
 import PersonIcon from '@mui/icons-material/Person';
 
-function ProfileOwner() {
+
+function Profile() {
     const { user } = useSelector((state) => state.user)
 
     const [value, setValue] = useState(0);
@@ -20,7 +21,7 @@ function ProfileOwner() {
         setValue(newValue);
     };
 
-    const CustomTabPanel = ((props) => {
+    const CustomTabPanel = memo((props) => {
         const { children, value, index, ...other } = props;
 
         return (
@@ -29,15 +30,12 @@ function ProfileOwner() {
                 hidden={value !== index}
                 id={`tabpanel-${index}`}
                 {...other}
-                sx={{ 
+                sx={{
                     p: 2,
                     maxWidth: 1600,
                 }}
             >
-                {value === 0 && <BookingRequests></BookingRequests>}
-                {value === 1 && <BookingHistory></BookingHistory>}
-                {value === 2 && <Messages></Messages>}
-                {value === 3 && <Settings></Settings>}
+                {value === index && children}
             </Box>
         );
 
@@ -45,9 +43,12 @@ function ProfileOwner() {
 
     return (
 
-        <Box sx={{
-            display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%'
-        }}>
+        <Box
+            sx={{
+                display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between', width: '100%'
+            }}
+            onWheel={(e) => e.stopPropagation()}
+        >
 
             <Box sx={{
                 backgroundColor: 'primary.main',
@@ -85,7 +86,7 @@ function ProfileOwner() {
                         }}
                         sizes='150'
                         alt="profile"
-                        src={"http://localhost:8080/" + user.avatar}
+                        src={user.avatar ? "http://localhost:8080/" + user.avatar : null}
                     >
                         <PersonIcon
                             sx={{
@@ -123,16 +124,16 @@ function ProfileOwner() {
             </Box>
 
             <CustomTabPanel value={value} index={0}>
-                Booking Requests
+                <BookingRequests></BookingRequests>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-                Bookings
+                <BookingHistory></BookingHistory>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-                Messages
+                <Messages></Messages>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
-                Account settings
+                <Settings></Settings>
             </CustomTabPanel>
 
         </Box>
@@ -140,4 +141,4 @@ function ProfileOwner() {
     )
 }
 
-export default ProfileOwner
+export default Profile

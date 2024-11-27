@@ -3,20 +3,22 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Avatar, Box, Button, Card, CircularProgress, Container, FormControl, InputLabel, MenuItem, Modal, Select, Tab, Tabs, Typography } from '@mui/material';
-import ProfileImg from '../assets/sitter3.jpg';
+import { Avatar, Box, Button, Card, CircularProgress, FormControl, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material';
 import ReviewList from '../components/ReviewList';
 import RequestBooking from '../components/RequestBooking';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getPubliUserData } from '../requests/dataRequests';
 import PersonIcon from '@mui/icons-material/Person';
+import SendUserMessage from '../components/SendUserMessage';
 
 function PublicProfile() {
     const { user } = useSelector((state) => state.user)
 
     const [ratingFilter, setRatingFilter] = useState(5)
     const [bookingOpen, setBookingOpen] = useState(false);
+    const [sendMessageOpen, setSendMessageOpen] = useState(false);
+
     const [viewedProfile, setViewedProfile] = useState(null)
     const [requestError, setRequestError] = useState(null)
     const [currentReviews, setCurrentReviews] = useState([])
@@ -40,6 +42,18 @@ function PublicProfile() {
                 setBookingOpen(!bookingOpen);
             } else {
                 setRequestError("Sitters can't make requests.")
+            }
+        } else {
+            navigate(`/DogWatch/login`)
+        }
+    };
+
+    const handleMessageForm = () => {
+        if (user) {
+            if (user.uuid !== viewedProfile.uuid) {
+                setSendMessageOpen(!sendMessageOpen);
+            } else {
+                setRequestError("You can't send message to yourself.")
             }
         } else {
             navigate(`/DogWatch/login`)
@@ -101,6 +115,15 @@ function PublicProfile() {
                         </Box>
                     </Modal>
 
+                    <Modal
+                        open={sendMessageOpen}
+                        onClose={handleMessageForm}
+                    >
+                        <Box sx={modalStyle}>
+                            <SendUserMessage receiverId={viewedProfile.uuid} receiverFirstName={viewedProfile.firstName} receiverLastname={viewedProfile.lastName} setSendMessageOpen={setSendMessageOpen}></SendUserMessage>
+                        </Box>
+                    </Modal>
+
 
                     <Box sx={{
                         backgroundColor: 'primary.main',
@@ -136,7 +159,7 @@ function PublicProfile() {
                                     width: 150
                                 }}
                                 alt="Remy Sharp"
-                                src={"http://localhost:8080/" + viewedProfile.avatar}
+                                src={viewedProfile.avatar ? "http://localhost:8080/" + viewedProfile.avatar : null}
                             >
                                 <PersonIcon
                                     sx={{
@@ -178,7 +201,7 @@ function PublicProfile() {
                                 >Request Booking</Button>
                                 <Button
                                     variant="contained"
-                                    onClick={() => { handleSendMessage() }}
+                                    onClick={() => { handleMessageForm() }}
                                 >Send Message</Button>
                             </Box>
                             {requestError != null &&

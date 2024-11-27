@@ -10,19 +10,21 @@ import Contact from './views/Contact';
 import Search from './views/Search';
 import Footer from './components/Footer';
 import TopToolbar from './components/TopToolbar';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Typography } from '@mui/material';
 import theme from './theme';
 import { ThemeProvider } from '@mui/material/styles';
 import Profile from './views/Profile';
 import PublicProfile from './views/PublicProfile';
 import { configureStore } from '@reduxjs/toolkit';
-import UserReducer, { userInitial, userLogout } from './reducers/UserReducer';
+import UserReducer, { updateReceivedMsg, updateSentMsg, userInitial, userLogout, userMsgInit } from './reducers/UserReducer';
 import { Provider, useDispatch, useSelector } from 'react-redux';
 import DataReducer, { dataAuthInitial, dataInitial } from './reducers/DataReducer';
-import { useEffect, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import { getServices, getSittersDataFetch, getUserBookings } from './requests/dataRequests';
-import { userDataFetch } from './requests/userRequests';
+import { getUserMessages, userDataFetch } from './requests/userRequests';
+import io from 'socket.io-client'
 
+export const SocketContext = createContext();
 
 function App() {
 
@@ -31,6 +33,7 @@ function App() {
     if (action.type.endsWith('rejected') && action.error?.message === "Request failed with status code 401") {
       // Trigger logout action on 401 response
       dispatch(userLogout());
+      socket.disconnect()
     }
 
     return next(action);
@@ -49,10 +52,16 @@ function App() {
   const token = localStorage.getItem('token');
   const userUUID = localStorage.getItem('userUUID');
 
+  console.log('creating socket connection')
+  const socket = io.connect("http://localhost:8080",
+    {
+      query: userUUID ? { userId: userUUID } : {},
+    }
+  );
 
   const AppInit = () => {
     const dispatch = useDispatch();
-
+    const { userMessages } = useSelector((state) => state.user);
     const [waitInit, setWaitInit] = useState(true)
     const [pageError, setPageError] = useState(null)
 
@@ -62,15 +71,19 @@ function App() {
 
         try {
 
-          if (userUUID) {
+          if (userUUID && token) {
             const userPersonalData = await userDataFetch(userUUID)
             dispatch(userInitial({ userInfo: userPersonalData }))
+
+            const messageSenders = await getUserMessages(token)
+            dispatch(userMsgInit(messageSenders))
+            console.log('All user messages', messageSenders)
           }
 
           const sitters = await getSittersDataFetch()
           const services = await getServices()
           const initSearchParams = {
-            service: services[0],
+            service: services.length > 0 ? services[0] : "",
             location: 'Helsinki',
             rating: 0
           }
@@ -79,7 +92,6 @@ function App() {
           if (token) {
             const bookings = token ? await getUserBookings(token) : []
             dispatch(dataAuthInitial(bookings))
-
           }
 
           setWaitInit(false)
@@ -87,9 +99,10 @@ function App() {
         } catch (error) {
           console.log('error', error)
 
-          if(error.status === 401){
+          if (error.status === 401) {
             //Server returns 401 if token is no more valid.
             //Logout in such case
+            socket.disconnect()
             dispatch(userLogout())
             setWaitInit(false)
           } else {
@@ -102,6 +115,36 @@ function App() {
       fetchInitialData();
 
     }, []);
+
+
+    const performMessagesUpdate = async() => {
+      const messageSenders = await getUserMessages(token)
+      dispatch(userMsgInit(messageSenders))
+    }
+
+
+    useEffect(() => {
+      socket.on("receiveMessage", (data) => {
+        console.log('received message!!!', data)
+
+        if(userMessages.some(message => message.partnerId === data.senderId)){
+          dispatch(updateReceivedMsg(data))
+        } else {
+          performMessagesUpdate()
+        }
+      })
+  
+      socket.on("sendMessage", (data) => {
+        console.log('I send a message!', data)
+
+        if(userMessages.some(message => message.partnerId === data.receiverId)){
+          dispatch(updateSentMsg(data))
+        } else {
+          performMessagesUpdate()
+        }
+        
+      })
+    }, [socket]);
 
     if (pageError) {
       return <Typography align='left' variant='h4'>{pageError}</Typography>
@@ -149,7 +192,6 @@ function App() {
               <Footer></Footer>
             </Box>
           </Router>
-
         </ThemeProvider>
       )
     }
@@ -181,8 +223,10 @@ function App() {
 
   return (
     <Provider store={store}>
-      <AppInit>
-      </AppInit>
+      <SocketContext.Provider value={socket}>
+        <AppInit>
+        </AppInit>
+      </SocketContext.Provider>
     </Provider >
   )
 }

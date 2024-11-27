@@ -15,7 +15,7 @@ function SearchBox() {
     console.log('search params', searchParameters)
     const [service, setService] = useState(searchParameters.service.name);
     const [location, setLocation] = useState(searchParameters.location)
-    const [rating, setRating] = useState(searchParameters.rating);
+    const [rating, setRating] = useState(searchParameters.rating)
 
     console.log('service and services', searchParameters.service, services)
 

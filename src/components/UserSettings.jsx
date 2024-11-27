@@ -1,10 +1,5 @@
-import { useEffect, useState } from 'react'
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import { useState } from 'react'
 import { Avatar, Box, Button, Card, Checkbox, CircularProgress, FormControl, FormControlLabel, FormGroup, IconButton, Input, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateUserServices, userChangePassword, userEdit } from '../reducers/UserReducer';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -35,8 +30,6 @@ function UserSettings() {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [passwordErrors, setPasswordErrors] = useState({});
 
-
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleFirstName = (event) => setFirstName(event.target.value);
@@ -242,7 +235,7 @@ function UserSettings() {
                         }}
                         variant='square'
                         alt="Remy Sharp"
-                        src={"http://localhost:8080/" + user.avatar}
+                        src={user.avatar ? "http://localhost:8080/" + user.avatar : null}
                     >
                         <PersonIcon
                             sx={{
@@ -253,7 +246,7 @@ function UserSettings() {
                     </Avatar>
 
 
-                    <Typography variant='p'>Images are transformed to 1:1 format.</Typography>
+                    <Typography sx={{maxWidth: 280}} variant='p'>Images are transformed to 1:1 format. PNG and JPG formats supported.</Typography>
 
 
                 </Card>
@@ -429,21 +422,6 @@ function UserSettings() {
                                 },
                             }}
 
-                            /*endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label={
-                                            showCurPassword ? 'hide the password' : 'display the password'
-                                        }
-                                        onClick={handleClickshowCurPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        onMouseUp={handleMouseUpPassword}
-                                        edge="end"
-                                    >
-                                        {showCurPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }*/
                             error={!!passwordErrors.curPassword}
                             helperText={passwordErrors.curPassword}
                             label="Current password"
@@ -476,21 +454,6 @@ function UserSettings() {
                                 },
                             }}
 
-                            /*endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label={
-                                            showNewPassword ? 'hide the password' : 'display the password'
-                                        }
-                                        onClick={handleClickShowNewPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        onMouseUp={handleMouseUpPassword}
-                                        edge="end"
-                                    >
-                                        {showNewPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }*/
                             error={!!passwordErrors.newPassword}
                             helperText={passwordErrors.newPassword}
                             label="New password"
@@ -523,21 +486,6 @@ function UserSettings() {
                                 },
                             }}
 
-                            /*endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label={
-                                            showConfirmPassword ? 'hide the password' : 'display the password'
-                                        }
-                                        onClick={handleClickShowConfirmPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        onMouseUp={handleMouseUpPassword}
-                                        edge="end"
-                                    >
-                                        {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }*/
                             error={!!passwordErrors.confirmPassword}
                             helperText={passwordErrors.confirmPassword}
                             label="Confirm new password"
@@ -566,25 +514,3 @@ function UserSettings() {
 }
 
 export default UserSettings
-
-
-/*
-<FormControlLabel
-                                control={
-                                    <Checkbox checked={service[0]} onChange={handleDogWalking} name="Dog walking" />
-                                }
-                                label="Dog walking"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={service[1]} onChange={handleHouseSitting} name="Dog sitting" />
-                                }
-                                label="Dog sitting"
-                            />
-                            <FormControlLabel
-                                control={
-                                    <Checkbox checked={service[2]} onChange={handleDaycare} name="Daycare" />
-                                }
-                                label="Daycare"
-                            />
-*/

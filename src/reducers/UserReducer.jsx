@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { postUserServices, updateUserData, uploadImage, userDataFetch, userLoginReq, userRegisterReq, userUpdatePassword } from "../requests/userRequests";
+import { getAllUserMessages, postUserMessage, postUserServices, updateUserData, userDataFetch, userLoginReq, userRegisterReq, userUpdatePassword } from "../requests/userRequests";
 
 export const userLogin = createAsyncThunk(
     'user/userLogin',
@@ -79,6 +79,21 @@ export const userChangePassword = createAsyncThunk(
     }
 )
 
+export const fetchAllUserMessages = createAsyncThunk(
+    'user/fetchAllUserMessages',
+    async (data) => {
+        const allMessages = await getAllUserMessages(data.uuid, data.token)
+    }
+)
+
+export const sendMessageToUser = createAsyncThunk(
+    'user/sendMessageToUser',
+    async (data) => {
+        const createMsgResp = await postUserMessage(data.content, data.receiverId, data.token)
+        return createMsgResp
+    }
+)
+
 const UserReducer = createSlice({
     name: 'user',
     initialState: {
@@ -90,6 +105,8 @@ const UserReducer = createSlice({
         userEditLoad: false,
         userServicesUpdateLoad: false,
         userPasswordChangeLoad: false,
+        userFetchAllMessagesLoad: false,
+        sendMessageToUserLoad: false,
 
         //errors
         userInitError: null,
@@ -99,9 +116,13 @@ const UserReducer = createSlice({
         userEditError: null,
         userServicesUpdateError: null,
         userPasswordChangeError: null,
+        userFetchAllMessagesError: null,
+        sendMessageToUserError: null,
 
         //Main / other stuff
-        user: null
+        user: null,
+        userMessages: [],
+        viewedProfileIndex: 0
     },
     reducers: {
         userLogout: (state) => {
@@ -114,7 +135,63 @@ const UserReducer = createSlice({
         userInitial: (state, action) => {
             state.user = action.payload.userInfo;
         },
+        userMsgInit: (state, action) => {
+            state.userMessages = action.payload.messages
+        },
+        updateReceivedMsg: (state, action) => {
 
+            const partnerIndex = state.userMessages.findIndex(
+                (message) => message.partnerId === action.payload.senderId
+            );
+
+            // Ensure that partnerIndex exists and the partner is found
+            if (partnerIndex !== -1) {
+                // Create a new state with the updated messages for that partner
+                const updatedMessages = state.userMessages.map((message, index) => {
+                    if (index === partnerIndex) {
+                        // Return a new object with the updated messages array
+                        return {
+                            ...message,
+                            messages: [...message.messages, action.payload] // Append the new message
+                        };
+                    }
+                    return message; // Return unchanged message if it's not the one to update
+                });
+
+                //state.viewedProfileIndex = partnerIndex
+
+                // Return a new state with the updated messages
+                state.userMessages = updatedMessages;
+            }
+
+        },
+        updateSentMsg: (state, action) => {
+
+            const partnerIndex = state.userMessages.findIndex(
+                (message) => message.partnerId === action.payload.receiverId
+            );
+
+            // Ensure that partnerIndex exists and the partner is found
+            if (partnerIndex !== -1) {
+                // Create a new state with the updated messages for that partner
+                const updatedMessages = state.userMessages.map((message, index) => {
+                    if (index === partnerIndex) {
+                        // Return a new object with the updated messages array
+                        return {
+                            ...message,
+                            messages: [...message.messages, action.payload] // Append the new message
+                        };
+                    }
+                    return message; // Return unchanged message if it's not the one to update
+                });
+
+                state.viewedProfileIndex = partnerIndex
+
+                // Return a new state with the updated messages
+                state.userMessages = updatedMessages;
+            }
+
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -133,7 +210,7 @@ const UserReducer = createSlice({
                 state.userLoginLoad = false;
                 state.user = null;
 
-                if(action.error.code === "ERR_BAD_REQUEST"){
+                if (action.error.code === "ERR_BAD_REQUEST") {
                     state.userLoginError = "Input fields are invalid. Please input valid credentials."
                 } else {
                     state.userLoginError = action.error.message;
@@ -153,9 +230,9 @@ const UserReducer = createSlice({
             .addCase(userRegister.rejected, (state, action) => {
                 state.userRegisterLoad = false;
                 state.user = null;
-                console.log('error',action.error.code, action.error )
+                console.log('error', action.error.code, action.error)
 
-                if(action.error.code === "ERR_BAD_REQUEST"){
+                if (action.error.code === "ERR_BAD_REQUEST") {
                     state.userRegisterError = "Input fields are invalid. Please input valid credentials."
                 } else {
                     state.userRegisterError = action.error.message;
@@ -219,9 +296,37 @@ const UserReducer = createSlice({
                 state.userPasswordChangeError = action.error.message;
             })
 
+            .addCase(fetchAllUserMessages.pending, (state) => {
+                state.userFetchAllMessagesLoad = true;
+                state.userFetchAllMessagesError = null
+            })
+            .addCase(fetchAllUserMessages.fulfilled, (state, action) => {
+                state.userFetchAllMessagesLoad = false;
+                state.userMessages = action.payload
+                state.userFetchAllMessagesError = null
+            })
+            .addCase(fetchAllUserMessages.rejected, (state, action) => {
+                state.userFetchAllMessagesLoad = false;
+                state.userFetchAllMessagesError = action.error.message;
+            })
+
+            .addCase(sendMessageToUser.pending, (state) => {
+                state.sendMessageToUserLoad = true;
+                state.sendMessageToUserError = null
+            })
+            .addCase(sendMessageToUser.fulfilled, (state) => {
+                state.sendMessageToUserLoad = false;
+                state.sendMessageToUserError = null
+            })
+            .addCase(sendMessageToUser.rejected, (state, action) => {
+                state.sendMessageToUserLoad = false;
+                state.sendMessageToUserError = action.error.message;
+            })
+
+
     }
 })
 
-export const { userLogout, userInitial } = UserReducer.actions;
+export const { userLogout, userInitial, userMsgInit, updateReceivedMsg, updateSentMsg } = UserReducer.actions;
 
 export default UserReducer.reducer;

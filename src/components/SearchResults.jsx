@@ -59,7 +59,7 @@ function SearchResults({ preview }) {
                                         }}
                                         variant='square'
                                         alt="profilepic"
-                                        src={"http://localhost:8080/" + result.avatar}
+                                        src={result.avatar ? "http://localhost:8080/" + result.avatar : null}
                                     >
                                         <PersonIcon
                                             sx={{

@@ -6,13 +6,15 @@ import { AppBar, Avatar, Box, Button, Container, IconButton, Link, Menu, MenuIte
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Logo from '../assets/logo.png';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogout } from '../reducers/UserReducer'
+import { SocketContext } from '../App';
 
 function TopToolbar() {
 
   const { user } = useSelector((state) => state.user)
+  const socket = useContext(SocketContext);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -38,6 +40,7 @@ function TopToolbar() {
   const navigate = useNavigate();
 
   const handleUserLogout = () => {
+    socket.disconnect()
     dispatch(userLogout());
     handleCloseUserMenu()
     navigate(`/DogWatch/`);

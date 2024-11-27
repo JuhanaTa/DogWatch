@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
@@ -10,9 +10,11 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { userLogin } from '../reducers/UserReducer';
+import { userLogin, userMsgInit } from '../reducers/UserReducer';
 import { getUserBookings } from '../requests/dataRequests';
 import { dataAuthInitial } from '../reducers/DataReducer';
+import { SocketContext } from '../App';
+import { getUserMessages } from '../requests/userRequests';
 //import { dataInit } from '../reducers/DataReducer';
 
 function LoginForm({ setShowRegister }) {
@@ -21,6 +23,7 @@ function LoginForm({ setShowRegister }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [errors, setErrors] = useState({});
+    const socket = useContext(SocketContext);
 
     //redux states
     const { userLoginLoad, userLoginError } = useSelector((state) => state.user)
@@ -55,6 +58,21 @@ function LoginForm({ setShowRegister }) {
                     try {
                         const bookings = await getUserBookings(res.payload.token)
                         dispatch(dataAuthInitial(bookings))
+
+                        const messageSenders = await getUserMessages(res.payload.token)
+                        dispatch(userMsgInit(messageSenders))
+
+                        //Before new user can use socket disconnect the previous
+                        socket.disconnect()
+
+                        console.log('Before connecting to socket', res.payload)
+
+                        socket.connect("http://localhost:8080",
+                            {
+                                query: { userId: res.payload.userInfo.uuid }
+                            }
+                        );
+
                     } catch (error) {
                         dispatch(dataAuthInitial([]))
                     }

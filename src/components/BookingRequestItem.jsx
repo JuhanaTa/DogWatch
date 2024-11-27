@@ -1,22 +1,23 @@
 import { useState } from 'react'
-import { Avatar, Box, Button, Card, CircularProgress, IconButton, Typography } from '@mui/material';
+import { Avatar, Box, Button, Card, CircularProgress, IconButton, Modal, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import ProfileImg from '../assets/sitter3.jpg';
 import { format } from 'date-fns';
 import { updateBookingStatus } from '../reducers/DataReducer';
 import PersonIcon from '@mui/icons-material/Person';
 import ForumIcon from '@mui/icons-material/Forum';
+import SendUserMessage from './SendUserMessage';
+import { useNavigate } from 'react-router-dom';
 
 function BookingRequestItem({ booking }) {
     const { user } = useSelector((state) => state.user)
     const { services, updateBookinStatusLoad } = useSelector((state) => state.data)
+    const navigate = useNavigate();
+    const [sendMessageOpen, setSendMessageOpen] = useState(false);
+
     const token = localStorage.getItem('token');
 
     const bookingService = services.find(serviceItem => booking.serviceId === serviceItem.uuid)
     console.log('booking', booking)
-
-    //const endDate = format(new Date(booking.startDate * 1000), 'MMMM dd, yyyy HH:mm')
-    //const startDate = format(new Date(booking.endDate * 1000), 'MMMM dd, yyyy HH:mm')
 
     const endDate = format(new Date(booking.endDate), "MMMM d, yyyy, HH:mm")
     const startDate = format(new Date(booking.startDate), "MMMM d, yyyy, HH:mm")
@@ -35,9 +36,24 @@ function BookingRequestItem({ booking }) {
 
     }
 
-    const handleMessagesOpen = () => {
-        console.log('messages should open')
-    }
+    const handleMessageForm = () => {
+        if (user) {
+            setSendMessageOpen(!sendMessageOpen);
+        } else {
+            navigate(`/DogWatch/login`)
+        }
+    };
+
+    const modalStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+    };
 
     return (
 
@@ -49,6 +65,20 @@ function BookingRequestItem({ booking }) {
 
             }}
         >
+            <Modal
+                open={sendMessageOpen}
+                onClose={() => setSendMessageOpen(false)}
+            >
+                <Box sx={modalStyle}>
+                    <SendUserMessage
+                        receiverId={user.role === "sitter" ? booking.ownerId : booking.sitterId}
+                        receiverFirstName={user.role === "sitter" ? booking.owner.firstName : booking.sitter.firstName}
+                        receiverLastname={user.role === "sitter" ? booking.owner.lastName : booking.sitter.lastName}
+                        setSendMessageOpen={setSendMessageOpen}>
+                    </SendUserMessage>
+                </Box>
+            </Modal>
+
             <Box
                 sx={{
                     flexDirection: 'row',
@@ -75,7 +105,7 @@ function BookingRequestItem({ booking }) {
                             width: 120
                         }}
                         alt="ReviewAvatar"
-                        src={"http://localhost:8080/" + booking.owner.avatar}
+                        src={booking.owner.avatar ? "http://localhost:8080/" + booking.owner.avatar : null}
                     >
                         <PersonIcon
                             sx={{
@@ -142,7 +172,7 @@ function BookingRequestItem({ booking }) {
                                 height: '100%'
                             }}
                             aria-label="open messages"
-                            onClick={handleMessagesOpen}
+                            onClick={handleMessageForm}
                         >
                             <ForumIcon />
                         </IconButton>
@@ -150,25 +180,33 @@ function BookingRequestItem({ booking }) {
 
                         {user.role === "sitter" ?
                             <>
-                                <Button
-                                    sx={{ backgroundColor: 'notice' }}
-                                    variant="contained"
-                                    onClick={() => handleBookingStatusUpdate('denied')}
-                                >
-                                    Deny
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => handleBookingStatusUpdate('confirmed')}
-                                >
-                                    Accept
-                                </Button>
+                                {booking.status === "pending" &&
+                                    <>
+                                        <Button
+                                            sx={{ backgroundColor: 'notice' }}
+                                            variant="contained"
+                                            onClick={() => handleBookingStatusUpdate('denied')}
+                                        >
+                                            Deny
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => handleBookingStatusUpdate('confirmed')}
+                                        >
+                                            Accept
+                                        </Button>
+                                    </>
+                                }
                             </>
                             :
-                            <Button
-                                variant="contained"
-                                onClick={() => handleBookingStatusUpdate('cancelled')}
-                            >Cancel Request</Button>
+                            <>
+                                {booking.status === "pending" &&
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => handleBookingStatusUpdate('cancelled')}
+                                    >Cancel Request</Button>
+                                }
+                            </>
                         }
                     </Box>
                 }

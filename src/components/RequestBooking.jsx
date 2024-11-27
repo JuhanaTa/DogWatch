@@ -59,7 +59,7 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
                 bookingData: bookingData,
                 token: token
             })).then(() => {
-                handleBookingForm()
+                handleBookingForm() //TODO Is this correct?? Seems to work but might be wrong function
             })
         } else {
             setInpuError("Both dates must be selected")

@@ -24,7 +24,7 @@ function ReviewList({ reviews }) {
                             width: 60
                         }}
                         alt="reviewAvatar"
-                        src={"http://localhost:8080/" + review.reviewer.avatar}
+                        src={review.reviewer.avatar ? "http://localhost:8080/" + review.reviewer.avatar : null}
                     >
                         <PersonIcon
                             sx={{
