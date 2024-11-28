@@ -11,6 +11,7 @@ import ReviewSitter from './ReviewSitter';
 import PersonIcon from '@mui/icons-material/Person';
 import ForumIcon from '@mui/icons-material/Forum';
 import SendUserMessage from './SendUserMessage';
+const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 function BookingItem({ booking }) {
 
@@ -163,7 +164,7 @@ function BookingItem({ booking }) {
                                     width: 120
                                 }}
                                 alt="BookingAvatar"
-                                src={booking.owner.avatar ? "http://localhost:8080/" + booking.owner.avatar : null}
+                                src={booking.owner.avatar ? VITE_IMAGE_URL + "/" + booking.owner.avatar : null}
                             >
                                 <PersonIcon
                                     sx={{

@@ -1,7 +1,8 @@
 import { Avatar, Box, Rating, Typography } from '@mui/material';
 import { format } from 'date-fns';
 import PersonIcon from '@mui/icons-material/Person';
-import { useState } from 'react';
+const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
+
 
 function ReviewList({ reviews }) {
 
@@ -24,7 +25,7 @@ function ReviewList({ reviews }) {
                             width: 60
                         }}
                         alt="reviewAvatar"
-                        src={review.reviewer.avatar ? "http://localhost:8080/" + review.reviewer.avatar : null}
+                        src={review.reviewer.avatar ? VITE_IMAGE_URL + "/" + review.reviewer.avatar : null}
                     >
                         <PersonIcon
                             sx={{

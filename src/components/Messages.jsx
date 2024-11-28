@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sendMessageToUser } from '../reducers/UserReducer';
 import SendIcon from '@mui/icons-material/Send';
 import { format } from 'date-fns';
-//import io from 'socket.io-client'
+const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 function Messages() {
     const { user, userMessages, viewedProfileIndex } = useSelector((state) => state.user)
@@ -98,7 +98,7 @@ function Messages() {
                                                     width: 50
                                                 }}
                                                 alt="partnerAvatar"
-                                                src={msgUser.partnerAvatar ? "http://localhost:8080/" + msgUser.partnerAvatar : null}
+                                                src={msgUser.partnerAvatar ? VITE_IMAGE_URL + "/" + msgUser.partnerAvatar : null}
                                             >
                                                 <PersonIcon
                                                     sx={{
@@ -159,7 +159,7 @@ function Messages() {
                                 }}
                                 alt="messagePartner"
                                 src={
-                                    userMessages[viewedMsgPartner].partnerAvatar ? "http://localhost:8080/" + userMessages[viewedMsgPartner].partnerAvatar : null
+                                    userMessages[viewedMsgPartner].partnerAvatar ? VITE_IMAGE_URL + "/" + userMessages[viewedMsgPartner].partnerAvatar : null
                                 }
                             >
                                 <PersonIcon

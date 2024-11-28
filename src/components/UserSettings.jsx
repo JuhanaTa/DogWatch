@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { updateUserServices, userChangePassword, userEdit } from '../reducers/UserReducer';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import PersonIcon from '@mui/icons-material/Person';
+const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 function UserSettings() {
     const token = localStorage.getItem('token');
@@ -234,8 +235,8 @@ function UserSettings() {
                             width: 280
                         }}
                         variant='square'
-                        alt="Remy Sharp"
-                        src={user.avatar ? "http://localhost:8080/" + user.avatar : null}
+                        alt="Profile pic"
+                        src={user.avatar ? VITE_IMAGE_URL + "/" + user.avatar : null}
                     >
                         <PersonIcon
                             sx={{

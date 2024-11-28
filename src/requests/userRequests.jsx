@@ -1,4 +1,5 @@
 import axios from 'axios';
+const API_URL = import.meta.env.VITE_API_URL;
 
 const userLoginReq = async (credentials, token) => {
     const config = {
@@ -7,7 +8,7 @@ const userLoginReq = async (credentials, token) => {
             'Content-Type': 'application/json',
         },
     };
-    const resp = await axios.post('http://localhost:8080/api/v1/login', credentials, config);
+    const resp = await axios.post(`${API_URL}/login`, credentials, config);
     console.log("login resp")
     return resp.data;
 }
@@ -18,12 +19,12 @@ const userRegisterReq = async (credentials) => {
             'Content-Type': 'application/json',
         },
     };
-    const resp = await axios.post('http://localhost:8080/api/v1/register', credentials, config);
+    const resp = await axios.post(`${API_URL}/register`, credentials, config);
     return resp.data
 }
 
 const userUpdatePassword = async (passwords, uuid, token) => {
-    const resp = await axios.patch(`http://localhost:8080/api/v1/users/${uuid}`, passwords, {
+    const resp = await axios.patch(`${API_URL}/users/${uuid}`, passwords, {
         headers: {
             Authorization: `Bearer ${token}`, 
             'Content-Type': 'application/json'
@@ -34,7 +35,7 @@ const userUpdatePassword = async (passwords, uuid, token) => {
 }
 
 const userDataFetch = async (uuid) => {
-    const resp = await axios.get(`http://localhost:8080/api/v1/users/${uuid}`)
+    const resp = await axios.get(`${API_URL}/users/${uuid}`)
     return resp.data
 }
 
@@ -54,7 +55,7 @@ const updateUserData = async (uuid, token, updatedData, avatar) => {
     // Append file
     if (avatar) formData.append('avatar', avatar);
 
-    const resp = await axios.put(`http://localhost:8080/api/v1/users/${uuid}`, formData, {
+    const resp = await axios.put(`${API_URL}/users/${uuid}`, formData, {
         headers: {
             Authorization: `Bearer ${token}`, 
             'Content-Type': 'multipart/form-data', 
@@ -73,7 +74,7 @@ const postUserServices = async (services, id, token) => {
             'Content-Type': 'application/json',
         },
     };
-    const resp = await axios.post(`http://localhost:8080/api/v1/users/${id}/services`, {services}, config);
+    const resp = await axios.post(`${API_URL}/users/${id}/services`, {services}, config);
     return resp.data
 }
 
@@ -81,7 +82,7 @@ const getAllUserMessages = async (uuid, token) => {
 
     console.log('uuid, token', uuid, token)
 
-    const resp = await axios.get(`http://localhost:8080/api/v1/messages/${uuid}`, {
+    const resp = await axios.get(`${API_URL}/messages/${uuid}`, {
         headers: {
             'Authorization': 'Bearer ' + token,
         },
@@ -90,7 +91,7 @@ const getAllUserMessages = async (uuid, token) => {
 }
 
 const getUserMessages = async (token) => {
-    const resp = await axios.get(`http://localhost:8080/api/v1/messages/`, {
+    const resp = await axios.get(`${API_URL}/messages/`, {
         headers: {
             'Authorization': 'Bearer ' + token,
         },
@@ -105,7 +106,7 @@ const postUserMessage = async (content, receiverId, token) => {
             'Content-Type': 'application/json',
         },
     };
-    const resp = await axios.post(`http://localhost:8080/api/v1/messages/${receiverId}`, content, config);
+    const resp = await axios.post(`${API_URL}/messages/${receiverId}`, content, config);
     return resp.data
 }
 

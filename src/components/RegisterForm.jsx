@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userRegister } from '../reducers/UserReducer';
 import { NearMeOutlined } from '@mui/icons-material';
 import { SocketContext } from '../App';
+const VITE_SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 function RegisterForm({ setShowRegister }) {
     const navigate = useNavigate();
@@ -82,7 +83,7 @@ function RegisterForm({ setShowRegister }) {
 
                     console.log('Before connecting to socket', result.payload)
 
-                    socket.connect("http://localhost:8080",
+                    socket.connect(VITE_SOCKET_URL,
                         {
                             query: { userId: result.payload.userInfo.uuid }
                         }

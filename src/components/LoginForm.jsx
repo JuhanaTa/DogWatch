@@ -15,7 +15,7 @@ import { getUserBookings } from '../requests/dataRequests';
 import { dataAuthInitial } from '../reducers/DataReducer';
 import { SocketContext } from '../App';
 import { getUserMessages } from '../requests/userRequests';
-//import { dataInit } from '../reducers/DataReducer';
+const VITE_SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 
 function LoginForm({ setShowRegister }) {
     // normal states
@@ -67,7 +67,7 @@ function LoginForm({ setShowRegister }) {
 
                         console.log('Before connecting to socket', res.payload)
 
-                        socket.connect("http://localhost:8080",
+                        socket.connect(VITE_SOCKET_URL,
                             {
                                 query: { userId: res.payload.userInfo.uuid }
                             }

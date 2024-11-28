@@ -10,6 +10,7 @@ import Settings from '../components/UserSettings';
 import BookingRequests from '../components/BookingRequests';
 import { useSelector } from 'react-redux';
 import PersonIcon from '@mui/icons-material/Person';
+const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 
 function Profile() {
@@ -86,7 +87,7 @@ function Profile() {
                         }}
                         sizes='150'
                         alt="profile"
-                        src={user.avatar ? "http://localhost:8080/" + user.avatar : null}
+                        src={user.avatar ? VITE_IMAGE_URL + "/" + user.avatar : null}
                     >
                         <PersonIcon
                             sx={{

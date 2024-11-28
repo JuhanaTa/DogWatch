@@ -1,8 +1,4 @@
 import { useEffect, useState } from 'react'
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import { Avatar, Box, Button, Card, CircularProgress, FormControl, InputLabel, MenuItem, Modal, Select, Typography } from '@mui/material';
 import ReviewList from '../components/ReviewList';
 import RequestBooking from '../components/RequestBooking';
@@ -11,6 +7,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getPubliUserData } from '../requests/dataRequests';
 import PersonIcon from '@mui/icons-material/Person';
 import SendUserMessage from '../components/SendUserMessage';
+const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 function PublicProfile() {
     const { user } = useSelector((state) => state.user)
@@ -159,7 +156,7 @@ function PublicProfile() {
                                     width: 150
                                 }}
                                 alt="Remy Sharp"
-                                src={viewedProfile.avatar ? "http://localhost:8080/" + viewedProfile.avatar : null}
+                                src={viewedProfile.avatar ? VITE_IMAGE_URL + "/" + viewedProfile.avatar : null}
                             >
                                 <PersonIcon
                                     sx={{

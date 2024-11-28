@@ -2,6 +2,7 @@ import { Card, CardContent, Typography, CardActionArea, Grid2 as Grid, Rating, A
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import PersonIcon from '@mui/icons-material/Person';
+const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 function SearchResults({ preview }) {
     const navigate = useNavigate();
@@ -59,7 +60,7 @@ function SearchResults({ preview }) {
                                         }}
                                         variant='square'
                                         alt="profilepic"
-                                        src={result.avatar ? "http://localhost:8080/" + result.avatar : null}
+                                        src={result.avatar ? VITE_IMAGE_URL + "/" + result.avatar : null}
                                     >
                                         <PersonIcon
                                             sx={{

@@ -23,6 +23,8 @@ import { createContext, useEffect, useState } from 'react';
 import { getServices, getSittersDataFetch, getUserBookings } from './requests/dataRequests';
 import { getUserMessages, userDataFetch } from './requests/userRequests';
 import io from 'socket.io-client'
+const VITE_SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+
 
 export const SocketContext = createContext();
 
@@ -52,8 +54,8 @@ function App() {
   const token = localStorage.getItem('token');
   const userUUID = localStorage.getItem('userUUID');
 
-  console.log('creating socket connection')
-  const socket = io.connect("http://localhost:8080",
+  console.log('creating socket connection', VITE_SOCKET_URL)
+  const socket = io.connect(VITE_SOCKET_URL,
     {
       query: userUUID ? { userId: userUUID } : {},
     }

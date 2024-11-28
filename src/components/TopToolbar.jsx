@@ -10,6 +10,7 @@ import { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { userLogout } from '../reducers/UserReducer'
 import { SocketContext } from '../App';
+const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 function TopToolbar() {
 
@@ -173,7 +174,7 @@ function TopToolbar() {
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt={user ? user.name : "profile"} src={
-                  user && "http://localhost:8080/" + user.avatar
+                  user && VITE_IMAGE_URL + "/" + user.avatar
                 } />
               </IconButton>
             </Tooltip>

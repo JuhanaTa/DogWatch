@@ -7,6 +7,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import ForumIcon from '@mui/icons-material/Forum';
 import SendUserMessage from './SendUserMessage';
 import { useNavigate } from 'react-router-dom';
+const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 function BookingRequestItem({ booking }) {
     const { user } = useSelector((state) => state.user)
@@ -105,7 +106,7 @@ function BookingRequestItem({ booking }) {
                             width: 120
                         }}
                         alt="ReviewAvatar"
-                        src={booking.owner.avatar ? "http://localhost:8080/" + booking.owner.avatar : null}
+                        src={booking.owner.avatar ? VITE_IMAGE_URL + "/" + booking.owner.avatar : null}
                     >
                         <PersonIcon
                             sx={{
