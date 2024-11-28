@@ -4,6 +4,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
+import reviewIcon1 from '../assets/dog1.jpg'
+import reviewIcon2 from '../assets/dog4.jpg'
+import reviewIcon3 from '../assets/dog10.jpg'
+
 
 function ReviewCarousel() {
 
@@ -22,19 +26,19 @@ function ReviewCarousel() {
             name: 'Robert Harris',
             reviewTxt: 'Perfect match for my pup! DogWatch has been a game-changer for me and my dog - Oscar. The sitter I found was not only reliable but also incredibly attentive to his needs. I highly recommend this service!',
             grade: 5,
-            img: 'ADD IMAGE HERE'
+            img: reviewIcon1
         },
         {
             name: 'Liam nelsson',
             reviewTxt: 'DogWatch is a lifesaver for busy schedules! The platform made it easy to connect with experienced dog sitters. My dog Nala comes home happy and well-exercised every single time!',
             grade: 5,
-            img: 'ADD IMAGE HERE'
+            img: reviewIcon2
         },
         {
             name: 'Li Wei',
             reviewTxt: 'DogWatch helped me find the perfect overnight sitter during a recent trip. The entire process, from booking to the actual care, was seamless! Amazing care and convenience! !',
             grade: 5,
-            img: 'ADD IMAGE HERE'
+            img: reviewIcon3
         },
 
     ]
@@ -70,7 +74,7 @@ function ReviewCarousel() {
                             }}
                             sizes='150'
                             alt="profile"
-                            src={ProfileImg}
+                            src={reviewData[showReview].img}
                             //src={user.avatar ? VITE_IMAGE_URL + "/" + user.avatar : null}
                         >
                             <PersonIcon
