@@ -99,6 +99,7 @@ function Profile() {
 
                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                         <Typography align='left' variant='h4'>{user.firstName} {user.lastName}</Typography>
+                        <Typography align='left' variant='p' fontWeight='bold'> {user.location}</Typography>
                         <Typography align='left' variant='p'>{user.headline}</Typography>
                     </Box>
 

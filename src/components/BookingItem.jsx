@@ -45,7 +45,7 @@ function BookingItem({ booking }) {
         if (user) {
             setSendMessageOpen(!sendMessageOpen);
         } else {
-            navigate(`/DogWatch/login`)
+            navigate(`/login`)
         }
     };
 

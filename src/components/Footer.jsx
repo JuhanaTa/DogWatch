@@ -92,7 +92,7 @@ function Footer() {
                             <PlayArrowIcon sx={{ color: 'text.white' }} />
                             <Link
                                 component={RouterLink}
-                                to="/DogWatch/"
+                                to="/"
                                 color="text.white"
                                 sx={{
                                     textDecoration: 'none',
@@ -111,7 +111,7 @@ function Footer() {
                             <PlayArrowIcon sx={{ color: 'text.white' }} />
                             <Link
                                 component={RouterLink}
-                                to="/DogWatch/search"
+                                to="/search"
                                 color="text.white"
                                 sx={{
                                     textDecoration: 'none',
@@ -129,7 +129,7 @@ function Footer() {
                             <PlayArrowIcon sx={{ color: 'text.white' }} />
                             <Link
                                 component={RouterLink}
-                                to="/DogWatch/login"
+                                to="/login"
                                 color="text.white"
                                 sx={{
                                     textDecoration: 'none',

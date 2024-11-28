@@ -27,7 +27,7 @@ function RegisterForm({ setShowRegister }) {
     const [rePassword, setRePassword] = useState('')
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPass, setShowConfirmPass] = useState(false);
-    const [roleChecked, setRoleChecked] = useState([true, false]);
+    const [roleChecked, setRoleChecked] = useState([false, true]);
     const [location, setLocation] = useState(availableLocations[0])
     const [errors, setErrors] = useState({});
 
@@ -89,7 +89,7 @@ function RegisterForm({ setShowRegister }) {
                         }
                     );
 
-                    navigate(`/DogWatch/`)
+                    navigate(`/`)
                 }
             })
         }
@@ -205,6 +205,11 @@ function RegisterForm({ setShowRegister }) {
                             id="location-select"
                             value={location}
                             label="Location"
+                            sx={{
+                                '.MuiSelect-select': {
+                                    textAlign: 'right'
+                                },
+                            }}
                             onChange={handleLocation}
                             startAdornment={
                                 <InputAdornment position="start">

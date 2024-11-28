@@ -314,7 +314,7 @@ function UserSettings() {
                     {userEditLoad ?
                         <CircularProgress />
                         :
-                        <Button sx={{ width: 150 }} onClick={() => { handleUserDataEdit() }} variant="contained">Save Changes</Button>
+                        <Button sx={{ width: 120 }} onClick={() => { handleUserDataEdit() }} variant="contained">Save Info</Button>
                     }
 
                     {userEditError && (

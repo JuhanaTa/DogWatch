@@ -51,7 +51,7 @@ function SendUserMessage({ receiverId, receiverFirstName, receiverLastname, setS
                 <Typography align='left' variant="p" sx={{ color: 'text.primary' }}>To: {receiverFirstName} {receiverLastname}</Typography>
             </Box>
 
-            <FormControl sx={{ width: '100%', minWidth: 225 }}>
+            <FormControl sx={{ width: '40vw', maxWidth: 500, minWidth: 225, }}>
                 <TextField
                     id="message-input"
                     label="Message"
@@ -65,7 +65,7 @@ function SendUserMessage({ receiverId, receiverFirstName, receiverLastname, setS
                 onClick={handleMessageSend}
                 variant="contained"
                 endIcon={<SendIcon />}
-                sx={{width: '100%'}}
+                sx={{width: 175, alignSelf: 'center'}}
             >
                 Send message
             </Button>

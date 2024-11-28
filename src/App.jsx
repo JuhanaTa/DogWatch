@@ -31,13 +31,11 @@ export const SocketContext = createContext();
 function App() {
 
   const authMiddleware = ({ dispatch }) => (next) => (action) => {
-    console.log('action happened', action, action.error?.message)
     if (action.type.endsWith('rejected') && action.error?.message === "Request failed with status code 401") {
       // Trigger logout action on 401 response
       dispatch(userLogout());
       socket.disconnect()
     }
-
     return next(action);
   };
 
@@ -54,7 +52,8 @@ function App() {
   const token = localStorage.getItem('token');
   const userUUID = localStorage.getItem('userUUID');
 
-  console.log('creating socket connection', VITE_SOCKET_URL)
+  console.log('creating socket connection')
+
   const socket = io.connect(VITE_SOCKET_URL,
     {
       query: userUUID ? { userId: userUUID } : {},
@@ -79,8 +78,27 @@ function App() {
 
             const messageSenders = await getUserMessages(token)
             dispatch(userMsgInit(messageSenders))
-            console.log('All user messages', messageSenders)
+
+            const bookings = token ? await getUserBookings(token) : []
+            dispatch(dataAuthInitial(bookings))
           }
+
+        } catch (error) {
+          console.log('error', error)
+
+          if (error.status === 401) {
+            //Server returns 401 if token is no more valid.
+            //Logout in such case
+            socket.disconnect()
+            dispatch(userLogout())
+          } else {
+            setPageError('App load failed: ' + error.message)
+          }
+
+        }
+
+        //Other none userUUID or token required inits
+        try {
 
           const sitters = await getSittersDataFetch()
           const services = await getServices()
@@ -91,27 +109,12 @@ function App() {
           }
           dispatch(dataInitial({ sitters: sitters, services: services, initSearchParams: initSearchParams }))
 
-          if (token) {
-            const bookings = token ? await getUserBookings(token) : []
-            dispatch(dataAuthInitial(bookings))
-          }
-
           setWaitInit(false)
-
+          
         } catch (error) {
-          console.log('error', error)
-
-          if (error.status === 401) {
-            //Server returns 401 if token is no more valid.
-            //Logout in such case
-            socket.disconnect()
-            dispatch(userLogout())
-            setWaitInit(false)
-          } else {
-            setPageError('App load failed: ' + error.message)
-          }
-
+          setPageError('App load failed: ' + error.message)
         }
+
       };
 
       fetchInitialData();
@@ -120,14 +123,15 @@ function App() {
 
 
     const performMessagesUpdate = async() => {
-      const messageSenders = await getUserMessages(token)
-      dispatch(userMsgInit(messageSenders))
+      if(token && userUUID){
+        const messageSenders = await getUserMessages(token)
+        dispatch(userMsgInit(messageSenders))
+      }
     }
-
 
     useEffect(() => {
       socket.on("receiveMessage", (data) => {
-        console.log('received message!!!', data)
+        console.log('received message')
 
         if(userMessages.some(message => message.partnerId === data.senderId)){
           dispatch(updateReceivedMsg(data))
@@ -137,7 +141,7 @@ function App() {
       })
   
       socket.on("sendMessage", (data) => {
-        console.log('I send a message!', data)
+        console.log('Sent a message')
 
         if(userMessages.some(message => message.partnerId === data.receiverId)){
           dispatch(updateSentMsg(data))
@@ -157,23 +161,23 @@ function App() {
       return (
         <ThemeProvider theme={theme}>
 
-          <Router>
+          <Router basename="/DogWatch/">
             <ScrollToTop></ScrollToTop>
 
             <TopToolbar></TopToolbar>
 
             <Box className='content'>
 
-              <Routes basename="/DogWatch/">
-                <Route path="/DogWatch/" element={<MainPage />} />
+              <Routes>
+                <Route path="/" element={<MainPage />} />
 
-                <Route path="/DogWatch/publicprofile/:uuid" element={<PublicProfile />} />
-                <Route path="/DogWatch/search" element={<Search />} />
-                <Route path="/DogWatch/contact" element={<Contact />} />
-                <Route path="/DogWatch/login" element={<Login />} />
+                <Route path="/publicprofile/:uuid" element={<PublicProfile />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
 
                 <Route
-                  path="/DogWatch/profile"
+                  path="/profile"
                   element={
                     <ProtectedRoute>
                       <Profile />
@@ -205,7 +209,7 @@ function App() {
     const { user } = useSelector((state) => state.user);
 
     if (!user) {
-      return <Navigate to="/DogWatch/login" replace />;
+      return <Navigate to="/login" replace />;
     }
 
     return children;

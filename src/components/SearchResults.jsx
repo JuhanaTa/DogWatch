@@ -7,8 +7,9 @@ const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 function SearchResults({ preview }) {
     const navigate = useNavigate();
 
-    const { searchResults, sittersList } = useSelector((state) => state.data)
-
+    const { searchResults, sittersList, searchParameters } = useSelector((state) => state.data)
+    console.log('search params', searchParameters, searchResults, Object.keys(searchParameters).length, searchResults.length)
+    
     let results = []
 
     if (preview) {
@@ -17,7 +18,13 @@ function SearchResults({ preview }) {
         results = sittersList.slice(0, 6)
     } else {
         //Filtered sitters
-        results = searchResults
+
+        if(Object.keys(searchParameters).length > 0){
+            results = searchResults
+        } else {
+            results = sittersList
+        }
+
     }
 
     console.log('search sitters', results)
@@ -50,7 +57,7 @@ function SearchResults({ preview }) {
 
                             >
                                 <CardActionArea
-                                    onClick={() => { navigate(`/DogWatch/publicprofile/${result.uuid}`) }}
+                                    onClick={() => { navigate(`/publicprofile/${result.uuid}`) }}
                                 >
 
                                     <Avatar

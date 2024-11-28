@@ -1,8 +1,9 @@
-import { Box, Typography, List, ListItem, IconButton } from '@mui/material';
+import { Box, Typography, List, ListItem, IconButton, Avatar } from '@mui/material';
 import ProfileImg from '../assets/sitter3.jpg';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useState } from 'react';
+import PersonIcon from '@mui/icons-material/Person';
 
 function ReviewCarousel() {
 
@@ -18,26 +19,20 @@ function ReviewCarousel() {
 
     const reviewData = [
         {
-            name: 'Christine Beckam',
-            reviewTxt: 'I’m so grateful for the opportunity DogWatch provides! I got a wonderful care of my dog, he was well-fed, entertained, and comfortable throughout my absence. My dog sitter’s attention to detail and genuine love for dogs were evident in the daily updates and photos they provided.',
-            grade: 4,
-            img: 'ADD IMAGE HERE'
-        },
-        {
-            name: 'Liam nelsson',
-            reviewTxt: 'I’m grateful too!!!',
+            name: 'Robert Harris',
+            reviewTxt: 'Perfect match for my pup! DogWatch has been a game-changer for me and my dog - Oscar. The sitter I found was not only reliable but also incredibly attentive to his needs. I highly recommend this service!',
             grade: 5,
             img: 'ADD IMAGE HERE'
         },
         {
-            name: 'Christine Beckam',
-            reviewTxt: 'I’m so grateful for the opportunity DogWatch provides! I got a wonderful care of my dog, he was well-fed, entertained, and comfortable throughout my absence. My dog sitter’s attention to detail and genuine love for dogs were evident in the daily updates and photos they provided.',
-            grade: 4,
+            name: 'Liam nelsson',
+            reviewTxt: 'DogWatch is a lifesaver for busy schedules! The platform made it easy to connect with experienced dog sitters. My dog Nala comes home happy and well-exercised every single time!',
+            grade: 5,
             img: 'ADD IMAGE HERE'
         },
         {
-            name: 'Liam nelsson',
-            reviewTxt: 'I’m grateful too!!!',
+            name: 'Li Wei',
+            reviewTxt: 'DogWatch helped me find the perfect overnight sitter during a recent trip. The entire process, from booking to the actual care, was seamless! Amazing care and convenience! !',
             grade: 5,
             img: 'ADD IMAGE HERE'
         },
@@ -50,13 +45,13 @@ function ReviewCarousel() {
 
         <Box sx={{ display: 'flex', width: '100%', maxWidth: 800, justifyContent: 'center', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
 
-            <Typography sx={{width: 240}} variant='h4'>What Our Customers Say</Typography>
+            <Typography sx={{ width: 240 }} variant='h4'>What Our Customers Say</Typography>
 
             <List sx={{ flexDirection: 'row', display: 'flex' }}>
 
-                <ListItem sx={{ gap: 2, width: '100%'}}>
+                <ListItem sx={{ gap: 2, width: '100%' }}>
 
-                    <IconButton disabled={showReview === 0 } onClick={handleReviewBack}
+                    <IconButton disabled={showReview === 0} onClick={handleReviewBack}
                         sx={{
                             backgroundColor: 'primary.main',
                             '&:hover': {
@@ -66,9 +61,26 @@ function ReviewCarousel() {
                         <ArrowBackIcon fontSize="large" />
                     </IconButton>
 
-                    <Box sx={{ flexDirection: 'column', display: 'flex', alignItems: 'center', gap: 3, width: '100%'}}>
+                    <Box sx={{ flexDirection: 'column', display: 'flex', alignItems: 'center', gap: 3, width: '100%' }}>
 
-                        <img style={{ width: 160 }} loading='lazy' src={ProfileImg} />
+                        <Avatar
+                            sx={{
+                                height: 125,
+                                width: 125
+                            }}
+                            sizes='150'
+                            alt="profile"
+                            src={ProfileImg}
+                            //src={user.avatar ? VITE_IMAGE_URL + "/" + user.avatar : null}
+                        >
+                            <PersonIcon
+                                sx={{
+                                    width: 60,
+                                    height: 60
+                                }}>
+                            </PersonIcon>
+                        </Avatar>
+
 
                         <Typography variant='p'>{reviewData[showReview].reviewTxt}</Typography>
 

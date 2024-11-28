@@ -4,7 +4,11 @@ import { getServices, getSittersDataFetch, getSittersWithFilter, getUserBookings
 
 
 let availableLocations = ["Helsinki", "Espoo", "Vantaa"]
-
+let initSearchParams = {
+    service: null,
+    location: '',
+    rating: null
+}
 export const searchAllSitters = createAsyncThunk(
     'data/allSitters',
     async () => {
@@ -96,11 +100,7 @@ const DataReducer = createSlice({
         //Main / other stuff
         availableLocations: availableLocations,
         services: [],
-        searchParameters: {
-            service: null,
-            location: '',
-            rating: null
-        },
+        searchParameters: {},
         searchResults: [],
         sittersList: [],
         bookingHistory: [],
@@ -112,11 +112,15 @@ const DataReducer = createSlice({
             // Clear user state and localStorage on logout
             state.services = action.payload.services
             state.sittersList = action.payload.sitters
-            state.searchParameters = action.payload.initSearchParams
+            //state.searchParameters = action.payload.initSearchParams
         },
         dataAuthInitial: (state, action) => {
             state.bookings = action.payload;
         },
+        clearSearchParams: (state) => {
+            state.searchParameters = {}
+            state.searchResults = []
+        }
 
     },
 
@@ -226,6 +230,6 @@ const DataReducer = createSlice({
     }
 })
 
-export const { dataInitial, dataAuthInitial } = DataReducer.actions;
+export const { dataInitial, dataAuthInitial, clearSearchParams } = DataReducer.actions;
 
 export default DataReducer.reducer;

@@ -77,7 +77,7 @@ function LoginForm({ setShowRegister }) {
                         dispatch(dataAuthInitial([]))
                     }
 
-                    navigate(`/DogWatch/`);
+                    navigate(`/`);
                 }
             })
         }

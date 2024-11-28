@@ -44,7 +44,7 @@ function TopToolbar() {
     socket.disconnect()
     dispatch(userLogout());
     handleCloseUserMenu()
-    navigate(`/DogWatch/`);
+    navigate(`/`);
   };
 
 
@@ -85,7 +85,7 @@ function TopToolbar() {
             >
 
               <MenuItem onClick={handleCloseNavMenu}>
-                <Link component={RouterLink} to="/DogWatch/" color="primary" sx={{
+                <Link component={RouterLink} to="/" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
@@ -94,7 +94,7 @@ function TopToolbar() {
               </MenuItem>
 
               <MenuItem onClick={handleCloseNavMenu}>
-                <Link component={RouterLink} to="/DogWatch/search" color="primary" sx={{
+                <Link component={RouterLink} to="/search" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
@@ -103,7 +103,7 @@ function TopToolbar() {
               </MenuItem>
 
               <MenuItem onClick={handleCloseNavMenu}>
-                <Link component={RouterLink} to="/DogWatch/contact" color="primary" sx={{
+                <Link component={RouterLink} to="/contact" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',
@@ -125,7 +125,7 @@ function TopToolbar() {
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, gap: 2 }}>
             <Link
               component={RouterLink}
-              to="/DogWatch/"
+              to="/"
               color="primary"
               sx={{
                 textDecoration: 'none',
@@ -140,7 +140,7 @@ function TopToolbar() {
             </Link>
             <Link
               component={RouterLink}
-              to="/DogWatch/search"
+              to="/search"
               color="primary"
               sx={{
                 textDecoration: 'none',
@@ -155,7 +155,7 @@ function TopToolbar() {
             </Link>
             <Link
               component={RouterLink}
-              to="/DogWatch/contact"
+              to="/contact"
               color="primary"
               sx={{
                 textDecoration: 'none',
@@ -171,13 +171,11 @@ function TopToolbar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt={user ? user.name : "profile"} src={
                   user && VITE_IMAGE_URL + "/" + user.avatar
                 } />
               </IconButton>
-            </Tooltip>
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
@@ -194,7 +192,7 @@ function TopToolbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <Link component={RouterLink} to="/DogWatch/profile" color="primary" sx={{
+              <Link component={RouterLink} to="/profile" color="primary" sx={{
                 textDecoration: 'none',
                 '&:hover': {
                   textDecoration: 'none',
@@ -211,7 +209,7 @@ function TopToolbar() {
 
 
               {!user &&
-                <Link component={RouterLink} to="/DogWatch/Login" color="primary" sx={{
+                <Link component={RouterLink} to="/Login" color="primary" sx={{
                   textDecoration: 'none',
                   '&:hover': {
                     textDecoration: 'none',

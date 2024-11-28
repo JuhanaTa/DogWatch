@@ -17,7 +17,7 @@ import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 
 function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
     const { user } = useSelector((state) => state.user)
-    const { services, availableLocations, createBookingError } = useSelector((state) => state.data)
+    const { services, availableLocations } = useSelector((state) => state.data)
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -44,36 +44,52 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
 
         const usedService = services.find(serviceItem => service === serviceItem.name)
 
+
         if (startTime && endTime) {
-            let bookingData = {
-                startDate: startTime.toISOString(),
-                endDate: endTime.toISOString(),
-                location: location,
-                serviceId: usedService.uuid,
-                sitterId: viewedProfile.uuid
+
+            const startToCompare = new Date(startTime).getTime()
+            const endToCompare = new Date(endTime).getTime()
+
+            if (startToCompare < endToCompare) {
+
+                let bookingData = {
+                    startDate: startTime.toISOString(),
+                    endDate: endTime.toISOString(),
+                    location: location,
+                    serviceId: usedService.uuid,
+                    sitterId: viewedProfile.uuid
+                }
+
+                console.log('booking data', bookingData)
+
+                dispatch(createSitterBooking({
+                    bookingData: bookingData,
+                    token: token
+                })).then(() => {
+                    handleBookingForm() //TODO Is this correct?? Seems to work but might be wrong function
+                })
+
+            } else {
+                setInpuError("Start time must be before end time.")
             }
-
-            console.log('booking data', bookingData)
-
-            dispatch(createSitterBooking({
-                bookingData: bookingData,
-                token: token
-            })).then(() => {
-                handleBookingForm() //TODO Is this correct?? Seems to work but might be wrong function
-            })
         } else {
-            setInpuError("Both dates must be selected")
+            setInpuError("Both times must be selected")
         }
     }
 
     // Handle date changes
     const handleStartTimeChange = (newValue) => {
         setStartTime(newValue);
+        console.log("new start", new Date(newValue).getTime())
     };
 
     const handleEndTimeChange = (newValue) => {
         setEndTime(newValue);
+
+        console.log("new end", new Date(newValue).getTime())
+
     };
+
 
     return (
 
@@ -144,10 +160,6 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
                 </LocalizationProvider>
 
             </Box>
-
-            {createBookingError &&
-                <Typography variant='p' color='error'>{createBookingError}</Typography>
-            }
 
             {inputError &&
                 <Typography variant='p' color='error'>{inputError}</Typography>

@@ -7,12 +7,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getPubliUserData } from '../requests/dataRequests';
 import PersonIcon from '@mui/icons-material/Person';
 import SendUserMessage from '../components/SendUserMessage';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 function PublicProfile() {
     const { user } = useSelector((state) => state.user)
+    const { createBookingError } = useSelector((state) => state.data)
 
-    const [ratingFilter, setRatingFilter] = useState(5)
+
+    const [ratingFilter, setRatingFilter] = useState('')
     const [bookingOpen, setBookingOpen] = useState(false);
     const [sendMessageOpen, setSendMessageOpen] = useState(false);
 
@@ -41,7 +44,7 @@ function PublicProfile() {
                 setRequestError("Sitters can't make requests.")
             }
         } else {
-            navigate(`/DogWatch/login`)
+            navigate(`/login`)
         }
     };
 
@@ -53,15 +56,7 @@ function PublicProfile() {
                 setRequestError("You can't send message to yourself.")
             }
         } else {
-            navigate(`/DogWatch/login`)
-        }
-    };
-
-    const handleSendMessage = () => {
-        if (user) {
-            //setBookingOpen(!bookingOpen);
-        } else {
-            navigate(`/DogWatch/login`)
+            navigate(`/login`)
         }
     };
 
@@ -81,8 +76,8 @@ function PublicProfile() {
             const profile = await getPubliUserData(uuid)
             console.log('profile', profile)
             setViewedProfile(profile)
-            handleReviewFilter(ratingFilter, profile.receivedReviews)
-            //setCurrentReviews(profile.receivedReviews)
+            //handleReviewFilter(ratingFilter, profile.receivedReviews)
+            setCurrentReviews(profile.receivedReviews)
         } catch (error) {
             console.log('fail to load profile')
         }
@@ -91,9 +86,6 @@ function PublicProfile() {
     useEffect(() => {
         getViewedProfile()
     }, []);
-
-
-
 
     return (
 
@@ -155,7 +147,7 @@ function PublicProfile() {
                                     height: 150,
                                     width: 150
                                 }}
-                                alt="Remy Sharp"
+                                alt="sitter picture"
                                 src={viewedProfile.avatar ? VITE_IMAGE_URL + "/" + viewedProfile.avatar : null}
                             >
                                 <PersonIcon
@@ -166,9 +158,11 @@ function PublicProfile() {
                                 </PersonIcon>
                             </Avatar>
 
-                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
                                 <Typography align='left' variant='h4'>{viewedProfile.firstName} {viewedProfile.lastName}</Typography>
+                                <Typography align='left' variant='p' fontWeight='bold'> {viewedProfile.location}</Typography>
                                 <Typography align='left' variant='p'>{viewedProfile.headline}</Typography>
+
                             </Box>
 
                         </Box>
@@ -187,6 +181,27 @@ function PublicProfile() {
                             gap: 1
                         }}>
                             <Typography variant='h6'>ABOUT ME</Typography>
+
+                            {viewedProfile.services.length > 0 &&
+                                <Box sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'flex-start',
+                                }}>
+                                    <Typography variant='p' fontWeight="bold">I'm providing:</Typography>
+
+                                    {
+                                        <Typography align='left' variant='p'>
+                                            {viewedProfile.services.map((service, index) => (
+
+                                                index !== viewedProfile.services.length - 1 ? service.name + ", " : service.name + "."
+
+                                            ))}
+                                        </Typography>
+                                    }
+                                </Box>
+                            }
+
                             <Typography align='left' variant='p'>
                                 {viewedProfile.description}
                             </Typography>
@@ -201,9 +216,13 @@ function PublicProfile() {
                                     onClick={() => { handleMessageForm() }}
                                 >Send Message</Button>
                             </Box>
-                            {requestError != null &&
+                            {requestError != null || createBookingError != null &&
                                 <Typography variant='p' color='error'>{requestError}</Typography>
                             }
+                            {createBookingError != null &&
+                                <Typography variant='p' color='error'>Request failed: Check that sitter accepts selected service and location.</Typography>
+                            }
+
                         </Card>
 
                         <Card sx={{
@@ -214,8 +233,8 @@ function PublicProfile() {
 
                             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', flexWrap: 'wrap' }}>
 
-                                <Typography variant='h5'>Customers Feedback</Typography>
-                                <FormControl sx={{ m: 1, width: 125 }}>
+                                <Typography variant='h5'>Customer reviews</Typography>
+                                <FormControl sx={{ m: 1, width: 140 }}>
                                     <InputLabel id="demo-simple-select-label">Sort by rating</InputLabel>
                                     <Select
                                         labelId="rating-label"
