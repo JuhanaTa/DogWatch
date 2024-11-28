@@ -26,19 +26,19 @@ function ReviewCarousel() {
             name: 'Robert Harris',
             reviewTxt: 'Perfect match for my pup! DogWatch has been a game-changer for me and my dog - Oscar. The sitter I found was not only reliable but also incredibly attentive to his needs. I highly recommend this service!',
             grade: 5,
-            img: reviewIcon1
+            img: ""
         },
         {
             name: 'Liam nelsson',
             reviewTxt: 'DogWatch is a lifesaver for busy schedules! The platform made it easy to connect with experienced dog sitters. My dog Nala comes home happy and well-exercised every single time!',
             grade: 5,
-            img: reviewIcon2
+            img: ""
         },
         {
             name: 'Li Wei',
             reviewTxt: 'DogWatch helped me find the perfect overnight sitter during a recent trip. The entire process, from booking to the actual care, was seamless! Amazing care and convenience! !',
             grade: 5,
-            img: reviewIcon3
+            img: ""
         },
 
     ]
