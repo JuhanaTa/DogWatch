@@ -161,7 +161,7 @@ function App() {
       return (
         <ThemeProvider theme={theme}>
 
-          <Router basename="/watchdog/">
+          <Router basename="/dogwatch/">
             <ScrollToTop></ScrollToTop>
 
             <TopToolbar></TopToolbar>
