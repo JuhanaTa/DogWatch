@@ -4,9 +4,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useState } from 'react';
 import PersonIcon from '@mui/icons-material/Person';
-import reviewIcon1 from '../assets/dog1.jpg'
-import reviewIcon2 from '../assets/dog4.jpg'
-import reviewIcon3 from '../assets/dog10.jpg'
+//import reviewIcon1 from '../assets/dog1.jpg'
+//import reviewIcon2 from '../assets/dog4.jpg'
+//import reviewIcon3 from '../assets/dog10.jpg'
 
 
 function ReviewCarousel() {
@@ -74,7 +74,8 @@ function ReviewCarousel() {
                             }}
                             sizes='150'
                             alt="profile"
-                            src={reviewData[showReview].img}
+                            src={ProfileImg}
+                            //src={reviewData[showReview].img}
                             //src={user.avatar ? VITE_IMAGE_URL + "/" + user.avatar : null}
                         >
                             <PersonIcon
