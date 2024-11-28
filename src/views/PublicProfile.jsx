@@ -168,7 +168,7 @@ function PublicProfile() {
 
                             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                 <Typography align='left' variant='h4'>{viewedProfile.firstName} {viewedProfile.lastName}</Typography>
-                                <Typography align='left' variant='p'>--</Typography>
+                                <Typography align='left' variant='p'>{viewedProfile.headline}</Typography>
                             </Box>
 
                         </Box>
