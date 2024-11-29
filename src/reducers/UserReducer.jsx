@@ -140,6 +140,9 @@ const UserReducer = createSlice({
         },
         updateReceivedMsg: (state, action) => {
 
+            //Help from Chatgpt used to find correct messages and form the userMessages array when new message udpates
+            //Edited to work with used data structure
+
             const partnerIndex = state.userMessages.findIndex(
                 (message) => message.partnerId === action.payload.senderId
             );
@@ -163,6 +166,9 @@ const UserReducer = createSlice({
 
         },
         updateSentMsg: (state, action) => {
+
+            //Help from Chatgpt used to find correct messages and form the userMessages array when new message udpates
+            //Edited to work with used data structure
 
             const partnerIndex = state.userMessages.findIndex(
                 (message) => message.partnerId === action.payload.receiverId

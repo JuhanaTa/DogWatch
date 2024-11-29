@@ -13,8 +13,6 @@ function UserSettings() {
     const { user, userPasswordChangeLoad, userEditLoad, userEditError, userPasswordChangeError, userServicesUpdateLoad, userServicesUpdateError } = useSelector((state) => state.user)
     const { services } = useSelector((state) => state.data)
 
-    console.log('user Settings user', user)
-
     const [firstName, setFirstName] = useState(user.firstName != null ? user.firstName : "")
     const [lastName, setLastName] = useState(user.lastName != null ? user.lastName : "")
     const [headline, setHeadline] = useState(user.headline != null ? user.headline : "")

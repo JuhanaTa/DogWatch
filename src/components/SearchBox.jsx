@@ -10,13 +10,10 @@ function SearchBox() {
     const dispatch = useDispatch();
 
     const { searchParameters, availableLocations, services, filterLoad } = useSelector((state) => state.data)
-    console.log('search params', searchParameters)
     const [service, setService] = useState(Object.keys(searchParameters).length > 0 ? searchParameters.service.name : '');
     const [location, setLocation] = useState(Object.keys(searchParameters).length > 0 ? searchParameters.location : '')
     const [rating, setRating] = useState(Object.keys(searchParameters).length > 0 ? searchParameters.rating : 0)
     const [errors, setErrors] = useState({});
-
-    console.log('service and services', searchParameters.service, services)
 
     const handleService = (event) => {
         setService(event.target.value);
@@ -36,8 +33,6 @@ function SearchBox() {
         if (validate()) {
             //need to find the service id
             const usedService = services.find(serItem => serItem.name === service)
-
-            console.log('used service', usedService)
 
             let filters = {
                 service: usedService,
