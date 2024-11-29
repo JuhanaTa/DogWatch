@@ -60,6 +60,64 @@ DogWatch is where pet owners and pet sitters find each others. Our desire is to 
     "react-window": "^1.8.10",
     "socket.io-client": "^4.8.1"
 
+## Folder Structure
+```
+.
+├── README.md
+├── vite.config.js
+├── index.html
+├── eslint.config.js
+├── .env.production
+├── package.json
+├── src
+│ ├── App.css
+│ ├── App.jsx
+│ ├── index.css
+│ ├── main.jsx
+│ ├── theme.jsx
+│ ├── assets
+│ │ ├── App Images
+│ ├── components
+│ │ ├── BookingHistory.jsx
+│ │ ├── BookingItem.jsx
+│ │ ├── BookingRequestItem.jsx
+│ │ ├── BookingRequests.jsx
+│ │ ├── Footer.jsx
+│ │ ├── InfoCards.jsx
+│ │ ├── LoginForm.jsx
+│ │ ├── Messages.jsx
+│ │ ├── RegisterForm.jsx
+│ │ ├── RequestBooking.jsx
+│ │ ├── ReviewCarousel.jsx
+│ │ ├── ReviewList.jsx
+│ │ ├── ReviewSitter.jsx
+│ │ ├── SearchBox.jsx
+│ │ ├── SearchResults.jsx
+│ │ ├── SendUserMessage.jsx
+│ │ ├── TopToolbar.jsx
+│ │ ├── UsetSettings.jsx
+│ ├── reducers
+│ │ ├── DataReducer.jsx
+│ │ ├── UserReducer.jsx
+│ ├── requests
+│ │ ├── DataRequests.jsx
+│ │ ├── UserRequests.jsx
+│ ├── views
+│ │ ├── Contact.jsx
+│ │ ├── Login.jsx
+│ │ ├── MainPage.jsx
+│ │ ├── Profile.jsx
+│ │ ├── PublicProfile.jsx
+│ │ ├── Search.jsx
+├── public
+│ ├── 404.html
+│ ├── favicon.png
+│ ├── vite.svg
+├── .github
+│ ├── workflows
+│   ├── deploy.yml
+```
+
 ## Installation (local)
 
 Clone the repo:

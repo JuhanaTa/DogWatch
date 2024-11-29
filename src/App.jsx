@@ -157,7 +157,6 @@ function App() {
     } else if (waitInit) {
       return <CircularProgress />;
     } else {
-      console.log('returnin app')
       return (
         <ThemeProvider theme={theme}>
 
