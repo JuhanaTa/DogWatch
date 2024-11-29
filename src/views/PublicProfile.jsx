@@ -7,7 +7,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { getPubliUserData } from '../requests/dataRequests';
 import PersonIcon from '@mui/icons-material/Person';
 import SendUserMessage from '../components/SendUserMessage';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 const VITE_IMAGE_URL = import.meta.env.VITE_IMAGE_URL;
 
 function PublicProfile() {

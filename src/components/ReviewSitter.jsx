@@ -1,14 +1,11 @@
 import { Box, Button, FormControl, Rating, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch, useSelector } from 'react-redux';
 import { leaveSitterReview } from '../reducers/DataReducer';
 
 function ReviewSitter({ handleReviewForm, booking }) {
-    const { user } = useSelector((state) => state.user)
     const { leaveSitterReviewError } = useSelector((state) => state.data)
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const token = localStorage.getItem('token');
@@ -32,7 +29,6 @@ function ReviewSitter({ handleReviewForm, booking }) {
         const ratingData = {
             rating: rating,
             comment: description,
-            //revieweeId: user.uuid
         }
 
         dispatch(leaveSitterReview(

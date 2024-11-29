@@ -1,10 +1,6 @@
 import cover from '../assets/search_page.jpg'
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import SearchBox from '../components/SearchBox';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import SearchResults from '../components/SearchResults';
 
 function Search() {

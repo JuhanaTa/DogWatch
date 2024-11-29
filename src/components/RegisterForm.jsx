@@ -1,7 +1,3 @@
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import { Box, Button, FormControl, FormControlLabel, FormGroup, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography, Checkbox, CircularProgress, MenuItem, Select, FormHelperText } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
@@ -74,14 +70,13 @@ function RegisterForm({ setShowRegister }) {
                 location: location
             }
 
-            console.log('creds', credentials)
             dispatch(userRegister(credentials)).then((result) => {
                 if (result.payload) {
 
                     //Before new user can use socket disconnect the previous
                     socket.disconnect()
 
-                    console.log('Before connecting to socket', result.payload)
+                    console.log('Before connecting to socket')
 
                     socket.connect(VITE_SOCKET_URL,
                         {

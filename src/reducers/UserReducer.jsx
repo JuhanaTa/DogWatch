@@ -144,23 +144,20 @@ const UserReducer = createSlice({
                 (message) => message.partnerId === action.payload.senderId
             );
 
-            // Ensure that partnerIndex exists and the partner is found
+            //Ensure that partnerIndex exists
             if (partnerIndex !== -1) {
-                // Create a new state with the updated messages for that partner
+                //Create a new state with the updated messages
                 const updatedMessages = state.userMessages.map((message, index) => {
                     if (index === partnerIndex) {
                         // Return a new object with the updated messages array
                         return {
                             ...message,
-                            messages: [...message.messages, action.payload] // Append the new message
+                            messages: [...message.messages, action.payload]
                         };
                     }
-                    return message; // Return unchanged message if it's not the one to update
+                    return message; 
                 });
 
-                //state.viewedProfileIndex = partnerIndex
-
-                // Return a new state with the updated messages
                 state.userMessages = updatedMessages;
             }
 
@@ -171,23 +168,21 @@ const UserReducer = createSlice({
                 (message) => message.partnerId === action.payload.receiverId
             );
 
-            // Ensure that partnerIndex exists and the partner is found
+            //Ensure that partnerIndex exists
             if (partnerIndex !== -1) {
-                // Create a new state with the updated messages for that partner
+                //Create a new state with the updated messages
                 const updatedMessages = state.userMessages.map((message, index) => {
                     if (index === partnerIndex) {
                         // Return a new object with the updated messages array
                         return {
                             ...message,
-                            messages: [...message.messages, action.payload] // Append the new message
+                            messages: [...message.messages, action.payload]
                         };
                     }
-                    return message; // Return unchanged message if it's not the one to update
+                    return message;
                 });
 
                 state.viewedProfileIndex = partnerIndex
-
-                // Return a new state with the updated messages
                 state.userMessages = updatedMessages;
             }
 

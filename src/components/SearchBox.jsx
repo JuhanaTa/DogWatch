@@ -1,8 +1,5 @@
-import { AccountCircle } from '@mui/icons-material';
-import { Box, FormControl, InputLabel, Select, MenuItem, Button, TextField, InputAdornment, Rating, Typography, Container, CircularProgress, IconButton } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import NearMeOutlinedIcon from '@mui/icons-material/NearMeOutlined';
+import { Box, FormControl, InputLabel, Select, MenuItem, Button, Rating, Typography, Container, CircularProgress, IconButton } from '@mui/material';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearSearchParams, searchFilteredSitters } from '../reducers/DataReducer';
@@ -22,7 +19,6 @@ function SearchBox() {
     console.log('service and services', searchParameters.service, services)
 
     const handleService = (event) => {
-        console.log('selected service', event.target.value)
         setService(event.target.value);
     };
 
@@ -31,7 +27,6 @@ function SearchBox() {
     }
 
     const handleRating = (event) => {
-        console.log('rating', event.target.value)
         setRating(parseInt(event.target.value));
     };
 

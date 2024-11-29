@@ -1,24 +1,15 @@
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch, useSelector } from 'react-redux';
 import { createSitterBooking } from '../reducers/DataReducer';
 import { DateTimePicker } from '@mui/x-date-pickers';
-import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 
-function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
-    const { user } = useSelector((state) => state.user)
+function RequestBooking({ handleBookingForm, viewedProfile }) {
     const { services, availableLocations } = useSelector((state) => state.data)
-    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const token = localStorage.getItem('token');
@@ -59,8 +50,6 @@ function RequestBooking({ handleBookingForm, viewedProfile, setBookingOpen }) {
                     serviceId: usedService.uuid,
                     sitterId: viewedProfile.uuid
                 }
-
-                console.log('booking data', bookingData)
 
                 dispatch(createSitterBooking({
                     bookingData: bookingData,

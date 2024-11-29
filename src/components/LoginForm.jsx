@@ -1,10 +1,6 @@
 
 import { useContext, useState } from 'react';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-import { Box, Button, CircularProgress, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, TextField, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, FormControl, IconButton, TextField, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -65,7 +61,7 @@ function LoginForm({ setShowRegister }) {
                         //Before new user can use socket disconnect the previous
                         socket.disconnect()
 
-                        console.log('Before connecting to socket', res.payload)
+                        console.log('Before connecting to socket')
 
                         socket.connect(VITE_SOCKET_URL,
                             {

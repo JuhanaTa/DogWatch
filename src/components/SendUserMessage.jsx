@@ -1,21 +1,19 @@
 import { Box, Button, FormControl, TextField, Typography } from '@mui/material';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import SendIcon from '@mui/icons-material/Send';
 import { useDispatch, useSelector } from 'react-redux';
 import { sendMessageToUser, userMsgInit } from '../reducers/UserReducer';
-import { SocketContext } from '../App';
 import { getUserMessages } from '../requests/userRequests';
 
 function SendUserMessage({ receiverId, receiverFirstName, receiverLastname, setSendMessageOpen }) {
     const { sendMessageToUserError } = useSelector((state) => state.data)
-    const { user } = useSelector((state) => state.user)
 
-    const socket = useContext(SocketContext);
     const dispatch = useDispatch();
     
     const token = localStorage.getItem('token');
 
     const [message, setMessage] = useState('');
+    const [errors, setErrors] = useState({});
 
 
     const handleMessage = (event) => {
@@ -25,21 +23,40 @@ function SendUserMessage({ receiverId, receiverFirstName, receiverLastname, setS
 
     const handleMessageSend = () => {
 
-        let data = {
-            content: { content: message },
-            receiverId: receiverId,//viewedProfile.uuid,
-            token: token
+        if(validate()){
+
+            let data = {
+                content: { content: message },
+                receiverId: receiverId,//viewedProfile.uuid,
+                token: token
+            }
+    
+            dispatch(sendMessageToUser(data)).then(async(res) => {
+                if(res.payload) {
+                    try {
+                        const messageSenders = await getUserMessages(token)
+                        dispatch(userMsgInit(messageSenders))
+                        setSendMessageOpen(false)
+                    } catch (error) {
+                        console.log('Message sent, but update failed.')
+                    }
+                }
+            })
+
         }
 
-        dispatch(sendMessageToUser(data)).then(async(res) => {
-            if(res.payload) {
-                const messageSenders = await getUserMessages(token)
-                dispatch(userMsgInit(messageSenders))
+    }
 
-                setSendMessageOpen(false)
-            }
-        })
+    const validate = () => {
+        const allErrors = {};
 
+        if (!message.trim()) {
+            allErrors.message = 'Message is required';
+        }
+
+        setErrors(allErrors)
+
+        return Object.keys(allErrors).length === 0;
     }
 
     return (
@@ -58,6 +75,8 @@ function SendUserMessage({ receiverId, receiverFirstName, receiverLastname, setS
                     variant="outlined"
                     value={message}
                     onChange={handleMessage}
+                    error={!!errors.message}
+                    helperText={errors.message}
                 />
             </FormControl>
 

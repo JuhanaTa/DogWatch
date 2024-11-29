@@ -247,7 +247,7 @@ function UserSettings() {
                     </Avatar>
 
 
-                    <Typography sx={{maxWidth: 280}} variant='p'>Images are transformed to 1:1 format. PNG and JPG formats supported.</Typography>
+                    <Typography sx={{maxWidth: 280}} variant='p'>Images are transformed to 1:1 format. PNG AND JPG FILES SUPPORTED.</Typography>
 
 
                 </Card>

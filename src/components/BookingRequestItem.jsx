@@ -18,14 +18,11 @@ function BookingRequestItem({ booking }) {
     const token = localStorage.getItem('token');
 
     const bookingService = services.find(serviceItem => booking.serviceId === serviceItem.uuid)
-    console.log('booking', booking)
 
     const endDate = format(new Date(booking.endDate), "MMMM d, yyyy, HH:mm")
     const startDate = format(new Date(booking.startDate), "MMMM d, yyyy, HH:mm")
     const dispatch = useDispatch();
 
-
-    console.log('booking', booking)
 
     const handleBookingStatusUpdate = (status) => {
 

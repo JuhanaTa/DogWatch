@@ -1,8 +1,4 @@
 import { useState } from 'react'
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import { Avatar, Box, Button, Card, Divider, IconButton, Modal, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { ArrowUpward, ArrowDownward } from '@mui/icons-material';
@@ -20,8 +16,6 @@ function BookingItem({ booking }) {
     const [sendMessageOpen, setSendMessageOpen] = useState(false);
     const [open, setOpen] = useState(false)
 
-    console.log('booking', booking, user.uuid)
-
     const endDate = format(new Date(booking.endDate), "MMMM d, yyyy, HH:mm")
     const startDate = format(new Date(booking.startDate), "MMMM d, yyyy, HH:mm")
     const createdDate = format(new Date(booking.createdAt), "MMMM d, yyyy, HH:mm")
@@ -30,10 +24,6 @@ function BookingItem({ booking }) {
 
 
     const handleOpen = () => setOpen(!open);
-
-    const handleMessagesOpen = () => {
-        console.log('messages should open')
-    }
 
     const [reviewOpen, setReviewOpen] = useState(false);
 

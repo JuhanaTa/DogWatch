@@ -1,8 +1,4 @@
-import { useContext, useEffect, useRef, useState } from 'react'
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
+import { useState } from 'react'
 import { Avatar, Box, Button, Card, CardActionArea, Divider, FormControl, TextField, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,10 +12,9 @@ function Messages() {
 
     const [message, setMessage] = useState('')
     const [viewedMsgPartner, setViewedMsgPartner] = useState(viewedProfileIndex)
+    const [errors, setErrors] = useState({});
 
     const dispatch = useDispatch();
-
-    console.log('userMessages', userMessages)
 
     const token = localStorage.getItem('token');
 
@@ -30,20 +25,35 @@ function Messages() {
 
     const handleMessageSend = () => {
 
-        const receiverId = userMessages[viewedMsgPartner].partnerId
+        if (validate()) {
 
-        let data = {
-            content: { content: message },
-            receiverId: receiverId,
-            token: token
+            const receiverId = userMessages[viewedMsgPartner].partnerId
+
+            let data = {
+                content: { content: message },
+                receiverId: receiverId,
+                token: token
+            }
+
+            dispatch(sendMessageToUser(data))
         }
-
-        dispatch(sendMessageToUser(data))
 
     }
 
     const handleMsgPartner = (index) => {
         setViewedMsgPartner(index)
+    }
+
+    const validate = () => {
+        const allErrors = {};
+
+        if (!message.trim()) {
+            allErrors.message = 'Message is required';
+        }
+
+        setErrors(allErrors)
+
+        return Object.keys(allErrors).length === 0;
     }
 
     return (
@@ -229,13 +239,15 @@ function Messages() {
                                     label="Message"
                                     variant="outlined"
                                     onChange={handleMessageWrite}
-
+                                    error={!!errors.message}
+                                    helperText={errors.message}
                                 />
                             </FormControl>
 
                             <Button
                                 variant="contained"
                                 onClick={handleMessageSend}
+                                sx={{maxHeight: 55}}
                             >
                                 <SendIcon />
                             </Button>
