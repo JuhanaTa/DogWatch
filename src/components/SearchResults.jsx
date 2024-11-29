@@ -8,7 +8,6 @@ function SearchResults({ preview }) {
     const navigate = useNavigate();
 
     const { searchResults, sittersList, searchParameters } = useSelector((state) => state.data)
-    console.log('search params', searchParameters, searchResults, Object.keys(searchParameters).length, searchResults.length)
     
     let results = []
 
@@ -26,8 +25,6 @@ function SearchResults({ preview }) {
         }
 
     }
-
-    console.log('search sitters', results)
 
     return (
         <>
